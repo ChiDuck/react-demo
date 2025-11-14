@@ -1,0 +1,80 @@
+@use "variables";
+@use "mixin";
+
+body {
+  font-family: variables.$font-family;
+  margin: 0;
+  padding: 0;
+}
+
+button {
+  @include mixin.default-button;
+}
+
+.fa-star {
+  color: variables.$star-color;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 10;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transform: translateX(100%);
+  transition: opacity 0.3s;
+}
+
+.overlay.open {
+  transform: translateX(0%);
+  opacity: 1;
+}
+
+.modal-wrapper {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  z-index: 10;
+  transform: translateY(100%);
+  transition: transform 0.3s;
+  }
+
+.modal-wrapper.open {
+  transform: translateY(0);
+}
+
+.modal {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: white;
+  margin: 1em 0;
+  padding: 2em;
+  border-radius: 5px;
+  max-width: 350px;
+  width: 80%;
+  gap: 1em;
+  opacity: 0;
+  z-index: 10;
+  transform: translateY(50%);
+  transition: opacity 0.3s, transform 0.3s ease;
+
+  .modal p {
+    margin: 0;
+  }
+
+  h2 {
+    margin: 0;
+  }
+}
+
+.modal.open {
+  transform: translateY(0%);
+  opacity: 1;
+}

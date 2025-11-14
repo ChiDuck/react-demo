@@ -1,0 +1,43 @@
+@use "variables";
+.salon-owner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fcedf2;
+  background-image: url(logo/Frame.svg);
+  background-size: contain;
+  background-repeat: no-repeat;
+  border-radius: 10px;
+  height: auto;
+  margin: 2em 8em 2em;
+  padding: 4em;
+  color: variables.$button-text-color;
+}
+
+.salon-owner div {
+  white-space: wrap;
+  max-width: 450px;
+}
+
+.salon-owner h1 {
+  margin: 0 0 0.5em;
+}
+
+.list-salon-button {
+  min-width: 200px;
+}
+
+@media (max-width: 1100px) {
+  .salon-owner {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: start;
+    padding: 2em;
+    gap: 2em;
+  margin: 2em 3em 2em;
+  }
+
+  .list-salon-button {
+    margin-right: 0;
+  }
+}

@@ -1,0 +1,55 @@
+@use "variables";
+
+.review-card {
+  background-color: white;
+  color: variables.$text-title-color;
+  border-radius: 5px;
+  box-shadow: 5px 2px 15px 0px rgba(0, 0, 0, 0.04);
+  padding: 25px;
+  flex: 1;
+}
+
+.reviewer {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  margin-top: 1em;
+  justify-content: space-between;
+
+  img:first-child {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+
+  h4 {
+    margin: 0;
+  }
+}
+
+.review-text {
+  margin-top: 1em;
+  font-size: large;
+  color: variables.$text-color;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+.salon-name {
+  border: variables.$border-bold;
+  border-radius: 50%;
+  margin-right: 1em;
+  width: 55px;
+  height: 55px;
+}
+
+.salon-name-review {
+  font-weight: bold;
+  margin-right: 1em;
+  font-size: 20px;
+}
+
+.review-card-header {
+  display: flex;
+  gap: 0.5em;
+}

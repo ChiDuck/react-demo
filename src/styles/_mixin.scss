@@ -1,0 +1,27 @@
+@use "variables";
+
+@mixin default-button {
+  background-color: variables.$primary-color;
+  color: variables.$button-text-color;
+  border-radius: 30px;
+  border: none;
+  height: 50px;
+  min-width: 115px;
+  padding: 0 20px;
+  font-size: 18px;
+  line-height: 100%;
+  font-weight: 700;
+  text-align: center;
+  white-space: nowrap;
+}
+
+@mixin secondary-button {
+  @include default-button;
+  background-color: variables.$secondary-opposite-color;
+  color: variables.$text-title-color;
+  border: variables.$border-bold;
+  height: 34px;
+  padding: 12px 20px;
+  font-size: 14px;
+  line-height: 10px;
+}

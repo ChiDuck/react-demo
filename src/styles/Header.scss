@@ -1,0 +1,90 @@
+@use "variables";
+
+.pageheader {
+  background: linear-gradient(180deg, #1e1e1e 0%, #5e5e5e 100%);
+  display: flex;
+  flex-direction: column;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.header-bar {
+  position: sticky;
+  top: 0;
+  z-index: 9;
+  padding: 1.5em 2em;
+  background-color: #1e1e1e;
+}
+
+.header-left {
+  display: flex;
+  flex: 1;
+  gap: 1em;
+}
+
+.logo {
+  height: 50px;
+}
+.header-banner {
+  position: relative;
+  padding: 0 2em 2em;
+}
+
+.banner-img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+.banner-text {
+  position: absolute;
+  top: 20%;
+  left: 5%;
+  color: variables.$button-text-color;
+  max-width: 30vw;
+  text-align: start;
+  font-size: 2vw;
+}
+.login-button {
+  background-color: variables.$secondary-opposite-color;
+  color: variables.$text-title-color;
+}
+
+.pro-button {
+  background-color: variables.$secondary-color;
+}
+
+.header-top {
+  display: flex;
+  gap: 10px;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 10px;
+}
+.sidebar-button {
+  min-width: 0;
+  display: none;
+}
+
+.spacer {
+  display: flex;
+  gap: 10px;
+  flex: 1;
+}
+
+@media screen and (max-width: 1100px) {
+  .header-buttons {
+    display: none;
+  }
+  .sidebar-button {
+    display: block;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .header-top {
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,136 @@
+
+.salon-overlay {
+  padding: 1em;
+}
+
+.salon-book {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1em;
+}
+
+.salon-grid {
+  display: grid;
+  padding-left: 6em;
+  padding-right: 6em;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1em;
+}
+
+.review-row {
+  padding: 0 3em 3em;
+  display: flex;
+  gap: 24px;
+  justify-content: space-between;
+}
+
+.reviews-header {
+  text-align: center;
+  margin-bottom: 2em;
+}
+
+.view-all-button {
+  display: flex;
+  margin: 1em 0 5em;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.salon-header {
+  text-align: center;
+}
+
+.footer {
+  background-color: rgb(242, 242, 242);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2em;
+  padding: 3em 0 3em 3em;
+}
+
+.footer-note {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid rgb(211, 211, 211);
+  padding: 1.5em 5em;
+  align-items: center;
+}
+
+.footer-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+@media screen and (max-width: 1100px) {
+  .review-row {
+    flex-direction: column;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .header-left {
+    flex-direction: column;
+    height: 10em;
+    gap: 0.5em;
+  }
+
+  .search-bar {
+    position: relative;
+    width: 100%;
+  }
+
+  .review-card-header {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .footer {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .salon-grid {
+    padding-left: 3em;
+    padding-right: 3em;
+  }
+
+  .footer-note {
+    flex-direction: column;
+    gap: 1em;
+  }
+
+  .review-row {
+    flex-direction: column;
+  }
+
+  .reviews-header {
+    margin: 0 1em 2em;
+  }
+
+  .review-row {
+    padding: 0 2em 4em;
+  }
+
+  .footer-note {
+    padding: 1.5em 1em;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .footer {
+    grid-template-columns: 1fr;
+  }
+
+  .salon-header {
+    padding: 0 1em;
+  }
+  .salon-grid {
+    padding: 0 0.5em;
+  }
+
+  .review-card-header {
+    flex-direction: column;
+    align-items: start;
+  }
+}

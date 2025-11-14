@@ -1,0 +1,85 @@
+@use "variables";
+@use "mixin";
+.salon-card {
+  position: relative;
+  background-color: white;
+  border-radius: 10px;
+  border: variables.$border-light;
+  transition: all 0.3s;
+}
+
+.salon-card:hover {
+  box-shadow: variables.$box-shadow;
+  border: variables.$primary-color 1px solid;
+}
+
+.salon-card-link {
+  text-decoration: none;
+  color: inherit;
+}
+.salon-image {
+  height: 150px;
+  display: flex;
+  overflow: hidden;
+  justify-content: center;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+.salon-image img {
+  width: 100%;
+  object-fit: cover;
+}
+
+.book-button {
+  @include mixin.secondary-button;
+  transition: all 0.3s;
+}
+
+.book-button:hover {
+  background-color: variables.$primary-color;
+  color: variables.$button-text-color;
+  border: transparent 1px solid;
+}
+
+.favorite-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  color: gray;
+  padding: 5px;
+}
+
+.salon-badge img {
+  border-radius: 50%;
+  border: variables.$border-bold;
+}
+
+.salon-badge h3 {
+  margin: 0;
+}
+.salon-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.location-icon {
+  margin-right: 5px;
+}
+
+.salon-rating {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  justify-content: baseline;
+
+  span {
+    font-weight: bold;
+  }
+
+  span:last-child {
+    font-weight: 400;
+    font-size: 12px;
+  }
+}

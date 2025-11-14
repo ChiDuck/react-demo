@@ -1,0 +1,43 @@
+@use "variables";
+.sidebar-menu {
+  position: fixed;
+  background-color: white;
+  height: 100%;
+  right: 0;
+  top: 0;
+  border: variables.$border-bold;
+  box-shadow: variables.$box-shadow;
+  z-index: 10;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  opacity: 0;
+  transition: transform 0.3s ease-out, opacity 0.3s;
+  transform: translateX(100%);
+}
+
+.sidebar-menu.open {
+  transform: translateX(0%);
+  opacity: 1;
+}
+
+.sidebar-menu ul {
+  margin: 40px;
+  padding: 20px 0;
+  line-height: 3;
+  list-style: none;
+}
+
+.sidebar-menu ul li + li {
+  border-top: variables.$border-light;
+}
+
+.sidebar-menu ul li {
+  padding: 0 10px;
+  transition: all 0.3s;
+}
+
+.sidebar-menu ul li:hover {
+  background-color: variables.$primary-color;
+  color: variables.$button-text-color;
+  border-radius: 10px;
+}

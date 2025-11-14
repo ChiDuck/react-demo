@@ -1,0 +1,29 @@
+@use "variables";
+
+.search-bar-container {
+  position: relative;
+  flex: 1;
+}
+
+.search-bar {
+  position: absolute;
+  height: 50px;
+  padding: 0 1em;
+  border-radius: 30px;
+  border: none;
+  font-size: 1em;
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 200px;
+  line-height: 1;
+}
+.search-icon {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: variables.$button-text-color;
+  border-radius: 50%;
+  background-color: variables.$primary-color;
+  padding: 0.7em;
+}
