@@ -6,7 +6,7 @@ export default function SalonDetailTitle() {
       <img src="logo\b9f21775293a2c2c86941e865ff81ff0a92ae96f.png" />
       <div>
         <div className={style.flex1}>
-          <h1>Salon name</h1>
+          <h1>Lathersalonaspen</h1>
           <span>Open Now</span>
           <span> - Closes 10 PM</span>
         </div>

@@ -6,15 +6,9 @@ export default function SalonDetailPage() {
   return (
     <>
       <SalonDetail />
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "70% 30%",
-        }}
-      >
-        <SalonDetailServices />
+      <SalonDetailServices>
         <SalonDetailMap />
-      </div>
+      </SalonDetailServices>
     </>
   );
 }

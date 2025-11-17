@@ -1,48 +1,118 @@
 import ContentSection from "../components/ContentSection";
 import ServiceCard from "../components/ServiceCard";
-import style from "../styles/SalonDetail.module.scss";
+import style from "../styles/SalonDetailService.module.scss";
 
-export default function SalonDetailServices() {
+import { useEffect, useRef, useState } from "react";
+function FullHeightMap({ servicesRef, children, mapOpen, setMapOpen }) {
+  const wrapperRef = useRef(null);
+  const [height, setHeight] = useState(0);
+
+  useEffect(() => {
+    function updateHeight() {
+      if (!servicesRef.current) return;
+
+      const servicesTop =
+        servicesRef.current.getBoundingClientRect().top + window.scrollY;
+      const pageHeight = document.body.scrollHeight;
+
+      setHeight(pageHeight - servicesTop);
+    }
+
+    window.addEventListener("resize", updateHeight);
+    window.addEventListener("scroll", updateHeight); // optional
+    updateHeight(); // initial
+
+    return () => {
+      window.removeEventListener("resize", updateHeight);
+      window.removeEventListener("scroll", updateHeight);
+    };
+  }, [servicesRef]);
+
   return (
-    <ContentSection>
-      <div className={style.services}>
-        <ServiceCard
-          service_name="Nail Extension"
-          description="Lorem Ipsum is simply dummy text of the printing  typesetting industry."
-          price="149.99"
-          picture="pictures\7f2704851f58aae290ac1da30b11f2280c662710.png"
-        />
-        <ServiceCard
-          service_name="Nail Extension"
-          description="Lorem Ipsum is simply dummy text of the printing  typesetting industry."
-          price="149.99"
-          picture="pictures\7f2704851f58aae290ac1da30b11f2280c662710.png"
-        />
-        <ServiceCard
-          service_name="Nail Extension"
-          description="Lorem Ipsum is simply dummy text of the printing  typesetting industry."
-          price="149.99"
-          picture="pictures\7f2704851f58aae290ac1da30b11f2280c662710.png"
-        />
-        <ServiceCard
-          service_name="Nail Extension"
-          description="Lorem Ipsum is simply dummy text of the printing  typesetting industry."
-          price="149.99"
-          picture="pictures\7f2704851f58aae290ac1da30b11f2280c662710.png"
-        />
-        <ServiceCard
-          service_name="Nail Extension"
-          description="Lorem Ipsum is simply dummy text of the printing  typesetting industry."
-          price="149.99"
-          picture="pictures\7f2704851f58aae290ac1da30b11f2280c662710.png"
-        />
-        <ServiceCard
-          service_name="Nail Extension"
-          description="Lorem Ipsum is simply dummy text of the printing  typesetting industry."
-          price="149.99"
-          picture="pictures\7f2704851f58aae290ac1da30b11f2280c662710.png"
-        />
-      </div>
-    </ContentSection>
+    <div
+      className={`${style.mapWrapper} ${mapOpen ? "" : style.hidden}`}
+      ref={wrapperRef}
+      style={{
+        position: "absolute",
+        display: "flex",
+        alignItems: "start",
+        justifyContent: "end",
+        width: "100%",
+        height: `${height}px`,
+        pointerEvents: "none", // allow clicks to pass through wrapper
+      }}
+    >
+      <button
+        className={style.toggleButton}
+        onClick={() => setMapOpen(!mapOpen)}
+      >
+        {mapOpen ? ">" : "<"}
+      </button>
+      <div style={{ pointerEvents: "auto", height: "100%" }}>{children}</div>
+    </div>
+  );
+}
+
+export default function SalonDetailServices({ children }) {
+  const servicesRef = useRef(null);
+  const [mapOpen, setMapOpen] = useState(true);
+  return (
+    <>
+      <ContentSection>
+        <div style={{ padding: "20px 30px 30px", backgroundColor: "#FAFAFA" }}>
+          <h1>Services</h1>
+          <div className={style.servicesSection}>
+            <div
+              ref={servicesRef}
+              className={`${style.services} ${mapOpen ? "" : style.fullWidth}`}
+            >
+              <ServiceCard
+                service_name="Nail Extension"
+                description="Lorem Ipsum is simply dummy text of the printing  typesetting industry."
+                price="149.99"
+                picture="pictures\7f2704851f58aae290ac1da30b11f2280c662710.png"
+              />
+              <ServiceCard
+                service_name="Nail Extension"
+                description="Lorem Ipsum is simply dummy text of the printing  typesetting industry."
+                price="149.99"
+                picture="pictures\7f2704851f58aae290ac1da30b11f2280c662710.png"
+              />
+              <ServiceCard
+                service_name="Nail Extension"
+                description="Lorem Ipsum is simply dummy text of the printing  typesetting industry."
+                price="149.99"
+                picture="pictures\7f2704851f58aae290ac1da30b11f2280c662710.png"
+              />
+              <ServiceCard
+                service_name="Nail Extension"
+                description="Lorem Ipsum is simply dummy text of the printing  typesetting industry."
+                price="149.99"
+                picture="pictures\7f2704851f58aae290ac1da30b11f2280c662710.png"
+              />
+              <ServiceCard
+                service_name="Nail Extension"
+                description="Lorem Ipsum is simply dummy text of the printing  typesetting industry."
+                price="149.99"
+                picture="pictures\7f2704851f58aae290ac1da30b11f2280c662710.png"
+              />
+              <ServiceCard
+                service_name="Nail Extension"
+                description="Lorem Ipsum is simply dummy text of the printing  typesetting industry."
+                price="149.99"
+                picture="pictures\7f2704851f58aae290ac1da30b11f2280c662710.png"
+              />
+            </div>
+            <FullHeightMap
+              servicesRef={servicesRef}
+              mapOpen={mapOpen}
+              setMapOpen={setMapOpen}
+            >
+              {children}
+            </FullHeightMap>
+          </div>
+        </div>
+      </ContentSection>
+    </>
   );
 }
