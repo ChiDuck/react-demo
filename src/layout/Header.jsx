@@ -1,9 +1,6 @@
+import { Children } from "react";
 import ContentSection from "../components/ContentSection";
-import { Children, useState } from "react";
-import LoginModal from "../components/LoginModal";
-import SignupModal from "../components/SignupModal";
 import "../styles/Header.scss";
-import SideBar from "../components/SideBar";
 
 function PageHeader({ children }) {
   return (

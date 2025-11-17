@@ -7,9 +7,11 @@ export default function SalonDetail() {
   return (
     <>
       <ContentSection>
-        <SalonDetailTitle />
-        <SalonDetailAction />
-        <SalonDetailGallery />
+        <div style={{ margin: "20px 100px" }}>
+          <SalonDetailTitle />
+          <SalonDetailAction />
+          <SalonDetailGallery />
+        </div>
       </ContentSection>
     </>
   );

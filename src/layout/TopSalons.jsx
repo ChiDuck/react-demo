@@ -1,5 +1,6 @@
 import ContentSection from "../components/ContentSection";
 import SalonCard from "../components/SalonCard";
+import "../styles/TopSalons.scss";
 
 function ViewAll() {
   return (

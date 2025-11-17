@@ -1,9 +1,9 @@
-import SearchBar from "../components/SearchBar";
-import Button from "../components/Button";
 import { useState } from "react";
-import LoginModal from "../components/LoginModal";
-import SignupModal from "../components/SignupModal";
+import Button from "../components/Button";
+import LoginModal from "../components/LogInModal";
+import SearchBar from "../components/SearchBar";
 import SideBar from "../components/SideBar";
+import SignupModal from "../components/SignUpModal";
 import "../styles/Header.scss";
 
 function Logo() {

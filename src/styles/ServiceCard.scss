@@ -1,6 +1,6 @@
 @use "variables";
 @use "mixin";
-.salon-card {
+.service-card {
   position: relative;
   background-color: white;
   border-radius: 10px;
@@ -8,26 +8,26 @@
   transition: all 0.3s;
 }
 
-.salon-card:hover {
+.service-card:hover {
   box-shadow: variables.$box-shadow;
   border: variables.$primary-color 1px solid;
 }
 
-.salon-card-link {
+.service-card-link {
   text-decoration: none;
   color: inherit;
 }
-.salon-image {
+.service-image {
   height: 150px;
   display: flex;
   overflow: hidden;
   justify-content: center;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
-}
-.salon-image img {
-  width: 100%;
-  object-fit: cover;
+  img {
+    width: 100%;
+    object-fit: cover;
+  }
 }
 
 .book-button {
@@ -49,45 +49,39 @@
   color: gray;
   padding: 5px;
 }
-.salon-overlay {
-  padding: 1em;
-}
-.salon-book {
+
+.service-badge {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
-  margin-top: 1em;
-}
-.salon-badge img {
-  border-radius: 50%;
-  border: variables.$border-bold;
-}
-
-.salon-badge h3 {
-  margin: 0;
-}
-.salon-badge {
-  display: flex;
-  align-items: center;
   gap: 0.5em;
-}
-
-.location-icon {
-  margin-right: 5px;
-}
-
-.salon-rating {
-  display: flex;
-  gap: 5px;
-  align-items: center;
-  justify-content: baseline;
-
   span {
+    font-size: 15px;
     font-weight: bold;
   }
 
   span:last-child {
-    font-weight: 400;
     font-size: 12px;
+    color: variables.$text-color;
+  }
+}
+.service-overlay {
+  padding: 1em;
+  h3 {
+    margin: 0;
+    font-weight: 600;
+  }
+}
+.service-book {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  p {
+    margin: 0;
+  }
+  span {
+    font-weight: bold;
+    color: variables.$primary-color;
   }
 }

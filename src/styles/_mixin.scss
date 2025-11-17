@@ -25,3 +25,10 @@
   font-size: 14px;
   line-height: 10px;
 }
+
+@mixin third-button {
+  @include secondary-button;
+  border: variables.$border-light;
+  font-weight: normal;
+  color: variables.$text-color;
+}

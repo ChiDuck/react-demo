@@ -1,0 +1,27 @@
+.salon-grid {
+  display: grid;
+  padding-left: 6em;
+  padding-right: 6em;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1em;
+}
+
+.view-all-button {
+  display: flex;
+  margin: 1em 0 5em;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.salon-header {
+  text-align: center;
+}
+
+@media screen and (max-width: 400px) {
+  .salon-header {
+    padding: 0 1em;
+  }
+  .salon-grid {
+    padding: 0 0.5em;
+  }
+}

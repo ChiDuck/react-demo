@@ -1,6 +1,7 @@
 import ContentSection from "../components/ContentSection";
 import FooterSocial from "../components/FooterSocial";
 
+
 function FooterColumn({ title, items }) {
   return (
     <div className="footer-column">

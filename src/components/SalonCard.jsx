@@ -1,6 +1,6 @@
-import Button from "./Button";
-import "../styles/SalonCard.scss";
 import { Link } from "react-router-dom";
+import "../styles/SalonCard.scss";
+import Button from "./Button";
 
 export default function SalonCard({
   picture,
@@ -10,7 +10,7 @@ export default function SalonCard({
   distance,
 }) {
   return (
-    <Link to={`/salon-detail/`} className="salon-card-link">
+    <Link to="/salon-detail" className="salon-card-link">
       <div className="salon-card">
         <img
           className="favorite-icon"

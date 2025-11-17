@@ -1,22 +1,5 @@
 
-.salon-overlay {
-  padding: 1em;
-}
 
-.salon-book {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 1em;
-}
-
-.salon-grid {
-  display: grid;
-  padding-left: 6em;
-  padding-right: 6em;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1em;
-}
 
 .review-row {
   padding: 0 3em 3em;
@@ -30,16 +13,6 @@
   margin-bottom: 2em;
 }
 
-.view-all-button {
-  display: flex;
-  margin: 1em 0 5em;
-  justify-content: center;
-  text-decoration: none;
-}
-
-.salon-header {
-  text-align: center;
-}
 
 .footer {
   background-color: rgb(242, 242, 242);
@@ -120,13 +93,6 @@
 @media screen and (max-width: 400px) {
   .footer {
     grid-template-columns: 1fr;
-  }
-
-  .salon-header {
-    padding: 0 1em;
-  }
-  .salon-grid {
-    padding: 0 0.5em;
   }
 
   .review-card-header {

@@ -1,17 +1,20 @@
-import HeaderBar from "../layout/HeaderBar";
-import Footer from "../Layout/Footer";
 import SalonDetail from "../layout/SalonDetail";
-import SalonDetailServices from "../layout/SalonDetailServices";
 import SalonDetailMap from "../layout/SalonDetailMap";
+import SalonDetailServices from "../layout/SalonDetailServices";
 
 export default function SalonDetailPage() {
   return (
     <>
-      <HeaderBar />
       <SalonDetail />
-      <SalonDetailServices />
-      <SalonDetailMap />
-      <Footer />
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "70% 30%",
+        }}
+      >
+        <SalonDetailServices />
+        <SalonDetailMap />
+      </div>
     </>
   );
 }

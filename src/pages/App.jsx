@@ -1,19 +1,13 @@
+import { Outlet } from "react-router-dom";
 import "../App.css";
-import Header from "../Layout/Header.jsx";
-import TopSalons from "../Layout/TopSalons.jsx";
-import TopReviews from "../Layout/TopReviews.jsx";
-import Footer from "../Layout/Footer.jsx";
-import ListYourSalon from "../Layout/ListYourSalon.jsx";
-import HeaderBar from "../layout/HeaderBar.jsx";
+import Footer from "../layout/Footer";
+import HeaderBar from "../layout/HeaderBar";
 
 export default function App() {
   return (
     <>
       <HeaderBar />
-      <Header />
-      <TopSalons />
-      <TopReviews />
-      <ListYourSalon />
+      <Outlet />
       <Footer />
     </>
   );
