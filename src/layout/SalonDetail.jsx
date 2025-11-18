@@ -1,7 +1,7 @@
 import ContentSection from "../components/ContentSection";
 import SalonDetailAction from "../components/SalonDetailAction";
 import SalonDetailGallery from "../components/SalonDetailGallery";
-import SalonDetailTitle from "../components/SalonDetailTitle";
+import SalonDetailTitle from "../components/SalonDetailTitle/SalonDetailTitle";
 import style from "../styles/SalonDetail.module.scss";
 
 export default function SalonDetail() {

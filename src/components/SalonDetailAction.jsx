@@ -6,19 +6,19 @@ export default function SalonDetailAction() {
     <div className={style.action}>
       <Button text="Book Now" />
       <button>
-        <img src="icon\review.svg" alt="" />
+        <img src="\icon\review.svg" alt="" />
         <span>Write a Review</span>
       </button>
       <button>
-        <img src="icon\+.svg" alt="" />
+        <img src="\icon\+.svg" alt="" />
         <span>Add Photo</span>
       </button>
       <button>
-        <img src="icon\share.svg" alt="" />
+        <img src="\icon\share.svg" alt="" />
         <span>Share</span>
       </button>
       <button>
-        <img src="icon\heart.svg" alt="" />
+        <img src="\icon\heart.svg" alt="" />
         <span>Save</span>
       </button>
     </div>

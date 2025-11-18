@@ -1,17 +1,23 @@
 import { useLoaderData } from "react-router-dom";
-import style from "../styles/SalonDetail.module.scss";
+import style from "../../styles/SalonDetail.module.scss";
+import { getOpenStatus } from "./openStatus";
 
 export default function SalonDetailTitle() {
   const item = useLoaderData();
+  const status = getOpenStatus(item.schedule, item.timezone);
+  console.log(status.text);
   console.log(item);
   return (
     <div className={style.salonDetailHeader}>
-      <img src="logo\b9f21775293a2c2c86941e865ff81ff0a92ae96f.png" />
+      <img
+        src={`https://dev.nail360.info/light/api/images/${item.avatarimg}`}
+      />
       <div>
         <div className={style.flex1}>
           <h1>{item.name}</h1>
-          <span>
-            Open Now <span> - Closes 10 PM</span>
+          <span className={`${status.isOpen ? "" : style.closed}`}>
+            {status.text1}
+            <span> {status.text2}</span>
           </span>
         </div>
         <div className={style.titleBlock}>
@@ -28,7 +34,7 @@ export default function SalonDetailTitle() {
             </div>
             <span>({item.countreview} Reviews) </span>
           </div>
-          <img src="icon\verified.svg" />
+          <img src="/icon/verified.svg" />
         </div>
       </div>
     </div>

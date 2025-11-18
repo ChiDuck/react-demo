@@ -18,7 +18,7 @@
   }
 
   h1 {
-    margin: 0;
+    margin: 0 !important;
     font-size: 30px;
   }
 }
@@ -26,9 +26,14 @@
 .flex1 {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 15px;
+  margin-bottom: 10px;
   text-wrap: nowrap;
   position: static;
+
+  .closed {
+    color: red;
+  }
 
   span {
     font-size: 14px;
