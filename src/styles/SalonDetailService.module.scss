@@ -16,32 +16,31 @@ h1:first-of-type {
   display: flex;
   position: relative;
 }
-
-.fullWidth {
-  max-width: 100%;
-}
-.hidden {
-  transform: translateX(30%);
-}
-/* Toggle button */
-.toggleButton {
-  position: sticky;
-  left: -35x; /* intrude from the left */
-  top: 150px;
-  z-index: 11;
-  width: 10px;
-  height: 50px;
-  background: #fff;
-  color: variables.$text-title-color;
-  border: none;
-  cursor: pointer;
-  pointer-events: all;
-  border-radius: 10px 0 0 10px;
-  padding: 0 20px 0 15px;
-  margin-top: 30px;
-  min-width: 0;
-}
-
 .mapWrapper {
-  transition: transform 0.3s ease;
+  position: absolute;
+  display: flex;
+  align-items: start;
+  justify-content: end;
+  width: 100%;
+  pointer-events: none; // allow clicks to pass through wrapper
+}
+
+@media screen and (max-width: 1250px) {
+  .servicesSection {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .services {
+    max-width: 100%;
+  }
+
+  .mapWrapper {
+    position: static;
+    display: block;
+    max-height: max-content;
+    width: 100%;
+  }
+
+
 }

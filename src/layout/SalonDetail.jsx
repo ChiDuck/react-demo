@@ -8,7 +8,7 @@ export default function SalonDetail() {
   return (
     <>
       <ContentSection>
-        <div style={{ margin: "30px 100px 50px" }}>
+        <div className={style.salonDetail}>
           <div
             className={style.titleFlex}
             style={{

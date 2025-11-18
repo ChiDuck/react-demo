@@ -1,5 +1,10 @@
 @use "variables";
 @use "mixin";
+
+.salonDetail {
+  margin: 30px 100px 50px;
+}
+
 .salonDetailHeader {
   display: flex;
   align-items: center;
@@ -28,9 +33,10 @@
   span {
     font-size: 14px;
     font-weight: bold;
-  }
-  span:first-of-type {
     color: green;
+    span {
+      color: variables.$text-color;
+    }
   }
 }
 
@@ -58,11 +64,19 @@
   button {
     @include mixin.third-button;
     min-width: 0;
+    display: flex;
+    align-items: center;
+    img {
+      width: 14px;
+      height: 14px;
+      margin-left: 0;
+    }
   }
 
   button:first-child {
     @include mixin.default-button;
     font-weight: normal;
+    display: block;
     height: 34px;
     font-size: 14px;
   }
@@ -81,8 +95,17 @@
     position: absolute;
     bottom: 20px;
     right: 30px;
+    display: flex;
+    align-items: center;
     @include mixin.third-button;
     min-width: 0;
+
+    img {
+      width: 14px;
+      height: 14px;
+      margin-left: 0;
+      overflow: visible;
+    }
   }
 
   img {
@@ -96,8 +119,41 @@
   height: 90px;
 }
 
-@media screen and (max-width: 1150px) {
+@media screen and (max-width: 1250px) {
+  .action button {
+    img {
+      margin: 0;
+    }
+    span {
+      display: none;
+    }
+  }
+}
+@media screen and (max-width: 1000px) {
   .titleFlex {
     height: 150px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .salonDetail {
+    margin: 30px 20px;
+  }
+
+  .flex1 {
+    flex-direction: column;
+    gap: 0;
+    align-items: self-start;
+    padding-bottom: 10px;
+    h1 {
+      margin-bottom: 0;
+    }
+  }
+
+  .gallery {
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    img {
+      aspect-ratio: 5/3;
+    }
   }
 }

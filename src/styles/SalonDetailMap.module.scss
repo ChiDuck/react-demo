@@ -108,8 +108,13 @@
   left: 0;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1250px) {
   .map {
-    top: 180px;
+    position: static;
+    max-width: 100%;
+  }
+
+  .embedMapResponsive {
+    padding-bottom: 30%;
   }
 }

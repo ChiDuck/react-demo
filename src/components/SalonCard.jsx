@@ -10,7 +10,10 @@ export default function SalonCard({
   distance,
 }) {
   return (
-    <Link to="/salon-detail" className="salon-card-link">
+    <Link
+      to="/salon-detail/8eb43f42-61e6-46a3-8339-33564c1b3739"
+      className="salon-card-link"
+    >
       <div className="salon-card">
         <img
           className="favorite-icon"

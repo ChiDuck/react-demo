@@ -3,7 +3,7 @@ import ServiceCard from "../components/ServiceCard";
 import style from "../styles/SalonDetailService.module.scss";
 
 import { useEffect, useRef, useState } from "react";
-function FullHeightMap({ servicesRef, children, mapOpen, setMapOpen }) {
+function FullHeightMap({ servicesRef, children }) {
   const wrapperRef = useRef(null);
   const [height, setHeight] = useState(0);
 
@@ -14,7 +14,11 @@ function FullHeightMap({ servicesRef, children, mapOpen, setMapOpen }) {
       const servicesTop =
         servicesRef.current.getBoundingClientRect().top + window.scrollY;
       const pageHeight = document.body.scrollHeight;
-
+      const pageWidth = window.innerWidth;
+      if (pageWidth <= 1250) {
+        setHeight(700);
+        return;
+      }
       setHeight(pageHeight - servicesTop);
     }
 
@@ -30,24 +34,12 @@ function FullHeightMap({ servicesRef, children, mapOpen, setMapOpen }) {
 
   return (
     <div
-      className={`${style.mapWrapper} ${mapOpen ? "" : style.hidden}`}
+      className={style.mapWrapper}
       ref={wrapperRef}
       style={{
-        position: "absolute",
-        display: "flex",
-        alignItems: "start",
-        justifyContent: "end",
-        width: "100%",
         height: `${height}px`,
-        pointerEvents: "none", // allow clicks to pass through wrapper
       }}
     >
-      <button
-        className={style.toggleButton}
-        onClick={() => setMapOpen(!mapOpen)}
-      >
-        {mapOpen ? ">" : "<"}
-      </button>
       <div style={{ pointerEvents: "auto", height: "100%" }}>{children}</div>
     </div>
   );
@@ -62,10 +54,7 @@ export default function SalonDetailServices({ children }) {
         <div style={{ padding: "20px 30px 30px", backgroundColor: "#FAFAFA" }}>
           <h1>Services</h1>
           <div className={style.servicesSection}>
-            <div
-              ref={servicesRef}
-              className={`${style.services} ${mapOpen ? "" : style.fullWidth}`}
-            >
+            <div ref={servicesRef} className={style.services}>
               <ServiceCard
                 service_name="Nail Extension"
                 description="Lorem Ipsum is simply dummy text of the printing  typesetting industry."
