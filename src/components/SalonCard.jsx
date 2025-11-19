@@ -11,7 +11,7 @@ export default function SalonCard({
 }) {
   return (
     <Link
-      to="/salon-detail/8eb43f42-61e6-46a3-8339-33564c1b3739"
+      to="/salon-detail/0cf58164-5614-48c3-9037-927283107cad"
       className="salon-card-link"
     >
       <div className="salon-card">

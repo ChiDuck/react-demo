@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import style from "../styles/SalonDetail.module.scss";
 import Button from "./Button";
 
@@ -5,10 +6,12 @@ export default function SalonDetailAction() {
   return (
     <div className={style.action}>
       <Button text="Book Now" />
-      <button>
-        <img src="\icon\review.svg" alt="" />
-        <span>Write a Review</span>
-      </button>
+      <Link to="/writereview/0cf58164-5614-48c3-9037-927283107cad">
+        <button>
+          <img src="\icon\review.svg" alt="" />
+          <span>Write a Review</span>
+        </button>
+      </Link>
       <button>
         <img src="\icon\+.svg" alt="" />
         <span>Add Photo</span>
