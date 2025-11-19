@@ -1,52 +1,20 @@
 import style from "../styles/SalonDetail.module.scss";
 
-export default function SalonDetailGallery() {
+export default function SalonDetailGallery({ gallery }) {
+  const imgUrl = import.meta.env.VITE_API_IMG_URL;
   return (
     <div className={style.gallery}>
       <button>
-        <img src="icon\all.svg" alt="" />
+        <img src="/icon/all.svg" alt="" />
         <span>Show all Photos</span>
       </button>
-      <img
-        src="avatar\aa0f1deacbaf753bf06ae8b28a64323b0b7cbf76.png"
-        alt="gallery item"
-      />
-      <img
-        src="avatar\aa0f1deacbaf753bf06ae8b28a64323b0b7cbf76.png"
-        alt="gallery item"
-      />
-      <img
-        src="pictures\7f2704851f58aae290ac1da30b11f2280c662710.png"
-        alt="gallery item"
-      />
-      <img
-        src="avatar\aa0f1deacbaf753bf06ae8b28a64323b0b7cbf76.png"
-        alt="gallery item"
-      />
-      <img
-        src="avatar\aa0f1deacbaf753bf06ae8b28a64323b0b7cbf76.png"
-        alt="gallery item"
-      />
-      <img
-        src="avatar\aa0f1deacbaf753bf06ae8b28a64323b0b7cbf76.png"
-        alt="gallery item"
-      />
-      <img
-        src="avatar\aa0f1deacbaf753bf06ae8b28a64323b0b7cbf76.png"
-        alt="gallery item"
-      />
-      <img
-        src="pictures\36181e00bb3ade0e158d7e3324150db51ec5048e.png"
-        alt="gallery item"
-      />
-      <img
-        src="avatar\aa0f1deacbaf753bf06ae8b28a64323b0b7cbf76.png"
-        alt="gallery item"
-      />
-      <img
-        src="avatar\aa0f1deacbaf753bf06ae8b28a64323b0b7cbf76.png"
-        alt="gallery item"
-      />
+      {gallery.map((item, index) => (
+        <img
+          key={index}
+          src={`${imgUrl}${item.imgpath}${item.imgname}`}
+          alt="gallery item"
+        />
+      ))}
     </div>
   );
 }

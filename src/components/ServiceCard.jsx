@@ -6,10 +6,15 @@ export default function ServiceCard({
   service_name,
   description,
   price,
+  countimg,
 }) {
   return (
     <div className="service-card">
-      <img className="favorite-icon" src="icon/heart-icon.svg" alt="favorite" />
+      <img
+        className="favorite-icon"
+        src="/icon/heart-icon.svg"
+        alt="favorite"
+      />
       <div className="service-image">
         <img src={picture} alt="service" />
       </div>
@@ -28,8 +33,8 @@ export default function ServiceCard({
             <span>(1200 Reviews)</span>
           </div>
           <div>
-            <img src="icon/pic.svg" alt="pics" />
-            <span>123</span>
+            <img src="/icon/pic.svg" alt="pics" />
+            <span>{countimg}</span>
           </div>
         </div>
         <p>{description}</p>

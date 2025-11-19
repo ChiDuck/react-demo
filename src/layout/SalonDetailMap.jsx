@@ -1,7 +1,14 @@
 import Button from "../components/Button";
+import { getOpenStatus } from "../components/SalonDetailTitle/openStatus";
 import style from "../styles/SalonDetailMap.module.scss";
 
-export default function SalonDetailMap() {
+function formattedPhone(num) {
+  if (!num) return "";
+  return num.replace(/\D/g, "").replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
+}
+
+export default function SalonDetailMap({ detail }) {
+  const status = getOpenStatus(detail.schedule, detail.timezone);
   return (
     <div className={style.map}>
       <h3>Location & Hours</h3>
@@ -34,35 +41,41 @@ export default function SalonDetailMap() {
       </div>
       <div className={style.info}>
         <div>
-          <img src="icon\Group 102.svg" alt="" />
-          <span>7400 Hazard Ave Westminster, CA 92683</span>
+          <img src="/icon/Group 102.svg" alt="" />
+          <span>
+            {detail.street} {detail.city}, {detail.state} {detail.zip}
+          </span>
         </div>
         <button>Directions</button>
       </div>
       <div className={style.info}>
         <div>
-          <img src="icon\Group 103.svg" alt="" />
-          <span>613-555-0184</span>
+          <img src="/icon/Group 103.svg" alt="" />
+          <span>
+            {detail.countryphone} {formattedPhone(detail.phone)}
+          </span>
         </div>
         <button>Call</button>
       </div>
       <div className={style.open}>
         <div>
-          <span>Open Now</span>
-          <span> - Closes 10 PM</span>
+          <span>{status.text1}</span>
+          <span>{status.text2}</span>
         </div>
         <div>
-          <img src="icon\down.svg" alt="" />
+          <img src="/icon/down.svg" alt="" />
         </div>
       </div>
       <div>
-        <a href="#">www.lathersalonaspen.com.au</a>
+        <a href="#">{detail.website}</a>
       </div>
       <div className={style.social}>
         <span>Social Media</span>
-        <img src="social-icon\Group1.svg" alt="facebook" />
-        <img src="social-icon\Group2.svg" alt="instagram" />
-        <img src="social-icon\Group4.svg" alt="twitter" />
+        {Object.entries(detail.social).map(([platform, url]) => (
+          <a key={platform} href={url}>
+            <img src={`/social-icon/${platform}.svg`} alt={platform} />
+          </a>
+        ))}
       </div>
       <div>
         <Button text="Book Now" />

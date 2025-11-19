@@ -20,7 +20,7 @@ export default function Header() {
           <div className="header-banner">
             <img
               className="banner-img"
-              src="pictures\header-banner.png"
+              src="/pictures/header-banner.png"
               alt="banner"
             />
             <div className="banner-text">

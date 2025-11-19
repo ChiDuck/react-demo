@@ -45,9 +45,10 @@ function FullHeightMap({ servicesRef, children }) {
   );
 }
 
-export default function SalonDetailServices({ children }) {
+export default function SalonDetailServices({ children, services }) {
   const servicesRef = useRef(null);
   const [mapOpen, setMapOpen] = useState(true);
+  const imgUrl = import.meta.env.VITE_API_IMG_URL;
   return (
     <>
       <ContentSection>
@@ -55,42 +56,16 @@ export default function SalonDetailServices({ children }) {
           <h1>Services</h1>
           <div className={style.servicesSection}>
             <div ref={servicesRef} className={style.services}>
-              <ServiceCard
-                service_name="Nail Extension"
-                description="Lorem Ipsum is simply dummy text of the printing  typesetting industry."
-                price="149.99"
-                picture="pictures\7f2704851f58aae290ac1da30b11f2280c662710.png"
-              />
-              <ServiceCard
-                service_name="Nail Extension"
-                description="Lorem Ipsum is simply dummy text of the printing  typesetting industry."
-                price="149.99"
-                picture="pictures\7f2704851f58aae290ac1da30b11f2280c662710.png"
-              />
-              <ServiceCard
-                service_name="Nail Extension"
-                description="Lorem Ipsum is simply dummy text of the printing  typesetting industry."
-                price="149.99"
-                picture="pictures\7f2704851f58aae290ac1da30b11f2280c662710.png"
-              />
-              <ServiceCard
-                service_name="Nail Extension"
-                description="Lorem Ipsum is simply dummy text of the printing  typesetting industry."
-                price="149.99"
-                picture="pictures\7f2704851f58aae290ac1da30b11f2280c662710.png"
-              />
-              <ServiceCard
-                service_name="Nail Extension"
-                description="Lorem Ipsum is simply dummy text of the printing  typesetting industry."
-                price="149.99"
-                picture="pictures\7f2704851f58aae290ac1da30b11f2280c662710.png"
-              />
-              <ServiceCard
-                service_name="Nail Extension"
-                description="Lorem Ipsum is simply dummy text of the printing  typesetting industry."
-                price="149.99"
-                picture="pictures\7f2704851f58aae290ac1da30b11f2280c662710.png"
-              />
+              {services.map((item, index) => (
+                <ServiceCard
+                  key={index}
+                  service_name={item.name}
+                  description={item.desc}
+                  price={item.price}
+                  picture={`${imgUrl}${item.imagejson}`}
+                  countimg={item.countimage}
+                />
+              ))}
             </div>
             <FullHeightMap
               servicesRef={servicesRef}

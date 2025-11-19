@@ -9,7 +9,7 @@ import "../styles/Header.scss";
 function Logo() {
   return (
     <div className="logo">
-      <img src="logo/logonail.svg" alt="React Logo" />
+      <img src="/logo/logonail.svg" alt="React Logo" />
     </div>
   );
 }

@@ -31,7 +31,7 @@ export function getOpenStatus(schedule, timezone) {
     const today = schedule.find(s => s.weekdays == todayIndex);
 
     if (!today || !today.times || today.times.length === 0) {
-        return { isOpen: false, text1: "Closed Today", text2: " - Opening Soon" };
+        return { isOpen: false, text1: "Closed Now", text2: " - Opening Soon" };
     }
 
     const { starttime, endtime } = today.times[0];
@@ -46,7 +46,7 @@ export function getOpenStatus(schedule, timezone) {
 
     if (now >= start && now < end) {
         // currently OPEN
-        return { isOpen: true, text1: "Open Now", text2: ` — Closes ${endtime}` };
+        return { isOpen: true, text1: "Open Now", text2: ` - Close ${endtime}` };
     }
 
     // currently CLOSED
@@ -55,5 +55,5 @@ export function getOpenStatus(schedule, timezone) {
         return { isOpen: false, text1: "Opening Soon", text2: ` (${starttime})` };
     }
 
-    return { isOpen: false, text1: "Closed", text2: ` — Opens ${starttime}` };
+    return { isOpen: false, text1: "Closed", text2: ` - Open ${starttime}` };
 }

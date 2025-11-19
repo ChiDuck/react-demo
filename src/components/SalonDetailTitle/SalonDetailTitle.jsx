@@ -1,20 +1,18 @@
-import { useLoaderData } from "react-router-dom";
 import style from "../../styles/SalonDetail.module.scss";
 import { getOpenStatus } from "./openStatus";
 
-export default function SalonDetailTitle() {
-  const item = useLoaderData();
-  const status = getOpenStatus(item.schedule, item.timezone);
+const imgUrl = import.meta.env.VITE_API_IMG_URL;
+
+export default function SalonDetailTitle({ detail }) {
+  const status = getOpenStatus(detail.schedule, detail.timezone);
   console.log(status.text);
-  console.log(item);
+  console.log(detail);
   return (
     <div className={style.salonDetailHeader}>
-      <img
-        src={`https://dev.nail360.info/light/api/images/${item.avatarimg}`}
-      />
+      <img src={`${imgUrl}/${detail.avatarimg}`} />
       <div>
         <div className={style.flex1}>
-          <h1>{item.name}</h1>
+          <h1>{detail.name}</h1>
           <span className={`${status.isOpen ? "" : style.closed}`}>
             {status.text1}
             <span> {status.text2}</span>
@@ -32,7 +30,7 @@ export default function SalonDetailTitle() {
               </span>
               <span>5.0</span>
             </div>
-            <span>({item.countreview} Reviews) </span>
+            <span>({detail.countreview} Reviews) </span>
           </div>
           <img src="/icon/verified.svg" />
         </div>

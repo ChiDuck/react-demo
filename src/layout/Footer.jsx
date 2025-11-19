@@ -1,7 +1,6 @@
 import ContentSection from "../components/ContentSection";
 import FooterSocial from "../components/FooterSocial";
 
-
 function FooterColumn({ title, items }) {
   return (
     <div className="footer-column">
@@ -21,7 +20,7 @@ function FooterColumn({ title, items }) {
 
 export default function Footer() {
   return (
-    <ContentSection >
+    <ContentSection>
       <div className="footer">
         <FooterColumn
           title="Quick Links"
@@ -49,12 +48,12 @@ export default function Footer() {
           ©2024 Nail360. All rights reserved.
         </span>
         <div>
-          <FooterSocial icons="social-icon/Group.svg" />
-          <FooterSocial icons="social-icon/Group1.svg" />
-          <FooterSocial icons="social-icon/Group2.svg" />
-          <FooterSocial icons="social-icon/Group3.svg" />
-          <FooterSocial icons="social-icon/Group4.svg" />
-          <FooterSocial icons="social-icon/Group5.svg" />
+          <FooterSocial icons="/social-icon/Group.svg" />
+          <FooterSocial icons="/social-icon/Group1.svg" />
+          <FooterSocial icons="/social-icon/Group2.svg" />
+          <FooterSocial icons="/social-icon/Group3.svg" />
+          <FooterSocial icons="/social-icon/Group4.svg" />
+          <FooterSocial icons="/social-icon/Group5.svg" />
         </div>
       </div>
     </ContentSection>
