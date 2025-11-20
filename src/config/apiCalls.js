@@ -16,7 +16,7 @@ export function getSalonService(id, { signal } = {}) {
 }
 
 export function getSalonReviews(id, { signal } = {}) {
-    return fetchApi(`public?s=GetSalonReviews&z=12&p=1&z=5&cache=0&idsalon=${encodeURIComponent(id)}`, { signal }
+    return fetchApi(`public?s=GetSalonReviews&p=1&z=5&cache=0&salonid=${encodeURIComponent(id)}`, { signal }
     )
 }
 

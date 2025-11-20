@@ -1,0 +1,44 @@
+@use "../../styles/variables";
+@use "../../styles/mixin";
+.header {
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: start;
+  margin-bottom: 10px;
+
+  span:last-child {
+    position: absolute;
+    top: 20px;
+    right: 0;
+    color: variables.$text-color;
+  }
+
+  img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 15px;
+  }
+  p {
+    margin: 0;
+  }
+}
+
+.card {
+  button {
+    @include mixin.secondary-button;
+    font-weight: normal;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+
+    img {
+      width: 20px;
+      height: 20px;
+      margin: 0;
+      margin-right: 5px;
+    }
+  }
+}

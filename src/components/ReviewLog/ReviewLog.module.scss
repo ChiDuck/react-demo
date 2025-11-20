@@ -1,0 +1,30 @@
+@use "../../styles/variables";
+.reviews {
+  border: variables.$border-light;
+  padding: 0 20px 30px 20px;
+  border-radius: 10px;
+  max-height: 800px;
+  flex: 1;
+  overflow-y: auto;
+
+  > div:first-child {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  > div {
+    padding-bottom: 20px;
+    border-bottom: variables.$border-light;
+  }
+
+  > div:last-child {
+    border-bottom: none;
+  }
+}

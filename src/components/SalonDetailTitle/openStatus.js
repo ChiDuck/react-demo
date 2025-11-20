@@ -25,7 +25,6 @@ function parseSalonTime(timeStr, baseDate) {
 
 export function getOpenStatus(schedule, timezone) {
     const now = getSalonNow(timezone);
-    console.log(now);
     const todayIndex = now.getDay() + 1; // 0 = Sun, 1 = Mon...
 
     const today = schedule.find(s => s.weekdays == todayIndex);

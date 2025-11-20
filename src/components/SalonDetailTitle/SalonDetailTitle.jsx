@@ -5,8 +5,6 @@ const imgUrl = import.meta.env.VITE_API_IMG_URL;
 
 export default function SalonDetailTitle({ detail }) {
   const status = getOpenStatus(detail.schedule, detail.timezone);
-  console.log(status.text);
-  console.log(detail);
   return (
     <div className={style.salonDetailHeader}>
       <img src={`${imgUrl}/${detail.avatarimg}`} />

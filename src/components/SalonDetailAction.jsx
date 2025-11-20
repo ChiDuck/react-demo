@@ -6,7 +6,10 @@ export default function SalonDetailAction() {
   return (
     <div className={style.action}>
       <Button text="Book Now" />
-      <Link to="/writereview/0cf58164-5614-48c3-9037-927283107cad">
+      <Link
+        to="/writereview/0cf58164-5614-48c3-9037-927283107cad"
+        className={style.actionLink}
+      >
         <button>
           <img src="\icon\review.svg" alt="" />
           <span>Write a Review</span>
