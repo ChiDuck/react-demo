@@ -89,6 +89,16 @@
     text-overflow: ellipsis;
   }
 }
+
+.service-desc {
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* number of lines */
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  color: variables.$text-color;
+}
+
 .service-book {
   margin-top: auto;
   display: flex;

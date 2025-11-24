@@ -58,6 +58,17 @@
     font-weight: normal;
     color: variables.$text-color;
   }
+
+  > div {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+
+    > div {
+      width: fit-content;
+      position: relative;
+    }
+  }
 }
 
 .action {
@@ -128,6 +139,15 @@
   height: 90px;
 }
 
+.actionLink {
+  text-decoration: none;
+}
+
+.trueStar {
+  position: absolute;
+  white-space: nowrap;
+  overflow: hidden;
+}
 @media screen and (max-width: 1250px) {
   .action button {
     img {
@@ -165,8 +185,4 @@
       aspect-ratio: 5/3;
     }
   }
-}
-
-.actionLink {
-  text-decoration: none;
 }

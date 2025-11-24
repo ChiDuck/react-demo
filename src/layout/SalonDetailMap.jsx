@@ -10,7 +10,7 @@ function formattedPhone(num) {
 export default function SalonDetailMap({ detail }) {
   const status = getOpenStatus(detail.schedule, detail.timezone);
   return (
-    <div className={style.map}>
+    <>
       <h3>Location & Hours</h3>
       <div className={style.embedMapResponsive}>
         <div className={style.embedMapContainer}>
@@ -80,6 +80,6 @@ export default function SalonDetailMap({ detail }) {
       <div>
         <Button text="Book Now" />
       </div>
-    </div>
+    </>
   );
 }

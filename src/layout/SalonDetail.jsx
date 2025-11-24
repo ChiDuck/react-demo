@@ -4,7 +4,7 @@ import SalonDetailGallery from "../components/SalonDetailGallery";
 import SalonDetailTitle from "../components/SalonDetailTitle/SalonDetailTitle";
 import style from "../styles/SalonDetail.module.scss";
 
-export default function SalonDetail({ detail, gallery }) {
+export default function SalonDetail({ detail, gallery, salonid }) {
   return (
     <>
       <ContentSection>
@@ -19,7 +19,7 @@ export default function SalonDetail({ detail, gallery }) {
               <SalonDetailTitle detail={detail} />
             </div>
             <div style={{ position: "absolute", bottom: 0, right: 0 }}>
-              <SalonDetailAction />
+              <SalonDetailAction salonid={salonid} />
             </div>
           </div>
           <SalonDetailGallery gallery={gallery} />

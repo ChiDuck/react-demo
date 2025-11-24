@@ -25,6 +25,34 @@ h1:first-of-type {
   pointer-events: none; // allow clicks to pass through wrapper
 }
 
+.map {
+  position: sticky;
+  top: 120px;
+  background-color: white;
+  border-radius: 5px;
+  padding: 20px;
+  box-shadow: 0px 1px 20px 0px rgba(0, 0, 0, 0.25);
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 25vw;
+  min-width: 300px;
+  h3 {
+    margin: 0;
+  }
+
+  a {
+    text-decoration: none;
+    color: variables.$text-title-color;
+  }
+
+  button:first-child {
+    width: 100%;
+    height: 42px;
+  }
+}
+
 @media screen and (max-width: 1250px) {
   .servicesSection {
     flex-direction: column;
@@ -41,6 +69,4 @@ h1:first-of-type {
     max-height: max-content;
     width: 100%;
   }
-
-
 }

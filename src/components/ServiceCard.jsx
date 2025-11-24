@@ -37,7 +37,7 @@ export default function ServiceCard({
             <span>{countimg}</span>
           </div>
         </div>
-        <p>{description}</p>
+        <p className="service-desc">{description}</p>
         <div className="service-book">
           <div>
             <p>Price:</p>

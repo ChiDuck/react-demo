@@ -9,7 +9,6 @@ export function formatReviewDate(interval, date) {
     const diffMin = Math.floor(interval / 60);
     const diffHrs = Math.floor(diffMin / 60);
     const diffDays = Math.floor(diffHrs / 24);
-    console.log(diffMin);
     // Relative formatting (within 24h)
     if (diffDays <= 7) {
         if (diffDays >= 1) return `${diffDays} day(s) ago`;

@@ -27,12 +27,14 @@
 }
 
 .card {
+  padding-top: 15px;
   button {
     @include mixin.secondary-button;
     font-weight: normal;
     margin-right: 10px;
     display: flex;
     align-items: center;
+    cursor: pointer;
 
     img {
       width: 20px;
@@ -40,5 +42,46 @@
       margin: 0;
       margin-right: 5px;
     }
+  }
+
+  button:hover {
+    background: #e0e0e0;
+  }
+}
+
+.content {
+  word-break: break-all;
+  word-wrap: break-word;
+
+  p {
+    color: variables.$text-color;
+    font-size: 14px;
+
+    span {
+      color: variables.$primary-color;
+      text-decoration: underline;
+      padding-left: 5px;
+      cursor: pointer;
+    }
+  }
+}
+
+.reviewImgs {
+  width: 100%;
+  overflow-x: auto;
+  ul {
+    list-style: none;
+    display: flex;
+    gap: 10px;
+    padding: 0;
+  }
+  li {
+    cursor: pointer;
+  }
+  img {
+    border-radius: 15px;
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
   }
 }

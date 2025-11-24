@@ -1,0 +1,110 @@
+@use "../../styles/variables";
+@use "../../styles/mixin";
+.reviewList {
+  a {
+    text-decoration: underline;
+    color: variables.$text-title-color;
+    cursor: pointer;
+  }
+}
+
+.reviewImg {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  gap: 15px;
+  margin: 10px 0;
+  img {
+    min-width: 0;
+    flex: 1;
+    height: 150px;
+    max-width: 150px;
+    border-radius: 10px;
+    object-fit: cover;
+  }
+
+  + div {
+    margin-bottom: 20px;
+    font-size: 14px;
+    text-align: right;
+  }
+}
+
+.reviewHeader {
+  display: flex;
+  align-items: center;
+
+  > div {
+    margin-left: auto;
+    display: flex;
+    gap: 20px;
+  }
+
+  button {
+    @include mixin.third-button;
+
+    padding: 0 5px 0 15px;
+    min-width: 0;
+    transition: all 0.3s;
+    position: relative;
+    img {
+      width: 10px;
+      height: 10px;
+    }
+    div {
+      position: absolute;
+      inset: 0 auto auto 0;
+      background: #fff;
+      border: variables.$border-light;
+      border-radius: 5px;
+      transform: translate(0, 33px);
+      width: 100%;
+    
+        button {
+          
+        }
+    }
+  }
+
+  button:hover {
+    color: variables.$text-title-color;
+    box-shadow: variables.$box-shadow;
+  }
+}
+.list {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  > div {
+    padding-bottom: 20px;
+    border-top: variables.$border-light;
+  }
+}
+.search {
+  position: relative;
+
+  input {
+    height: 35px;
+    padding: 0 1em;
+    border-radius: 30px;
+    font-size: 15px;
+    border: variables.$border-light;
+  }
+  input:focus-visible {
+    outline: none;
+  }
+}
+.searchIcon {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #ffffff;
+  border-radius: 50%;
+  background-color: #d3427a;
+  padding: 4px;
+  cursor: pointer;
+}

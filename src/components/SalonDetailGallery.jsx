@@ -11,7 +11,7 @@ export default function SalonDetailGallery({ gallery }) {
       {gallery.map((item, index) => (
         <img
           key={index}
-          src={`${imgUrl}${item.imgpath}${item.imgname}`}
+          src={`${imgUrl}/${item.imgpath}${item.imgname}`}
           alt="gallery item"
         />
       ))}

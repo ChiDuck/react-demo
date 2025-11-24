@@ -11,32 +11,40 @@ export default function FullReviewCard({
   helpful,
   stars,
   date,
+  full = false,
+  imgpath = null,
+  imglist = [],
 }) {
-  // const rating = new Array(stars).fill(null);
+  const imgUrl = import.meta.env.VITE_API_IMG_URL;
+
   return (
     <div className={style.card}>
       <div className={style.header}>
-        <img src={avatar} alt="" />
+        <img src={avatar} alt="avatar" />
         <div>
           <p>{name}</p>
-          {Array.from({ length: 5 }, (_, i) => i + 1).map((star) => (
-            <i
-              key={star}
-              className="fa-solid fa-star"
-              style={{
-                color: star < stars ? "#ffb800" : "rgb(170, 170, 170)",
-              }}
-            ></i>
-          ))}
-          {/* {rating.map((_, index) => (
-            <i key={index} className="fa-solid fa-star"></i>
-          ))} */}
+          <div>
+            {Array.from({ length: 5 }, (_, i) => i + 1).map((star) => (
+              <i
+                key={star}
+                className="fa-solid fa-star"
+                style={{
+                  color: star <= stars ? "#ffb800" : "rgb(170, 170, 170)",
+                }}
+              ></i>
+            ))}
+          </div>
+          <span style={{ position: full ? "static" : "absolute" }}>
+            {formatReviewDate(timeago, date)}
+          </span>
         </div>
-        <span>{formatReviewDate(timeago, date)}</span>
       </div>
-      <div>
+      <div className={style.content}>
         <strong>{headline}</strong>
-        <p>{review}</p>
+        <p>
+          {review}
+          {/* <span>Read more</span> */}
+        </p>
       </div>
       <div style={{ display: "flex" }}>
         <button>
@@ -46,8 +54,35 @@ export default function FullReviewCard({
         <button>
           <img src="/icon/helpful.svg" alt="" />
           <span>{helpful} | Helpful</span>
-        </button>
+        </button>{" "}
+        {full && (
+          <>
+            <button>
+              <img src="/icon/share.svg" alt="" />
+              <span>Share</span>
+            </button>
+            <button>
+              <img src="/icon/flag.svg" alt="" />
+              <span>Report</span>
+            </button>
+          </>
+        )}
       </div>
+      {full && imglist.length > 0 && (
+        <div className={style.reviewImgs}>
+          <ul>
+            {imglist.map((item, index) => (
+              <li>
+                <img
+                  key={index}
+                  src={`${imgUrl}/${imgpath}${item}`}
+                  alt="review img"
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }

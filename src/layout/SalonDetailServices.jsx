@@ -3,6 +3,7 @@ import ServiceCard from "../components/ServiceCard";
 import style from "../styles/SalonDetailService.module.scss";
 
 import { useEffect, useRef, useState } from "react";
+
 function FullHeightMap({ servicesRef, children }) {
   const wrapperRef = useRef(null);
   const [height, setHeight] = useState(0);
@@ -40,7 +41,9 @@ function FullHeightMap({ servicesRef, children }) {
         height: `${height}px`,
       }}
     >
-      <div style={{ pointerEvents: "auto", height: "100%" }}>{children}</div>
+      <div style={{ pointerEvents: "auto", height: "100%" }}>
+        <div className={style.map}>{children}</div>
+      </div>
     </div>
   );
 }
@@ -49,6 +52,7 @@ export default function SalonDetailServices({ children, services }) {
   const servicesRef = useRef(null);
   const [mapOpen, setMapOpen] = useState(true);
   const imgUrl = import.meta.env.VITE_API_IMG_URL;
+  const noImgUrl = import.meta.env.VITE_API_NO_IMG_URL;
   return (
     <>
       <ContentSection>
@@ -62,7 +66,11 @@ export default function SalonDetailServices({ children, services }) {
                   service_name={item.name}
                   description={item.desc}
                   price={item.price}
-                  picture={`${imgUrl}${item.imagejson}`}
+                  picture={
+                    item.imagejson != ""
+                      ? `${imgUrl}/${item.imagejson}`
+                      : `${noImgUrl}`
+                  }
                   countimg={item.countimage}
                 />
               ))}

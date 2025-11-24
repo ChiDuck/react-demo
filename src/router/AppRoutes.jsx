@@ -6,6 +6,8 @@ import { salonDetailLoader } from "../pages/SalonDetail/loader";
 import SalonDetailPage from "../pages/SalonDetail/SalonDetailPage";
 import { salonReviewLoader } from "../pages/SalonReview/loader";
 import SalonReviewPage from "../pages/SalonReview/SalonReviewPage";
+import { viewReviewLoader } from "../pages/ViewReview/loader";
+import ViewReviewPage from "../pages/ViewReview/ViewReviewPage";
 
 const routes = createBrowserRouter([
   {
@@ -23,6 +25,11 @@ const routes = createBrowserRouter([
         element: <SalonReviewPage />,
         loader: salonReviewLoader,
         action: reviewAction,
+      },
+      {
+        path: "viewreview/:id",
+        element: <ViewReviewPage />,
+        loader: viewReviewLoader,
       },
       {
         path: "*",

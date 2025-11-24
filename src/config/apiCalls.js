@@ -20,3 +20,14 @@ export function getSalonReviews(id, { signal } = {}) {
     )
 }
 
+export function GetSalonReviewOverall(id, { signal } = {}) {
+    return fetchApi(`public?s=GetSalonReviewOverall&cache=0&salonid=${encodeURIComponent(id)}`, { signal }
+    )
+}
+
+export function GetReviewImage(id, { signal } = {}) {
+    return fetchApi(`public?s=GetReviewImage&z=4&cache=0&salonid=${encodeURIComponent(id)}`, { signal }
+    )
+}
+
+

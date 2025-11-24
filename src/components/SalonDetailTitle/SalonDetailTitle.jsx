@@ -5,6 +5,7 @@ const imgUrl = import.meta.env.VITE_API_IMG_URL;
 
 export default function SalonDetailTitle({ detail }) {
   const status = getOpenStatus(detail.schedule, detail.timezone);
+  const star = (detail.star / 5) * 100;
   return (
     <div className={style.salonDetailHeader}>
       <img src={`${imgUrl}/${detail.avatarimg}`} />
@@ -19,15 +20,37 @@ export default function SalonDetailTitle({ detail }) {
         <div className={style.titleBlock}>
           <div>
             <div>
-              <span>
+              <div className={style.trueStar} style={{ width: `${star}%` }}>
                 <i className="fa-solid fa-star"></i>
                 <i className="fa-solid fa-star"></i>
                 <i className="fa-solid fa-star"></i>
                 <i className="fa-solid fa-star"></i>
                 <i className="fa-solid fa-star"></i>
-              </span>
-              <span>5.0</span>
+              </div>
+              <div>
+                <i
+                  className="fa-solid fa-star"
+                  style={{ color: "#aaaaaa" }}
+                ></i>
+                <i
+                  className="fa-solid fa-star"
+                  style={{ color: "#aaaaaa" }}
+                ></i>
+                <i
+                  className="fa-solid fa-star"
+                  style={{ color: "#aaaaaa" }}
+                ></i>
+                <i
+                  className="fa-solid fa-star"
+                  style={{ color: "#aaaaaa" }}
+                ></i>
+                <i
+                  className="fa-solid fa-star"
+                  style={{ color: "#aaaaaa" }}
+                ></i>
+              </div>
             </div>
+            <strong>{Number(detail.star.toFixed(1))}</strong>
             <span>({detail.countreview} Reviews) </span>
           </div>
           <img src="/icon/verified.svg" />

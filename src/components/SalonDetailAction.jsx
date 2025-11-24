@@ -2,14 +2,11 @@ import { Link } from "react-router-dom";
 import style from "../styles/SalonDetail.module.scss";
 import Button from "./Button";
 
-export default function SalonDetailAction() {
+export default function SalonDetailAction({ salonid }) {
   return (
     <div className={style.action}>
       <Button text="Book Now" />
-      <Link
-        to="/writereview/0cf58164-5614-48c3-9037-927283107cad"
-        className={style.actionLink}
-      >
+      <Link to={`/writereview/${salonid}`} className={style.actionLink}>
         <button>
           <img src="\icon\review.svg" alt="" />
           <span>Write a Review</span>
