@@ -1,4 +1,4 @@
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useParams } from "react-router-dom";
 import CustomerRating from "../../components/CustomerRating/CustomerRating";
 import SalonDetailAction from "../../components/SalonDetailAction";
 import SalonDetailTitle from "../../components/SalonDetailTitle/SalonDetailTitle";
@@ -8,6 +8,7 @@ import style from "./ViewReviewPage.module.scss";
 
 export default function ViewReviewPage() {
   const data = useLoaderData();
+  const { id } = useParams();
   return (
     <div className={style.viewreview}>
       <SalonDetailTitle detail={data.detail} />
@@ -19,7 +20,12 @@ export default function ViewReviewPage() {
             <SalonDetailMap detail={data.detail} />
           </div>
         </div>
-        <ReviewList reviews={data.reviews} reviewImg={data.reviewImg} />
+        <ReviewList
+          reviews={data.reviews}
+          reviewOverall={data.reviewOverall}
+          reviewImg={data.reviewImg}
+          salonid={id}
+        />
       </div>
     </div>
   );

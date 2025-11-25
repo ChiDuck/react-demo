@@ -15,6 +15,7 @@ body {
 
 button {
   @include mixin.default-button;
+  font-family: inherit;
 }
 
 .fa-star {

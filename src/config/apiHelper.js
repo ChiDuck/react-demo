@@ -1,6 +1,7 @@
 export const API_URL = import.meta.env.VITE_API_URL;
 
 export async function fetchApi(path, options = {}) {
+    console.log(`${API_URL}${path}`);
     const res = await fetch(`${API_URL}${path}`, options);
     if (!res.ok) {
         const text = await res.text();

@@ -1,4 +1,4 @@
-import { GetReviewImage, getSalonDetail, GetSalonReviewOverall, getSalonReviews } from "../../config/apiCalls";
+import { getSalonAPI } from "../../config/apiCalls";
 
 export async function viewReviewLoader({ params, request }) {
     const { id } = params;
@@ -6,10 +6,29 @@ export async function viewReviewLoader({ params, request }) {
     if (!id) throw new Response("Missing id", { status: 400 });
 
     const [detail, reviews, reviewOverall, reviewImg] = await Promise.all([
-        getSalonDetail(id, { signal: request.signal }),
-        getSalonReviews(id, { signal: request.signal }),
-        GetSalonReviewOverall(id, { signal: request.signal }),
-        GetReviewImage(id, { signal: request.signal }),
+        getSalonAPI({
+            s: "GetSalonDetail",
+            salonid: id,
+            signal: request.signal
+        }),
+        getSalonAPI({
+            s: "GetSalonReviews",
+            p: 1,
+            z: 6,
+            salonid: id,
+            signal: request.signal
+        }),
+        getSalonAPI({
+            s: "GetSalonReviewOverall",
+            salonid: id,
+            signal: request.signal
+        }),
+        getSalonAPI({
+            s: "GetReviewImage",
+            z: 4,
+            salonid: id,
+            signal: request.signal
+        }),
     ])
 
     console.log({ detail, reviews, reviewOverall, reviewImg });

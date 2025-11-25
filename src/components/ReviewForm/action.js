@@ -1,7 +1,7 @@
 import { redirect } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL;
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiTlRQIDU0MDUiLCJpZCI6IjRkMzhhZmMwLWFjODMtNDg4NC1iOGQzLWUwOGIzYTVkMWFkNCIsInJvbGUiOiJ1c2VyIiwiYWN0aXZlIjp0cnVlLCJkYmlkIjoiMWU1Mjg1MDkiLCJleHAiOjE3NjM3MTc4MDJ9.8ctZwa6ziFzdtmWiF-PeFqQE4B-17DqedvtATQ1hiRo";
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiTlRQIDU0MDUiLCJpZCI6IjRkMzhhZmMwLWFjODMtNDg4NC1iOGQzLWUwOGIzYTVkMWFkNCIsInJvbGUiOiJ1c2VyIiwiYWN0aXZlIjp0cnVlLCJkYmlkIjoiOTlkNmU3MzMiLCJleHAiOjE3NjQwNzA5ODZ9.fioAuiUgwGBgs634lIZykQX8w_L3OCa0TAr5O6rBbLg";
 
 export async function action({ request }) {
     const formData = await request.formData();

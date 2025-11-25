@@ -10,18 +10,7 @@ export default function ReviewLog({ reviews }) {
       </div>
       <div className={style.list}>
         {reviews.map((item, index) => (
-          <FullReviewCard
-            key={index}
-            avatar={`${imgUrl}${item.avatar}`}
-            name={item.name}
-            headline={item.content.headline}
-            review={item.content.review}
-            like={item.like}
-            helpful={item.helpful}
-            stars={item.star}
-            timeago={item.interval}
-            date={item.createddate}
-          />
+          <FullReviewCard key={index} item={item} />
         ))}
       </div>
     </div>
