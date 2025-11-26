@@ -10,5 +10,5 @@ export async function fetchApi(path, options = {}) {
         throw new Response(details.message || text || "API error", { status: res.status });
     }
     const json = await res.json();
-    return json.data;
+    return json;
 }

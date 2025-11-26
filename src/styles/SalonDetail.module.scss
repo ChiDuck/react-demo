@@ -48,7 +48,7 @@
 .titleBlock {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 15px;
 
   span {
     font-weight: bold;
@@ -58,19 +58,27 @@
     font-weight: normal;
     color: variables.$text-color;
   }
-
-  > div {
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
-
-    > div {
-      width: fit-content;
-      position: relative;
-    }
-  }
 }
 
+.rateAndReview {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+
+  strong {
+    font-size: 18px;
+  }
+
+  > div {
+    width: fit-content;
+    position: relative;
+  }
+}
+.trueStar {
+  position: absolute;
+  white-space: nowrap;
+  overflow: hidden;
+}
 .action {
   display: flex;
   align-items: center;
@@ -105,7 +113,7 @@
 .gallery {
   position: relative;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 10px;
   border-radius: 20px;
   overflow: hidden;
@@ -137,17 +145,24 @@
 
 .titleFlex {
   height: 90px;
+  position: relative;
+
+  > div:first-child {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  > div:last-child {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
 }
 
 .actionLink {
   text-decoration: none;
 }
 
-.trueStar {
-  position: absolute;
-  white-space: nowrap;
-  overflow: hidden;
-}
 @media screen and (max-width: 1250px) {
   .action button {
     img {
@@ -160,7 +175,7 @@
 }
 @media screen and (max-width: 1000px) {
   .titleFlex {
-    height: 150px;
+    height: 170px;
   }
 }
 
@@ -184,5 +199,14 @@
     img {
       aspect-ratio: 5/3;
     }
+  }
+}
+@media screen and (max-width: 400px) {
+  .titleBlock {
+    flex-direction: column;
+    align-items: start;
+  }
+  .titleFlex {
+    height: 210px;
   }
 }

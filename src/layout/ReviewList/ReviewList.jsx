@@ -1,27 +1,34 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import FullReviewCard from "../../components/FullReviewCard/FullReviewCard";
 import { getSalonAPI } from "../../config/apiCalls";
 import style from "./ReviewList.module.scss";
 
 const imgUrl = import.meta.env.VITE_API_IMG_URL;
 
-function filterQuery() {}
+async function filterQuery({ id, p, o, f, k, setTotalPages }) {
+  const list = await getSalonAPI({
+    s: "GetSalonReviews",
+    salonid: id,
+    p: p,
+    k: k && k.current ? k.current.value : k,
+    o: o && o.current ? o.current.toLowerCase().replace(/\s+/g, "") : o,
+    f:
+      (typeof f === "object" && f && "current" in f ? f.current : f) == 0
+        ? ""
+        : typeof f === "object" && f && "current" in f
+        ? f.current
+        : f,
+  });
+  setTotalPages(Math.ceil(list.total / 6));
+  return list;
+}
 
-function Pagination({ setFilteredList, totalPages, page, setPage, salonid }) {
-  async function getPage(p) {
-    console.log(p);
+function Pagination({ totalPages, page, setPage }) {
+  function goToPage(p) {
     if (p < 1) p = 1; // safety guard
     if (p > totalPages) p = totalPages;
 
     setPage(p);
-
-    const data = await getSalonAPI({
-      s: "GetSalonReviews",
-      salonid,
-      p,
-    });
-
-    return data;
   }
 
   return (
@@ -29,37 +36,27 @@ function Pagination({ setFilteredList, totalPages, page, setPage, salonid }) {
       <nav>
         <ul>
           <li>
-            <button onClick={async () => setFilteredList(await getPage(1))}>
+            <button onClick={() => goToPage(1)}>
               <i className="fa-solid fa-angles-left"></i>
             </button>
           </li>
           <li>
-            <button
-              onClick={async () => setFilteredList(await getPage(page - 1))}
-            >
+            <button onClick={() => goToPage(page - 1)}>
               <i className="fa-solid fa-angle-left"></i>
             </button>
           </li>
           {Array.from({ length: totalPages }, (_, i) => (
             <li key={i} className={page === i + 1 ? style.active : ""}>
-              <button
-                onClick={async () => setFilteredList(await getPage(i + 1))}
-              >
-                {i + 1}
-              </button>
+              <button onClick={() => goToPage(i + 1)}>{i + 1}</button>
             </li>
           ))}
           <li>
-            <button
-              onClick={async () => setFilteredList(await getPage(page + 1))}
-            >
+            <button onClick={() => goToPage(page + 1)}>
               <i className="fa-solid fa-angle-right"></i>
             </button>
           </li>
           <li>
-            <button
-              onClick={async () => setFilteredList(await getPage(totalPages))}
-            >
+            <button onClick={() => goToPage(totalPages)}>
               <i className="fa-solid fa-angles-right"></i>
             </button>
           </li>
@@ -68,20 +65,55 @@ function Pagination({ setFilteredList, totalPages, page, setPage, salonid }) {
     </div>
   );
 }
+
 export default function ReviewList({
-  reviews,
+  reviewsList,
   reviewImg,
   salonid,
-  reviewOverall,
+  // controlled rating (0 = All). If provided, this component becomes controlled
+  rating: controlledRating,
+  onRatingChange,
 }) {
+  const reviews = reviewsList.data;
   const [openSort, setOpenSort] = useState(false);
   const [openFilter, setOpenFilter] = useState(false);
   const [filteredList, setFilteredList] = useState(reviews);
   const [page, setPage] = useState(1);
   const searchValue = useRef("");
-  const rating = useRef(0);
+  // support controlled prop or local state
+  const [ratingState, setRatingState] = useState(controlledRating ?? 0);
+  const rating =
+    controlledRating !== undefined ? controlledRating : ratingState;
+  const setRating = onRatingChange ? onRatingChange : setRatingState;
   const sort = useRef("Newest First");
-  const totalPages = Math.ceil(reviewOverall.total / 6);
+  const [totalPages, setTotalPages] = useState(
+    Math.ceil(reviewsList.total / 6)
+  );
+
+  async function handleFilter() {
+    const list = await filterQuery({
+      id: salonid,
+      p: page,
+      k: searchValue,
+      o: sort,
+      f: rating,
+      setTotalPages: setTotalPages,
+    });
+    setFilteredList(list.data);
+  }
+  // refetch when page changes
+  useEffect(() => {
+    handleFilter();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page]);
+
+  // refetch when rating changes - reset page to 1 if needed
+  useEffect(() => {
+    if (page !== 1) setPage(1);
+    else handleFilter();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rating]);
+
   return (
     <div className={style.reviewList}>
       <h3>Review with Images</h3>
@@ -106,33 +138,19 @@ export default function ReviewList({
               type="text"
               placeholder="Search by keyword..."
               ref={searchValue}
-              onKeyDown={async (e) => {
+              onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   e.preventDefault(); // prevent default form submit if any
-                  setFilteredList(
-                    await getSalonAPI({
-                      s: "GetSalonReviews",
-                      f: rating.current == 0 ? "" : rating.current,
-                      o: sort.current.toLowerCase().replace(/\s+/g, ""),
-                      k: searchValue.current.value,
-                      salonid: salonid,
-                    })
-                  );
+                  if (page != 1) setPage(1);
+                  else handleFilter();
                 }
               }}
             />
             <div
               className={style.searchIcon}
-              onClick={async () => {
-                setFilteredList(
-                  await getSalonAPI({
-                    s: "GetSalonReviews",
-                    f: rating.current == 0 ? "" : rating.current,
-                    o: sort.current.toLowerCase().replace(/\s+/g, ""),
-                    k: searchValue.current.value,
-                    salonid: salonid,
-                  })
-                );
+              onClick={() => {
+                if (page != 1) setPage(1);
+                else handleFilter();
               }}
             >
               <i className="fa-solid fa-magnifying-glass"></i>
@@ -159,18 +177,10 @@ export default function ReviewList({
                 ].map((option) => (
                   <button
                     key={option}
-                    onClick={async () => {
+                    onClick={() => {
                       sort.current = option;
-                      console.log(sort.current);
-                      setFilteredList(
-                        await getSalonAPI({
-                          s: "GetSalonReviews",
-                          f: rating.current == 0 ? "" : rating.current,
-                          o: sort.current.toLowerCase().replace(/\s+/g, ""),
-                          k: searchValue.current.value,
-                          salonid: salonid,
-                        })
-                      );
+                      if (page != 1) setPage(1);
+                      else handleFilter();
                       setOpenSort(false);
                     }}
                   >
@@ -188,29 +198,22 @@ export default function ReviewList({
                 setOpenSort(false);
               }}
             >
-              Filter by rating:{" "}
-              <strong>{rating.current == 0 ? "All" : rating.current}</strong>
+              Filter by rating: <strong>{rating == 0 ? "All" : rating}</strong>
               <img src="/icon/down.svg" alt="" />
             </button>
             {openFilter && (
               <div>
-                {Array.from({ length: 6 }, (_, i) => i + 1).map((rate) => (
+                {[0, 1, 2, 3, 4, 5].map((rate) => (
                   <button
-                    onClick={async () => {
-                      rating.current = rate - 1;
-                      setFilteredList(
-                        await getSalonAPI({
-                          s: "GetSalonReviews",
-                          f: rating.current == 0 ? "" : rating.current,
-                          o: sort.current.toLowerCase().replace(/\s+/g, ""),
-                          k: searchValue.current.value,
-                          salonid: salonid,
-                        })
-                      );
+                    key={rate}
+                    onClick={() => {
+                      setRating(rate);
+                      if (page != 1) setPage(1);
+                      else handleFilter();
                       setOpenFilter(false);
                     }}
                   >
-                    {rate - 1 == 0 ? "All" : rate - 1}
+                    {rate === 0 ? "All" : rate}
                   </button>
                 ))}
               </div>
@@ -229,17 +232,9 @@ export default function ReviewList({
           </div>
         )}
       </div>
-      {filteredList.length >= 6 &&
-        page >
-          1(
-            <Pagination
-              setFilteredList={setFilteredList}
-              totalPages={totalPages}
-              page={page}
-              setPage={setPage}
-              salonid={salonid}
-            />
-          )}
+      {totalPages > 1 && (
+        <Pagination totalPages={totalPages} page={page} setPage={setPage} />
+      )}
     </div>
   );
 }
