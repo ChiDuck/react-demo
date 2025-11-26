@@ -9,6 +9,7 @@ export async function action({ request }) {
     const headline = formData.get("headline");
     const review = formData.get("review");
     const star = Number(formData.get("star"));
+    const files = formData.get("photos");
 
     const payload = {
         salonid,
@@ -23,10 +24,26 @@ export async function action({ request }) {
         method: "POST",
         body: JSON.stringify(payload),
     });
-    console.log(res.json());
+
+    const json = res.json();
+    console.log(json);
     if (!res.ok) {
         return { error: "Something went wrong." };
     }
 
+    //Upload photos to server
+    const uploadData = new FormData();
+    uploadData.append("idsalon", salonid);
+    uploadData.append("idreview", json.new_id);
+    files.forEach((f, i) => { uploadData.append("file[]", f) });
+
+    const uploadPic = await fetch(`${API_URL}salon/cmd?c=UploadPictureSalonReview`, {
+        headers: { Authorization: `Bearer ${token}` },
+        method: "POST",
+        body: uploadData,
+    });
+
+    const uploadjson = uploadPic.json();
+    if (uploadjson.data.status != 0) return { error: "Upload photo failed." }
     return redirect(`/viewreview/${salonid}`);
 }

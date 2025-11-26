@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useRef, useState } from "react";
 import { Form } from "react-router-dom";
 import style from "./ReviewForm.module.scss";
 
@@ -31,30 +31,30 @@ export default function ReviewForm({ salonid }) {
   const [headline, setHeadline] = useState("");
   const [review, setReview] = useState("");
   const [errors, setErrors] = useState({});
+  const [files, setFiles] = useState([]);
   const fileInputRef = useRef(null);
-  const [selectedFiles, setSelectedFiles] = useState([]);
 
-  const allowedExt = ["jpg", "jpeg", "png", "bmp", "tif", "webp"];
+  // const allowedExt = ["jpg", "jpeg", "png", "bmp", "tif", "webp"];
 
-  function validateFiles(files) {
-    const invalid = [];
-    const valid = [];
+  // function validateFiles(files) {
+  //   const invalid = [];
+  //   const valid = [];
 
-    Array.from(files).forEach((f) => {
-      const name = f.name || "";
-      const ext = name.split(".").pop().toLowerCase();
-      const mime = f.type || "";
+  //   Array.from(files).forEach((f) => {
+  //     const name = f.name || "";
+  //     const ext = name.split(".").pop().toLowerCase();
+  //     const mime = f.type || "";
 
-      // check either mime or extension
-      const mimeOk = /image\/(jpeg|jpg|png|bmp|tiff|webp)/.test(mime);
-      const extOk = allowedExt.includes(ext);
+  //     // check either mime or extension
+  //     const mimeOk = /image\/(jpeg|jpg|png|bmp|tiff|webp)/.test(mime);
+  //     const extOk = allowedExt.includes(ext);
 
-      if (mimeOk || extOk) valid.push(f);
-      else invalid.push(name || "(unknown)");
-    });
+  //     if (mimeOk || extOk) valid.push(f);
+  //     else invalid.push(name || "(unknown)");
+  //   });
 
-    return { valid, invalid };
-  }
+  //   return { valid, invalid };
+  // }
 
   const validate = () => {
     const newErrors = {};
@@ -63,6 +63,11 @@ export default function ReviewForm({ salonid }) {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+
+  const handleSelect = (e) => {
+    setFiles(Array.from(e.target.files));
+  };
+
   return (
     <Form
       method="post"
@@ -116,37 +121,10 @@ export default function ReviewForm({ salonid }) {
           ref={fileInputRef}
           type="file"
           name="photos"
-          accept=".jpg,.jpeg,.png,.bmp,.tif,.tiff,.webp,image/*"
+          accept=".jpg, .jpeg, .png, .bmp, .tif, .tiff, .webp"
           multiple
           style={{ display: "none" }}
-          onChange={(e) => {
-            const { valid, invalid } = validateFiles(e.target.files);
-
-            if (invalid.length) {
-              // alert user which files were rejected
-              window.alert(
-                `These files have unsupported format and were ignored:\n${invalid.join(", ")}`
-              );
-            }
-
-            // keep valid files; if none valid, clear the input
-            if (valid.length === 0) {
-              e.target.value = null;
-              setSelectedFiles([]);
-              return;
-            }
-
-            // programmatically set the input's files to the valid files only
-            try {
-              const dt = new DataTransfer();
-              valid.forEach((f) => dt.items.add(f));
-              e.target.files = dt.files;
-            } catch (err) {
-              // setting files may not be supported in some browsers; fallback
-            }
-
-            setSelectedFiles(valid.map((f) => f.name));
-          }}
+          onChange={handleSelect}
         />
 
         <button
@@ -158,9 +136,9 @@ export default function ReviewForm({ salonid }) {
           <span>Upload Photo</span>
         </button>
 
-        {selectedFiles.length > 0 && (
+        {files.length > 0 && (
           <div style={{ marginTop: 8, fontSize: 13 }}>
-            Selected ({selectedFiles.length}): {selectedFiles.join(", ")}
+            Selected ({files.length}): {files.join(", ")}
           </div>
         )}
       </div>
