@@ -59,9 +59,8 @@ export default function FullReviewCard({ item, full = false }) {
         <div className={style.reviewImgs}>
           <ul>
             {imglist.map((it, index) => (
-              <li>
+              <li key={index}>
                 <img
-                  key={index}
                   src={`${imgUrl}/${item.content.path}${it}`}
                   alt="review img"
                 />

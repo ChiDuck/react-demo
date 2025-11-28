@@ -1,5 +1,5 @@
-import { useRef, useState } from "react";
-import { Form } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { useFetcher } from "react-router-dom";
 import style from "./ReviewForm.module.scss";
 
 function StarRating({ maxStars = 5, onChange }) {
@@ -19,8 +19,6 @@ function StarRating({ maxStars = 5, onChange }) {
       onMouseLeave={() => setHovered(0)}
       style={{
         color: star <= (hovered || selected) ? "#ffb800" : "rgb(170, 170, 170)",
-        fontSize: "24px",
-        userSelect: "none",
       }}
     ></i>
   ));
@@ -30,50 +28,127 @@ export default function ReviewForm({ salonid }) {
   const [rating, setRating] = useState(5);
   const [headline, setHeadline] = useState("");
   const [review, setReview] = useState("");
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState({
+    headlineErr: "",
+    reviewErr: "",
+    formatErr: "",
+    dupErr: "",
+    maxErr: "",
+  });
   const [files, setFiles] = useState([]);
   const fileInputRef = useRef(null);
-
-  // const allowedExt = ["jpg", "jpeg", "png", "bmp", "tif", "webp"];
-
-  // function validateFiles(files) {
-  //   const invalid = [];
-  //   const valid = [];
-
-  //   Array.from(files).forEach((f) => {
-  //     const name = f.name || "";
-  //     const ext = name.split(".").pop().toLowerCase();
-  //     const mime = f.type || "";
-
-  //     // check either mime or extension
-  //     const mimeOk = /image\/(jpeg|jpg|png|bmp|tiff|webp)/.test(mime);
-  //     const extOk = allowedExt.includes(ext);
-
-  //     if (mimeOk || extOk) valid.push(f);
-  //     else invalid.push(name || "(unknown)");
-  //   });
-
-  //   return { valid, invalid };
-  // }
+  const fetcher = useFetcher();
+  const isSubmitting = fetcher.state === "submitting";
+  const newErrors = {};
+  const MAX_PHOTOS = 9;
 
   const validate = () => {
-    const newErrors = {};
-    if (!headline.trim()) newErrors.headline = "Headline is required";
-    if (!review.trim()) newErrors.review = "Review is required";
-    setErrors(newErrors);
+    if (!headline.trim()) newErrors.headlineErr = "Headline is required";
+    if (!review.trim()) newErrors.reviewErr = "Review is required";
+    setErrors((prev) => ({
+      ...prev,
+      headlineErr: newErrors.headlineErr,
+      reviewErr: newErrors.reviewErr,
+    }));
     return Object.keys(newErrors).length === 0;
   };
 
+  const allowedTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/bmp",
+    "image/tiff",
+    "image/webp",
+  ];
+
+  const fileKey = (file) => `${file.name}_${file.size}_${file.lastModified}`;
+
   const handleSelect = (e) => {
-    setFiles(Array.from(e.target.files));
+    const selected = Array.from(e.target.files);
+
+    if (files.length >= MAX_PHOTOS) {
+      newErrors.maxErr = "You can only upload a maximum of 9 files.";
+      setErrors((prev) => ({
+        ...prev,
+        maxErr: newErrors.maxErr,
+      }));
+      e.target.value = "";
+      return;
+    }
+
+    if (files.length + selected.length > MAX_PHOTOS) {
+      newErrors.maxErr = "You can only upload a maximum of 9 files.";
+      setErrors((prev) => ({
+        ...prev,
+        maxErr: newErrors.maxErr,
+      }));
+      selected.length = MAX_FILES - files.length;
+    }
+
+    const existingKeys = new Set(files.map((f) => fileKey(f)));
+    const pickedKeys = new Set();
+
+    const validFiles = selected.filter((file) => {
+      const formatOk = allowedTypes.includes(file.type);
+
+      const key = fileKey(file);
+      const dupOk = existingKeys.has(key) || pickedKeys.has(key);
+      if (!formatOk) {
+        newErrors.formatErr =
+          "Some file couldn't be uploaded. Use an image in one of these formats: .jpg, .jpeg, .png, .bmp, .tif, or .webp";
+      }
+      if (dupOk) {
+        newErrors.dupErr =
+          "There were duplicated files. Please choose different files.";
+      }
+      return formatOk && !dupOk;
+    });
+
+    setErrors((prev) => ({
+      ...prev,
+      dupErr: newErrors.dupErr,
+      formatErr: newErrors.formatErr,
+    }));
+
+    if (validFiles.length > 0) setFiles((prev) => [...prev, ...validFiles]);
+
+    e.target.value = "";
+  };
+
+  const removeImage = (index) => {
+    setFiles((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  useEffect(() => {
+    console.log(files);
+  }, [files]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!validate()) return;
+
+    const formData = new FormData();
+    formData.append("star", Number(rating));
+    formData.append("salonid", salonid ?? "");
+    formData.append("headline", headline ?? "");
+    formData.append("review", review ?? "");
+
+    files.forEach((file) => formData.append("photos", file));
+
+    // submit to the current route's action (or provide 'action' option)
+    fetcher.submit(formData, {
+      method: "post",
+      encType: "multipart/form-data",
+      // action: "/path-if-you-want-to-post-to-different-route"
+    });
   };
 
   return (
-    <Form
+    <fetcher.Form
       method="post"
-      onSubmit={(e) => {
-        if (!validate()) e.preventDefault(); // block submission if invalid
-      }}
+      encType="multipart/form-data"
+      onSubmit={handleSubmit}
       className={style.reviewForm}
     >
       <div>
@@ -93,9 +168,9 @@ export default function ReviewForm({ salonid }) {
           }}
           placeholder="What's most important to know?"
         />
-        {errors.headline && (
+        {errors.headlineErr && (
           <div style={{ color: "red", marginTop: "4px", fontSize: "12px" }}>
-            {errors.headline}
+            {errors.headlineErr}
           </div>
         )}
       </div>
@@ -110,13 +185,13 @@ export default function ReviewForm({ salonid }) {
           rows="5"
           placeholder="What did you like or dislike about service/ products?"
         ></textarea>
-        {errors.review && (
+        {errors.reviewErr && (
           <div style={{ color: "red", marginTop: "4px", fontSize: "12px" }}>
-            {errors.review}
+            {errors.reviewErr}
           </div>
         )}
       </div>
-      <div>
+      <div className={style.imgBlock}>
         <input
           ref={fileInputRef}
           type="file"
@@ -126,7 +201,16 @@ export default function ReviewForm({ salonid }) {
           style={{ display: "none" }}
           onChange={handleSelect}
         />
-
+        {files.length > 0 && (
+          <div className={style.imgList}>
+            {files.map((src, index) => (
+              <div className={style.imgItem} key={index}>
+                <img src={URL.createObjectURL(src)} alt={src.name} />
+                <button onClick={() => removeImage(index)}>×</button>
+              </div>
+            ))}
+          </div>
+        )}
         <button
           type="button"
           className={style.upload}
@@ -135,16 +219,37 @@ export default function ReviewForm({ salonid }) {
           <img src="/icon/upload.svg" alt="" />
           <span>Upload Photo</span>
         </button>
-
-        {files.length > 0 && (
-          <div style={{ marginTop: 8, fontSize: 13 }}>
-            Selected ({files.length}): {files.join(", ")}
-          </div>
-        )}
       </div>
-      <button className={style.post} type="submit">
-        Post Review
+      {(errors.maxErr || errors.formatErr || errors.dupErr) && (
+        <div className={style.fileError}>
+          {errors.maxErr || errors.formatErr || errors.dupErr}
+          <div>
+            <button
+              type="button"
+              onClick={() =>
+                setErrors((prev) => ({
+                  ...prev,
+                  formatErr: "",
+                  maxErr: "",
+                  dupErr: "",
+                }))
+              }
+            >
+              X
+            </button>
+          </div>
+        </div>
+      )}
+      <button className={style.post} type="submit" disabled={isSubmitting}>
+        {isSubmitting ? (
+          <>
+            Please wait...
+            <i className={`fa-solid fa-spinner ${style.spinner}`}></i>
+          </>
+        ) : (
+          "Post Review"
+        )}
       </button>
-    </Form>
+    </fetcher.Form>
   );
 }

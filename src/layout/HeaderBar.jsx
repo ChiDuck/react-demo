@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import Button from "../components/Button";
 import LoginModal from "../components/LogInModal";
 import SearchBar from "../components/SearchBar";
@@ -8,9 +9,11 @@ import "../styles/Header.scss";
 
 function Logo() {
   return (
-    <div className="logo">
-      <img src="/logo/logonail.svg" alt="React Logo" />
-    </div>
+    <Link to="/">
+      <div className="logo">
+        <img src="/logo/logonail.svg" alt="nail360" />
+      </div>
+    </Link>
   );
 }
 
