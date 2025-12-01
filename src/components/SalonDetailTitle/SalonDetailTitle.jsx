@@ -1,4 +1,4 @@
-import style from "../../styles/SalonDetail.module.scss";
+import style from "../../styles/SalonDetail.module.scss"; 
 import { getOpenStatus } from "./openStatus";
 
 const imgUrl = import.meta.env.VITE_API_IMG_URL;

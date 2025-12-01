@@ -1,0 +1,24 @@
+@use "../../styles/variables";
+.user-page {
+  width: 100%;
+  height: 100vh;
+  background-color: variables.$background-color;
+
+  > div {
+    display: flex;
+    margin: 0 auto;
+    padding-right: 20px;
+
+    height: 100%;
+    max-width: 1600px;
+  }
+}
+
+.user-page-content {
+  background-color: #fff;
+  border-radius: 20px;
+  margin: 20px 0;
+  padding: 20px;
+  flex: 1;
+  overflow-y: auto;
+}

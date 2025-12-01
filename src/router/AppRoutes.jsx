@@ -6,6 +6,7 @@ import { salonDetailLoader } from "../pages/SalonDetail/loader";
 import SalonDetailPage from "../pages/SalonDetail/SalonDetailPage";
 import { salonReviewLoader } from "../pages/SalonReview/loader";
 import SalonReviewPage from "../pages/SalonReview/SalonReviewPage";
+import UserPage from "../pages/UserPage/UserPage";
 import { viewReviewLoader } from "../pages/ViewReview/loader";
 import ViewReviewPage from "../pages/ViewReview/ViewReviewPage";
 
@@ -36,6 +37,10 @@ const routes = createBrowserRouter([
         element: <div>Not Found</div>,
       },
     ],
+  },
+  {
+    path: "/profile",
+    element: <UserPage />,
   },
 ]);
 export default routes;
