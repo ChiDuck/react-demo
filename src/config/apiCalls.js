@@ -4,6 +4,7 @@ import { fetchApi } from "../config/apiHelper";
 
 export async function getSalonAPI({
     s,
+    sort,
     p,
     z = 6,
     k,
@@ -11,18 +12,21 @@ export async function getSalonAPI({
     f,
     salonid,
     idsalon,
+    user = false,
+    token,
     signal, }
 ) {
 
     const params = {
         s,
+        sort,
         p,
         z,
         k,
         o,
         f,
-        salonid: salonid,
-        idsalon: idsalon,
+        salonid,
+        idsalon,
         cache: 0
     };
 
@@ -31,5 +35,8 @@ export async function getSalonAPI({
         .filter(([_, value]) => value !== undefined && value !== null)
         .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
         .join("&");
-    return fetchApi(`public?${query}`, { signal });
+
+    const fetchString = user ? `user/search?${query}` : `public?${query}`;
+    return fetchApi(fetchString, token, { signal });
 }
+

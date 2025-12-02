@@ -1,20 +1,27 @@
 import { useState } from "react";
+import { useLoaderData } from "react-router-dom";
 import ProfileContent from "../../layout/UserLayout/ProfileContent";
 import UserHeaderBar from "../../layout/UserLayout/UserHeaderBar";
 import UserSideNav from "../../layout/UserLayout/UserSideNav";
 import "./UserPage.scss";
 
 export default function UserPage() {
+  const data = useLoaderData();
   const [tab, setTab] = useState("Appointments");
   const [collapsed, setCollapsed] = useState(false);
 
   return (
     <div className="user-page">
       <div>
-        <UserSideNav tab={tab} setTab={setTab} collapsed={collapsed} />
+        <UserSideNav
+          tab={tab}
+          setTab={setTab}
+          collapsed={collapsed}
+          data={data.detail.data}
+        />
         <div className="user-page-content">
           <UserHeaderBar collapsed={collapsed} setCollapsed={setCollapsed} />
-          <ProfileContent tab={tab} />
+          <ProfileContent tab={tab} data={data.appointments.data} />
         </div>
       </div>
     </div>

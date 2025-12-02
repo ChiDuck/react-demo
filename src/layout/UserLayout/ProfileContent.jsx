@@ -1,10 +1,10 @@
 import AppointmentsSection from "../../components/UserProfile/AppointmentsSection";
 
-export default function ProfileContent({ tab }) {
+export default function ProfileContent(props) {
   return (
-    <div>
-      <h3>{tab}</h3>
-      <AppointmentsSection />
+    <div style={{ overflowY: "hidden", height: "100%" }}>
+      <h3>{props.tab}</h3>
+      <AppointmentsSection data={props.data} />
     </div>
   );
 }

@@ -2,7 +2,7 @@
 @use "mixin";
 
 html {
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
   color: variables.$text-title-color;
 }
@@ -16,6 +16,7 @@ body {
 button {
   @include mixin.default-button;
   font-family: inherit;
+  cursor: pointer;
 }
 
 .fa-star {

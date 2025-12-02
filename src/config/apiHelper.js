@@ -1,8 +1,13 @@
 export const API_URL = import.meta.env.VITE_API_URL;
 
-export async function fetchApi(path, options = {}) {
+export async function fetchApi(path, token, options = {}) {
     console.log(`${API_URL}${path}`);
-    const res = await fetch(`${API_URL}${path}`, options);
+    const res = await fetch(`${API_URL}${path}`, {
+        ...options, headers: {
+            ...(options.headers || {}),
+            Authorization: `Bearer ${token}`,
+        }
+    });
     if (!res.ok) {
         const text = await res.text();
         let details;
