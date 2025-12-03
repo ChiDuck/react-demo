@@ -2,18 +2,22 @@
 
 import { fetchApi } from "../config/apiHelper";
 
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiTlRQIDU0MDUiLCJpZCI6IjRkMzhhZmMwLWFjODMtNDg4NC1iOGQzLWUwOGIzYTVkMWFkNCIsInJvbGUiOiJ1c2VyIiwiYWN0aXZlIjp0cnVlLCJkYmlkIjoiZmQzYjU2ZGIiLCJleHAiOjE3NjQ3NjAzNjl9.ZFJ6H-vnAeZUSTIzuCWMyb8FNdz1THi-O5aKPmlDqxw";
+
 export async function getSalonAPI({
     s,
     sort,
     p,
-    z = 6,
+    z,
     k,
     o,
     f,
     salonid,
     idsalon,
+    cartid,
+    appointmentid,
     user = false,
-    token,
+    salon = false,
     signal, }
 ) {
 
@@ -27,6 +31,8 @@ export async function getSalonAPI({
         f,
         salonid,
         idsalon,
+        cartid,
+        appointmentid,
         cache: 0
     };
 
@@ -36,7 +42,9 @@ export async function getSalonAPI({
         .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
         .join("&");
 
-    const fetchString = user ? `user/search?${query}` : `public?${query}`;
-    return fetchApi(fetchString, token, { signal });
+
+    const fetchString = user ? "user/search?" : (salon ? "salon/search?" : "public?")
+
+    return fetchApi(`${fetchString}${query}`, (user || salon) ? token : null, { signal });
 }
 

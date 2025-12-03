@@ -1,6 +1,6 @@
 import { getSalonAPI } from "../../config/apiCalls";
 
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiTlRQIDU0MDUiLCJpZCI6IjRkMzhhZmMwLWFjODMtNDg4NC1iOGQzLWUwOGIzYTVkMWFkNCIsInJvbGUiOiJ1c2VyIiwiYWN0aXZlIjp0cnVlLCJkYmlkIjoiNTdhY2ZlOWQiLCJleHAiOjE3NjQ2NzcwODF9.9EBJtMtXdsCtoFV2FhKDeV0SI-MU4Qf6igy3OfcF5TE";
+
 
 export async function userProfileLoader({ params, request }) {
     // const { id } = params;
@@ -11,13 +11,13 @@ export async function userProfileLoader({ params, request }) {
         getSalonAPI({
             s: "GetUserDetail",
             user: true,
-            token,
             signal: request.signal
         }),
         getSalonAPI({
             s: "GetUserAppointment",
             user: true,
-            token,
+            p: 1,
+            z: 5,
             signal: request.signal
         })
     ])

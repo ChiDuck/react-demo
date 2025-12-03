@@ -2,9 +2,11 @@ import AppointmentsSection from "../../components/UserProfile/AppointmentsSectio
 
 export default function ProfileContent(props) {
   return (
-    <div style={{ overflowY: "hidden", height: "100%" }}>
-      <h3>{props.tab}</h3>
-      <AppointmentsSection data={props.data} />
-    </div>
+    <>
+      <h3 style={{ margin: "20px 0", fontSize: 22 }}>{props.tab}</h3>
+      <div style={{ overflow: "auto" }}>
+        <AppointmentsSection json={props.json} />
+      </div>
+    </>
   );
 }

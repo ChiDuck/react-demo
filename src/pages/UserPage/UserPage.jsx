@@ -21,7 +21,7 @@ export default function UserPage() {
         />
         <div className="user-page-content">
           <UserHeaderBar collapsed={collapsed} setCollapsed={setCollapsed} />
-          <ProfileContent tab={tab} data={data.appointments.data} />
+          <ProfileContent tab={tab} json={data.appointments} />
         </div>
       </div>
     </div>
