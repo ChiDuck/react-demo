@@ -4,12 +4,16 @@ import css from "../UserLayout/UserSideNav.module.scss";
 const imgUrl = import.meta.env.VITE_API_IMG_URL;
 
 function NavItem(props) {
-  const handleClick = () => {};
+  const { tab, setTab, name, index } = props;
+
+  const handleClick = () => {
+    setTab({ index, name });
+  };
 
   return (
-    <li>
+    <li className={tab.index === index ? css.select : ""} onClick={handleClick}>
       <img src={props.icon} alt="" />
-      <strong>{props.name}</strong>
+      <strong>{name}</strong>
     </li>
   );
 }
@@ -17,6 +21,7 @@ function NavItem(props) {
 export default function UserSideNav(props) {
   const data = props.data[0];
   const img = JSON.parse(props.data[0].content);
+
   return (
     <nav
       className={
@@ -49,14 +54,29 @@ export default function UserSideNav(props) {
         </div>
       </div>
       <ul className={css.navlist}>
-        <NavItem {...props} icon="/icon/user/6.svg" name="Appointments" />
-        <NavItem {...props} icon="/icon/user/7.svg" name="Review" />
-        <NavItem {...props} icon="/icon/user/8.svg" name="Gallery" />
-        <NavItem {...props} icon="/icon/user/2.svg" name="Favorite" />
-        <NavItem {...props} icon="/icon/user/5.svg" name="Payment" />
-        <NavItem {...props} icon="/icon/user/3.svg" name="Account Setting" />
-        <NavItem {...props} icon="/icon/user/1.svg" name="Classified Ads" />
-        <NavItem {...props} icon="/icon/user/4.svg" name="Logout" />
+        <NavItem
+          {...props}
+          icon="/icon/user/6.svg"
+          index={1}
+          name="Appointments"
+        />
+        <NavItem {...props} icon="/icon/user/7.svg" index={2} name="Review" />
+        <NavItem {...props} icon="/icon/user/8.svg" index={3} name="Gallery" />
+        <NavItem {...props} icon="/icon/user/2.svg" index={4} name="Favorite" />
+        <NavItem {...props} icon="/icon/user/5.svg" index={5} name="Payment" />
+        <NavItem
+          {...props}
+          icon="/icon/user/3.svg"
+          index={6}
+          name="Account Setting"
+        />
+        <NavItem
+          {...props}
+          icon="/icon/user/1.svg"
+          index={7}
+          name="Classified Ads"
+        />
+        <NavItem {...props} icon="/icon/user/4.svg" index={8} name="Logout" />
       </ul>
     </nav>
   );

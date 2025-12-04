@@ -25,3 +25,9 @@
   flex: 1;
   height: 100%;
 }
+
+@media screen and (max-width: 845px) {
+  .user-page {
+    height: 100vmax;
+  }
+}

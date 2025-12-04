@@ -99,6 +99,11 @@
   }
 }
 
+.select {
+  background: #fff;
+  color: variables.$primary-color;
+}
+
 .collapsed {
   width: 60px;
   padding: 0 15px;
@@ -116,5 +121,10 @@
 
   .point {
     scale: 0;
+  }
+}
+@media screen and (max-width: 900px) {
+  .userSideNav {
+    display: none;
   }
 }

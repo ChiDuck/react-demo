@@ -1,0 +1,190 @@
+@use "../../../styles/variables";
+
+.appointmentList {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: auto;
+}
+
+.appointmentList::-webkit-scrollbar {
+  width: 10px;
+}
+.appointmentList::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
+.appointmentList::-webkit-scrollbar-thumb {
+  background: #d3427a;
+  border-radius: 5px;
+}
+
+.appointmentContainer {
+  border: variables.$border-light;
+  margin-bottom: 30px;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.appointmentInfo {
+  display: flex;
+  gap: 30px;
+}
+
+.salonInfo {
+  position: relative;
+  min-width: 500px;
+  max-width: 500px;
+}
+
+.imgStyle {
+  position: relative;
+  border: variables.$border-light;
+  width: 80%;
+  height: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+  border-radius: 5px;
+
+  div {
+    position: absolute;
+    box-sizing: border-box;
+    z-index: 2;
+    padding: 10px;
+    width: 100%;
+    height: 70%;
+
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: 6px;
+      object-fit: cover;
+    }
+  }
+
+  svg {
+    position: absolute;
+    bottom: 31%;
+    z-index: 1;
+    width: 100%;
+  }
+}
+.gradient {
+  background: linear-gradient(180deg, #ffffff 0%, #e7e7e7 100%);
+  position: absolute;
+  bottom: 0;
+  height: 150px;
+  width: 100%;
+  border-radius: 5px;
+  padding: 25px;
+  display: flex;
+  gap: 10px;
+  justify-content: start;
+  align-items: end;
+  box-sizing: border-box;
+  overflow: hidden;
+
+  > img {
+    width: 60px;
+    height: 60px;
+    border: variables.$border-bold;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .rateAndReview {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+
+    strong {
+      font-size: 18px;
+    }
+
+    > div {
+      width: fit-content;
+      position: relative;
+    }
+  }
+  > div {
+    overflow: hidden;
+    padding-right: 20px;
+
+    > span:last-of-type {
+      display: block;
+      text-overflow: ellipsis;
+      text-wrap: nowrap;
+      overflow: hidden;
+    }
+  }
+
+  .trueStar {
+    position: absolute;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+}
+.otherInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  gap: 10px;
+  width: 100%;
+
+  border: variables.$border-light;
+  border-radius: 5px;
+  padding: 25px;
+  background-color: #f7f7f7;
+
+  > div {
+    display: flex;
+    gap: 5px;
+    font-size: 18px;
+  }
+}
+
+.amount {
+  font-size: 45px;
+  color: variables.$primary-color;
+}
+
+.loadingBar {
+  width: 100%;
+  min-height: 4px;
+  background-color: #c4c4c4;
+  border-radius: 2px;
+  overflow-x: hidden;
+  position: relative;
+
+  div {
+    width: 30%;
+    height: 100%;
+    background-color: variables.$primary-color;
+    position: absolute;
+    left: -30%; /* start outside the container */
+    animation: slide 1.2s linear infinite;
+  }
+}
+
+@keyframes slide {
+  0% {
+    left: -30%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+@media screen and (max-width: 1270px) {
+  .appointmentInfo {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  .salonInfo {
+    min-height: 300px;
+    height: 300px;
+  }
+
+}

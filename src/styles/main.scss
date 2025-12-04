@@ -86,3 +86,65 @@ button {
   transform: translateY(0%);
   opacity: 1;
 }
+
+.loading-dot {
+  height: 12px;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  div {
+    background: variables.$primary-color;
+    border-radius: 50%;
+    height: 100%;
+    width: 12px;
+  }
+  div:first-of-type {
+    animation: load 0.6s ease-in-out infinite;
+  }
+
+  div:first-of-type + div {
+    animation: move 0.6s ease-in-out infinite;
+    + div {
+      animation: move2 0.6s ease-in-out infinite;
+    }
+  }
+  div:last-of-type {
+    animation: gone 0.6s ease-in-out infinite;
+  }
+}
+
+@keyframes load {
+  0% {
+    scale: 0;
+  }
+  100% {
+    scale: 1;
+  }
+}
+@keyframes gone {
+  30% {
+    scale: 1;
+  }
+  70% {
+    scale: 0;
+  }
+}
+@keyframes move {
+  0% {
+    transform: translateX(-150%);
+  }
+
+  100% {
+    transform: translateX(80%);
+  }
+}
+
+@keyframes move2 {
+  0% {
+    transform: translateX(-70%);
+  }
+
+  100% {
+    transform: translateX(150%);
+  }
+}

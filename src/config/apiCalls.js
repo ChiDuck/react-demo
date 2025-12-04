@@ -2,7 +2,7 @@
 
 import { fetchApi } from "../config/apiHelper";
 
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiTlRQIDU0MDUiLCJpZCI6IjRkMzhhZmMwLWFjODMtNDg4NC1iOGQzLWUwOGIzYTVkMWFkNCIsInJvbGUiOiJ1c2VyIiwiYWN0aXZlIjp0cnVlLCJkYmlkIjoiZmQzYjU2ZGIiLCJleHAiOjE3NjQ3NjAzNjl9.ZFJ6H-vnAeZUSTIzuCWMyb8FNdz1THi-O5aKPmlDqxw";
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiTlRQIDU0MDUiLCJpZCI6IjRkMzhhZmMwLWFjODMtNDg4NC1iOGQzLWUwOGIzYTVkMWFkNCIsInJvbGUiOiJ1c2VyIiwiYWN0aXZlIjp0cnVlLCJkYmlkIjoiYzhiYjgwMzkiLCJleHAiOjE3NjQ4NDcxOTd9.szDGMcUmB4bNqEOiUofNqp5KanQBf3aK3QYqLOtqdxU";
 
 export async function getSalonAPI({
     s,

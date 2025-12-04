@@ -1,7 +1,5 @@
 import { getSalonAPI } from "../../config/apiCalls";
 
-
-
 export async function userProfileLoader({ params, request }) {
     // const { id } = params;
     // console.log("loader running", params, request.url);
@@ -16,6 +14,7 @@ export async function userProfileLoader({ params, request }) {
         getSalonAPI({
             s: "GetUserAppointment",
             user: true,
+            sort: "",
             p: 1,
             z: 5,
             signal: request.signal
