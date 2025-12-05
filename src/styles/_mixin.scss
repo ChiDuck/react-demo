@@ -32,3 +32,17 @@
   font-weight: normal;
   color: variables.$text-color;
 }
+
+@mixin custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+  &::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #d3427a;
+    border-radius: 5px;
+  }
+}

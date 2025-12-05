@@ -1,22 +1,12 @@
 @use "../../../styles/variables";
+@use "../../../styles/mixin";
 
 .appointmentList {
+  @include mixin.custom-scrollbar;
   display: flex;
   flex-direction: column;
   height: 100%;
   overflow: auto;
-}
-
-.appointmentList::-webkit-scrollbar {
-  width: 10px;
-}
-.appointmentList::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 5px grey;
-  border-radius: 10px;
-}
-.appointmentList::-webkit-scrollbar-thumb {
-  background: #d3427a;
-  border-radius: 5px;
 }
 
 .appointmentContainer {
@@ -186,5 +176,4 @@
     min-height: 300px;
     height: 300px;
   }
-
 }

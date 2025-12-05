@@ -1,31 +1,30 @@
-import { useEffect, useState } from "react";
-import { useLoaderData } from "react-router-dom";
-import ProfileContent from "../../layout/UserLayout/ProfileContent";
+import { useState } from "react";
+import { Outlet, useLoaderData, useLocation } from "react-router-dom";
+import { navItems } from "../../components/IconSVG/navItems";
 import UserHeaderBar from "../../layout/UserLayout/UserHeaderBar";
 import UserSideNav from "../../layout/UserLayout/UserSideNav";
 import "./UserPage.scss";
 
 export default function UserPage() {
   const data = useLoaderData();
-  const [tab, setTab] = useState({ index: 1, name: "Appointments" });
+  const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
 
-  useEffect(() => {
-    console.log(tab);
-  }, [tab]);
-
+  const curLbl = navItems.find((item) =>
+    location.pathname.startsWith(item.path)
+  );
   return (
     <div className="user-page">
       <div>
-        <UserSideNav
-          tab={tab}
-          setTab={setTab}
-          collapsed={collapsed}
-          data={data.detail.data}
-        />
+        <UserSideNav collapsed={collapsed} data={data.data} />
         <div className="user-page-content">
           <UserHeaderBar collapsed={collapsed} setCollapsed={setCollapsed} />
-          <ProfileContent tab={tab} json={data.appointments} />
+          <h3 style={{ margin: "20px 0", fontSize: 22 }}>
+            {curLbl?.label || ""}
+          </h3>
+          <div style={{ overflow: "auto" }}>
+            <Outlet />
+          </div>
         </div>
       </div>
     </div>

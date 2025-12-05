@@ -11,7 +11,7 @@ export function formatReviewDate(interval, date) {
     const diffDays = Math.floor(diffHrs / 24);
     // Relative formatting (within 24h)
     if (diffDays <= 7) {
-        if (diffDays >= 1) return `${diffDays} day(s) ago`;
+        if (diffDays >= 1) return `${diffDays}d ago`;
         if (diffHrs >= 1) return `${diffHrs}h ago`;
         if (diffMin >= 1) return `${diffMin}m ago`;
         return `${diffSec}s ago`;

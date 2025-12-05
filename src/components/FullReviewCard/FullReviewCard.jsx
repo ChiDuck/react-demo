@@ -1,5 +1,5 @@
 import style from "./FullReviewCard.module.scss";
-import { formatReviewDate } from "./formatReviewDate";
+import { formatReviewDate } from "../formatReviewDate";
 
 export default function FullReviewCard({ item, full = false }) {
   const imgUrl = import.meta.env.VITE_API_IMG_URL;
