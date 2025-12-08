@@ -1,7 +1,5 @@
 import { redirect } from "react-router-dom";
-
-const API_URL = import.meta.env.VITE_API_URL;
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiTlRQIDU0MDUiLCJpZCI6IjRkMzhhZmMwLWFjODMtNDg4NC1iOGQzLWUwOGIzYTVkMWFkNCIsInJvbGUiOiJ1c2VyIiwiYWN0aXZlIjp0cnVlLCJkYmlkIjoiYmRhMDVhMDQiLCJleHAiOjE3NjQzMjc2NTJ9.kitauzdWohmHcvKB69pFCmrcgogivRr36QxoGRZJl9M";
+import { postSalonAPI } from "../../config/apiCalls";
 
 export async function action({ request }) {
     const formData = await request.formData();
@@ -19,16 +17,17 @@ export async function action({ request }) {
         star,
     };
 
-    const res = await fetch(`${API_URL}salon/cmd?c=AddSalonReview`, {
-        headers: { Authorization: `Bearer ${token}` },
-        method: "POST",
+    const res = await postSalonAPI({
+        c: "AddSalonReview",
         body: JSON.stringify(payload),
     });
 
     const json = await res.json();
     console.log(json);
-    if (!res.ok)
-        return { error: "Something went wrong." };
+    if (res.error !== "") {
+        console.log(res.error);
+        return
+    }
 
     //Upload photos to server
     if (files.length !== 0) {
@@ -38,17 +37,17 @@ export async function action({ request }) {
         files.forEach((f) => uploadData.append("file[]", f));
         console.log(uploadData);
 
-        const uploadPic = await fetch(`${API_URL}salon/cmd?c=UploadPictureSalonReview`, {
-            headers: { Authorization: `Bearer ${token}` },
-            method: "POST",
+        const uploadPic = await postSalonAPI({
+            c: "UploadPictureSalonReview",
             body: uploadData,
         });
+
         if (!uploadPic.ok)
             return { error: "Something went wrong." };
 
-        const uploadjson = await uploadPic.json();
+        const uploadjson = await uploadPic.data;
         console.log(uploadjson);
-        if (uploadjson.data.status != 0) return { error: "Upload photo failed." }
+        if (uploadjson.status != 0) return { error: "Upload photo failed." }
     }
     return redirect(`/viewreview/${salonid}`);
 }

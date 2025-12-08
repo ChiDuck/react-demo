@@ -1,12 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLoaderData } from "react-router-dom";
-import { getSalonAPI } from "../../../config/apiCalls";
+import { getSalonAPI, postSalonAPI } from "../../../config/apiCalls";
 import Appointments from "./Appointments";
 import css from "./Appointments.module.scss";
-
-const apiUrl = import.meta.env.VITE_API_URL;
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiTlRQIDU0MDUiLCJpZCI6IjRkMzhhZmMwLWFjODMtNDg4NC1iOGQzLWUwOGIzYTVkMWFkNCIsInJvbGUiOiJ1c2VyIiwiYWN0aXZlIjp0cnVlLCJkYmlkIjoiZjI5YzFmNjIiLCJleHAiOjE3NjQ5MzMxMTl9.owp4MfxFQDNqXcu1V0NbqfqGq8TnQVk4KppT1UESI3g";
 
 export default function AppointmentsSection() {
   const data = useLoaderData();
@@ -36,7 +32,6 @@ export default function AppointmentsSection() {
       setItems((prev) => [...prev, ...newItems]);
       setPage((prev) => prev + 1);
 
-      // replace with your API's total count
       setHasMore(items.length + newItems.length < total);
     } catch (err) {
       console.error(err);
@@ -53,7 +48,6 @@ export default function AppointmentsSection() {
       const scrollTop = container.scrollTop;
       const scrollHeight = container.scrollHeight;
       const clientHeight = container.clientHeight;
-      // when scrolled to bottom (threshold 50px)
       if (scrollTop + clientHeight >= scrollHeight) {
         fetchPage();
       }
@@ -79,12 +73,8 @@ export default function AppointmentsSection() {
       iscustomer: 1,
     };
 
-    const res = await fetch(`${apiUrl}salon/cmd?c=AddSalonAppointmentChat`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+    const res = await postSalonAPI({
+      c: "AddSalonAppointmentChat",
       body: JSON.stringify(payload),
     });
     const data = await res.json();

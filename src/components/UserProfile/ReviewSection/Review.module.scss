@@ -8,10 +8,7 @@
 }
 
 .reviewCard {
-  display: flex;
   position: relative;
-  gap: 10px;
-  flex-direction: column;
   padding: 20px;
   border: variables.$border-light;
   border-radius: 10px;
@@ -20,14 +17,20 @@
   strong {
     font-size: 18px;
   }
+
+  .editForm {
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+  }
 }
 
 .reviewHeader {
   background: linear-gradient(180deg, #ffffff 0%, #e7e7e7 100%);
   width: 100%;
   border-radius: 5px;
-  padding: 20px;
-  padding-top: 10px;
+  padding: 10px 20px 20px;
+  margin-bottom: 10px;
   display: flex;
   gap: 10px;
   justify-content: start;
@@ -83,6 +86,18 @@
   }
 }
 
+.imgBlock {
+  display: flex;
+  align-items: center;
+  button {
+    margin-left: auto;
+    border-radius: 10px;
+    min-width: 90px;
+    height: 45px;
+    font-size: 16px;
+  }
+}
+
 .imgList {
   display: flex;
   gap: 10px;
@@ -127,29 +142,64 @@
 
 .overlay {
   display: flex;
+  opacity: 0;
+  pointer-events: none;
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: transparent;
-  transition: all 0.3s;
+  background-color: rgba(0, 0, 0, 0.45);
+  transition: all 0.3s ease;
 
   > div {
-    text-align: center;
     margin: 50px auto 0;
     background-color: #fff;
     border-radius: 20px;
     padding: 0 30px 30px;
+    text-align: center;
     height: max-content;
+    transition: all 0.3s ease;
+    transform: translateY(-30%);
+
+    > div {
+      display: flex;
+      margin-top: 40px;
+      gap: 20px;
+      justify-content: center;
+    }
 
     button {
       @include mixin.secondary-button;
+      border-color: variables.$primary-color;
+      color: variables.$primary-color;
+      height: 50px;
+      font-size: 18px;
     }
   }
 }
 
-.active {
-  display: none;
-  background-color: rgba(0, 0, 0, 0.158);
+.overlay.active {
+  opacity: 1;
+  pointer-events: all;
+
+  > div {
+    transform: translateY(0%);
+  }
+}
+
+input,
+textarea {
+  border: variables.$border-light;
+  width: 100%;
+  font-size: 15px;
+  border-radius: 5px;
+  box-sizing: border-box;
+  padding: 10px;
+  font-family: variables.$font-family;
+}
+
+textarea {
+  resize: vertical;
+  max-height: 500px;
 }

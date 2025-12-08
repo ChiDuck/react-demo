@@ -166,9 +166,12 @@
 }
 .customer,
 .admin {
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
   padding: 10px;
   font-size: 14px;
-  border-radius: 30px;
+  border-radius: 20px;
+  max-width: 350px;
 }
 
 .customer {
@@ -179,7 +182,7 @@
     border-top-right-radius: 5px !important;
   }
   + .customer:has(+ .chatAvatar) {
-    border-bottom-right-radius: 30px !important;
+    border-bottom-right-radius: 20px !important;
   }
   + .chatAvatar:has(+ .admin),
   + .chatAvatar:last-child {
@@ -195,7 +198,7 @@
     border-top-left-radius: 5px !important;
   }
   + .admin:has(+ .chatAvatar) {
-    border-bottom-left-radius: 30px !important;
+    border-bottom-left-radius: 20px !important;
   }
 }
 @media screen and (max-width: 1270px) {

@@ -24,6 +24,13 @@
   padding: 12px 20px;
   font-size: 14px;
   line-height: 10px;
+  transition: all 0.3s;
+
+  &:hover {
+    background-color: variables.$primary-color;
+    color: variables.$button-text-color;
+    border: transparent 1px solid;
+  }
 }
 
 @mixin third-button {

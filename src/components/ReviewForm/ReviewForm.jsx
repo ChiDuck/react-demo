@@ -2,28 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { useFetcher } from "react-router-dom";
 import style from "./ReviewForm.module.scss";
 
-function StarRating({ maxStars = 5, onChange }) {
-  const [selected, setSelected] = useState(maxStars);
-  const [hovered, setHovered] = useState(0);
-  const handleClick = (index) => {
-    setSelected(index);
-    if (onChange) onChange(index); // return the number to parent
-  };
-
-  return Array.from({ length: maxStars }, (_, i) => i + 1).map((star) => (
-    <i
-      key={star}
-      className={`fa-solid fa-star ${style.rating}`}
-      onClick={() => handleClick(star)}
-      onMouseEnter={() => setHovered(star)}
-      onMouseLeave={() => setHovered(0)}
-      style={{
-        color: star <= (hovered || selected) ? "#ffb800" : "rgb(170, 170, 170)",
-      }}
-    ></i>
-  ));
-}
-
 export default function ReviewForm({ salonid }) {
   const [rating, setRating] = useState(5);
   const [headline, setHeadline] = useState("");

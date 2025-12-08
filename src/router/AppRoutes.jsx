@@ -2,6 +2,7 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import { action as reviewAction } from "../components/ReviewForm/action";
 import AppointmentsSection from "../components/UserProfile/AppointmentsSection/AppointmentsSection";
 import { userAppointmentLoader } from "../components/UserProfile/AppointmentsSection/loader";
+import { editReview } from "../components/UserProfile/ReviewSection/action";
 import { userReviewLoader } from "../components/UserProfile/ReviewSection/loader";
 import ReviewSection from "../components/UserProfile/ReviewSection/ReviewSection";
 import App from "../pages/App";
@@ -59,6 +60,7 @@ const routes = createBrowserRouter([
         path: "review",
         element: <ReviewSection />,
         loader: userReviewLoader,
+        action: editReview,
       },
       {
         path: "gallery",

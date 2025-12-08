@@ -6,11 +6,11 @@
   border-radius: 10px;
   border: variables.$border-light;
   transition: all 0.3s;
-}
 
-.salon-card:hover {
-  box-shadow: variables.$box-shadow;
-  border: variables.$primary-color 1px solid;
+  &:hover {
+    box-shadow: variables.$box-shadow;
+    border: variables.$primary-color 1px solid;
+  }
 }
 
 .salon-card-link {
@@ -32,13 +32,6 @@
 
 .book-button {
   @include mixin.secondary-button;
-  transition: all 0.3s;
-}
-
-.book-button:hover {
-  background-color: variables.$primary-color;
-  color: variables.$button-text-color;
-  border: transparent 1px solid;
 }
 
 .favorite-icon {
