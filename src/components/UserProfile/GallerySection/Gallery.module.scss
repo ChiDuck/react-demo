@@ -1,0 +1,111 @@
+@use "../../../styles/variables";
+@use "../../../styles/mixin";
+
+.gallery {
+  overflow: auto;
+  height: 100%;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.galleryGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+
+  img {
+    height: 230px;
+    width: 100%;
+    border-radius: 10px;
+    border: variables.$border-light;
+    box-sizing: border-box;
+    object-fit: cover;
+    cursor: pointer;
+  }
+}
+
+.overlay {
+  display: flex;
+  opacity: 0;
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.45);
+  transition: all 0.4s ease;
+}
+
+.modal {
+  margin: 30px auto 0;
+  position: relative;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 30px;
+  height: max-content;
+  transition: all 0.4s ease;
+  transform: translateY(-20%);
+
+  button {
+    all: unset;
+    cursor: pointer;
+  }
+
+  .head {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .imgBlock {
+    height: 100%;
+    img {
+      height: 600px;
+      width: 70vw;
+      overflow: hidden;
+      object-fit: contain;
+      padding-top: 30px;
+    }
+  }
+  > div:nth-last-child(2),
+  > div:last-child {
+    position: absolute;
+    border: variables.$border-bold;
+    border-radius: 50%;
+    background-color: #fff;
+    top: 50%;
+    transition: all 0.2s ease;
+
+    button {
+      padding: 10px;
+    }
+
+    &:hover {
+      background-color: variables.$primary-color;
+      border: transparent 1px solid;
+      color: #fff;
+    }
+  }
+  > div:nth-last-child(2) {
+    left: -22px;
+  }
+
+  > div:last-child {
+    right: -22px;
+  }
+}
+
+.overlay.active {
+  opacity: 1;
+  pointer-events: all;
+
+  > div {
+    transform: translateY(0%);
+  }
+}
+
+.disable {
+  pointer-events: none;
+}

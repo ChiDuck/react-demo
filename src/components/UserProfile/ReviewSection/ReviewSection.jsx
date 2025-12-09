@@ -13,6 +13,7 @@ export default function ReviewSection() {
   const [page, setPage] = useState(2);
   const [hasMore, setHasMore] = useState(true);
   const containerRef = useRef(null);
+  const [refresh, setRefresh] = useState(0);
 
   const fetchPage = useCallback(async () => {
     if (isLoading || !hasMore) return;
@@ -72,6 +73,17 @@ export default function ReviewSection() {
     setPage(2);
   };
 
+  useEffect(() => {
+    fetchReviews();
+    setPage(2);
+    if (containerRef.current) {
+      containerRef.current.scrollTop = 0;
+    }
+    console.log(refresh);
+  }, [refresh]);
+
+  const handleUpdated = () => setRefresh((x) => x + 1);
+
   const openDelete = (id, salonid) => {
     setDeleting({ id, salonid });
   };
@@ -90,7 +102,12 @@ export default function ReviewSection() {
   return (
     <div className={css.reviewListContainer} ref={containerRef}>
       {items.map((item, idx) => (
-        <Review key={item.id || idx} data={item} openDelete={openDelete} />
+        <Review
+          key={item.id || idx}
+          data={item}
+          openDelete={openDelete}
+          onRefresh={handleUpdated}
+        />
       ))}
       {isLoading && (
         <div style={{ height: "140px", paddingTop: "70px" }}>

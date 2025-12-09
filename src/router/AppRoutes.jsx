@@ -2,6 +2,8 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import { action as reviewAction } from "../components/ReviewForm/action";
 import AppointmentsSection from "../components/UserProfile/AppointmentsSection/AppointmentsSection";
 import { userAppointmentLoader } from "../components/UserProfile/AppointmentsSection/loader";
+import GallerySection from "../components/UserProfile/GallerySection/GallerySection";
+import { userGalleryLoader } from "../components/UserProfile/GallerySection/loader";
 import { editReview } from "../components/UserProfile/ReviewSection/action";
 import { userReviewLoader } from "../components/UserProfile/ReviewSection/loader";
 import ReviewSection from "../components/UserProfile/ReviewSection/ReviewSection";
@@ -46,6 +48,10 @@ const routes = createBrowserRouter([
   {
     path: "/profile",
     element: <UserPage />,
+    shouldRevalidate: ({ actionResult }) => {
+      if (actionResult?.action === "edit-review") return false;
+      return true;
+    },
     children: [
       {
         index: true,
@@ -61,11 +67,15 @@ const routes = createBrowserRouter([
         element: <ReviewSection />,
         loader: userReviewLoader,
         action: editReview,
+        shouldRevalidate: ({ actionResult }) => {
+          if (actionResult?.action === "edit-review") return false;
+          return true;
+        },
       },
       {
         path: "gallery",
-        element: <AppointmentsSection />,
-        loader: userAppointmentLoader,
+        element: <GallerySection />,
+        loader: userGalleryLoader,
       },
     ],
     loader: userProfileLoader,

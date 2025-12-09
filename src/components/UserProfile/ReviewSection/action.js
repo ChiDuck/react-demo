@@ -21,5 +21,8 @@ export async function editReview({ request }) {
         return { success: false, error: res.error };
     }
 
-    return { success: true };
+    return {
+        success: true,
+        action: "edit-review",
+    };
 }

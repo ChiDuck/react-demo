@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFetcher } from "react-router-dom";
 import { formatReviewDate } from "../../formatReviewDate";
 import StarRating from "../../StarRating";
@@ -6,7 +6,7 @@ import css from "./Review.module.scss";
 
 const imgUrl = import.meta.env.VITE_API_IMG_URL;
 
-export default function Review({ data, openDelete }) {
+export default function Review({ data, openDelete, onRefresh }) {
   const star = (data.salonstar / 5) * 100;
   const imgList = data.content.images || [];
   const [isEditting, setIsEditting] = useState(false);
@@ -14,11 +14,23 @@ export default function Review({ data, openDelete }) {
   const [review, setReview] = useState(data.content.review);
   const [rating, setRating] = useState(data.stars);
   const fetcher = useFetcher();
+  const handledRef = useRef(false);
 
-  // detect success
-  if (fetcher.data?.success) {
-    console.log("success")
-  }
+  useEffect(() => {
+    // run exactly once when the action finished successfully
+    if (
+      fetcher.state === "idle" &&
+      fetcher.data?.success &&
+      fetcher.data?.action === "edit-review" &&
+      !handledRef.current
+    ) {
+      handledRef.current = true;
+      onRefresh();
+      setIsEditting(false);
+    }
+
+    if (!fetcher.data) handledRef.current = false;
+  }, [fetcher.state, fetcher.data]);
 
   return (
     <div className={css.reviewCard}>
@@ -73,7 +85,7 @@ export default function Review({ data, openDelete }) {
           {isEditting ? (
             <div>
               <StarRating
-                initStar={data.stars}
+                initStar={rating}
                 onChange={(num) => setRating(num)}
               />
             </div>

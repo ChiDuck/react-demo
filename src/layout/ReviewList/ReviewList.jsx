@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import FullReviewCard from "../../components/FullReviewCard/FullReviewCard";
+import Pagination from "../../components/Pagination/Pagination";
 import { getSalonAPI } from "../../config/apiCalls";
 import style from "./ReviewList.module.scss";
 
 const imgUrl = import.meta.env.VITE_API_IMG_URL;
+const PAGE_SIZE = 6;
 
 async function filterQuery({ id, p, o, f, k, setTotalPages }) {
   const list = await getSalonAPI({
@@ -19,51 +21,8 @@ async function filterQuery({ id, p, o, f, k, setTotalPages }) {
         ? f.current
         : f,
   });
-  setTotalPages(Math.ceil(list.total / 6));
+  setTotalPages(Math.ceil(list.total / PAGE_SIZE));
   return list;
-}
-
-function Pagination({ totalPages, page, setPage }) {
-  function goToPage(p) {
-    if (p < 1) p = 1; // safety guard
-    if (p > totalPages) p = totalPages;
-
-    setPage(p);
-  }
-
-  return (
-    <div className={style.pagination}>
-      <nav>
-        <ul>
-          <li>
-            <button onClick={() => goToPage(1)}>
-              <i className="fa-solid fa-angles-left"></i>
-            </button>
-          </li>
-          <li>
-            <button onClick={() => goToPage(page - 1)}>
-              <i className="fa-solid fa-angle-left"></i>
-            </button>
-          </li>
-          {Array.from({ length: totalPages }, (_, i) => (
-            <li key={i} className={page === i + 1 ? style.active : ""}>
-              <button onClick={() => goToPage(i + 1)}>{i + 1}</button>
-            </li>
-          ))}
-          <li>
-            <button onClick={() => goToPage(page + 1)}>
-              <i className="fa-solid fa-angle-right"></i>
-            </button>
-          </li>
-          <li>
-            <button onClick={() => goToPage(totalPages)}>
-              <i className="fa-solid fa-angles-right"></i>
-            </button>
-          </li>
-        </ul>
-      </nav>
-    </div>
-  );
 }
 
 export default function ReviewList({
@@ -87,7 +46,7 @@ export default function ReviewList({
   const setRating = onRatingChange ? onRatingChange : setRatingState;
   const sort = useRef("Newest First");
   const [totalPages, setTotalPages] = useState(
-    Math.ceil(reviewsList.total / 6)
+    Math.ceil(reviewsList.total / PAGE_SIZE)
   );
 
   async function handleFilter() {
@@ -101,13 +60,11 @@ export default function ReviewList({
     });
     setFilteredList(list.data);
   }
-  // refetch when page changes
+
   useEffect(() => {
     handleFilter();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
-  // refetch when rating changes - reset page to 1 if needed
   useEffect(() => {
     if (page !== 1) setPage(1);
     else handleFilter();
