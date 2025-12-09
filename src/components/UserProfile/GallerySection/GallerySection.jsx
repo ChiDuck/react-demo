@@ -51,7 +51,7 @@ export default function GallerySection() {
     Math.ceil(data.total / PAGE_SIZE)
   );
   const [openImg, setOpenImg] = useState("");
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(-1);
   const [curItem, setCurItem] = useState({});
 
   useEffect(() => {

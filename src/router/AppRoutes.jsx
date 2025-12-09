@@ -2,6 +2,8 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import { action as reviewAction } from "../components/ReviewForm/action";
 import AppointmentsSection from "../components/UserProfile/AppointmentsSection/AppointmentsSection";
 import { userAppointmentLoader } from "../components/UserProfile/AppointmentsSection/loader";
+import FavoriteSection from "../components/UserProfile/FavoriteSection/FavoriteSection";
+import { userFavoriteLoader } from "../components/UserProfile/FavoriteSection/loader";
 import GallerySection from "../components/UserProfile/GallerySection/GallerySection";
 import { userGalleryLoader } from "../components/UserProfile/GallerySection/loader";
 import { editReview } from "../components/UserProfile/ReviewSection/action";
@@ -76,6 +78,11 @@ const routes = createBrowserRouter([
         path: "gallery",
         element: <GallerySection />,
         loader: userGalleryLoader,
+      },
+      {
+        path: "fav",
+        element: <FavoriteSection />,
+        loader: userFavoriteLoader,
       },
     ],
     loader: userProfileLoader,
