@@ -1,5 +1,193 @@
 @use "../../../styles/variables";
-
+@use "../../../styles/mixin";
 .favorite {
-    
+  height: 100%;
+  overflow: auto;
+  scroll-behavior: smooth;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 10px;
+  border: variables.$border-light;
+  cursor: pointer;
+  overflow: hidden;
+  text-decoration: none;
+  color: unset;
+  transition: all 0.3s;
+
+  &:hover {
+    box-shadow: variables.$box-shadow;
+    border: variables.$primary-color 1px solid;
+  }
+
+  p,
+  span {
+    text-overflow: ellipsis;
+    text-wrap: nowrap;
+    overflow: hidden;
+    color: variables.$text-color;
+  }
+}
+
+.bookBtn {
+  display: flex;
+  margin-top: auto;
+  justify-content: center;
+  padding-top: 15px;
+
+  button {
+    @include mixin.secondary-button;
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+}
+
+.salonImg {
+  img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+  }
+}
+
+.info {
+  padding: 10px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.infoSrv {
+  padding: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  h3 {
+    margin: 0;
+    padding-right: 10px;
+    text-wrap: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    svg {
+      margin-right: 5px;
+    }
+  }
+}
+.header {
+  width: 100%;
+  border-radius: 5px;
+  display: flex;
+  gap: 10px;
+  justify-content: start;
+  align-items: end;
+  box-sizing: border-box;
+  overflow: hidden;
+
+  > div {
+    text-overflow: ellipsis;
+    text-wrap: nowrap;
+    overflow: hidden;
+  }
+
+  > img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  strong:first-child {
+    font-size: 20px;
+  }
+
+  span:first-child {
+    position: absolute;
+    right: 40px;
+    font-size: 14px;
+    color: variables.$text-color;
+  }
+
+  .rateAndReview {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    text-overflow: ellipsis;
+    text-wrap: nowrap;
+    overflow: hidden;
+    strong {
+      font-size: 18px;
+    }
+
+    > div {
+      width: fit-content;
+      position: relative;
+    }
+
+    span {
+    }
+  }
+
+  .trueStar {
+    position: absolute;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+}
+
+.seeMore {
+  padding: 20px 0 10px;
+  text-align: center;
+  color: variables.$primary-color;
+
+  strong {
+    cursor: pointer;
+  }
+}
+
+.navbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+  font-size: 18px;
+
+  a {
+    text-decoration: none;
+    font-weight: bold;
+    color: variables.$text-title-color;
+    font-size: 22px;
+  }
+}
+
+section {
+  > div:first-child {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    h3 {
+      font-size: 22px;
+    }
+  }
+}
+.tab {
+  color: variables.$primary-color !important;
+  text-decoration: underline !important;
 }

@@ -10,6 +10,7 @@
       li {
         border-radius: 50%;
         transition: all 0.2s;
+        cursor: pointer;
 
         button {
           all: unset;
@@ -36,3 +37,5 @@
   background-color: variables.$text-title-color;
   color: #fff;
 }
+
+

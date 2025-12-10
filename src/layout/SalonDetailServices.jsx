@@ -51,8 +51,6 @@ function FullHeightMap({ servicesRef, children }) {
 export default function SalonDetailServices({ children, services }) {
   const servicesRef = useRef(null);
   const [mapOpen, setMapOpen] = useState(true);
-  const imgUrl = import.meta.env.VITE_API_IMG_URL;
-  const noImgUrl = import.meta.env.VITE_API_NO_IMG_URL;
   return (
     <>
       <ContentSection>
@@ -61,18 +59,7 @@ export default function SalonDetailServices({ children, services }) {
           <div className={style.servicesSection}>
             <div ref={servicesRef} className={style.services}>
               {services.map((item, index) => (
-                <ServiceCard
-                  key={index}
-                  service_name={item.name}
-                  description={item.desc}
-                  price={item.price}
-                  picture={
-                    item.imagejson != ""
-                      ? `${imgUrl}/${item.imagejson}`
-                      : `${noImgUrl}`
-                  }
-                  countimg={item.countimage}
-                />
+                <ServiceCard key={index} item={item} />
               ))}
             </div>
             <FullHeightMap

@@ -7,7 +7,7 @@ export async function userFavoriteLoader({ request }) {
         getSalonAPI({
             s: "GetUserSalonFavourite",
             z: 8,
-            user: true,
+            salon: true,
             signal: request.signal
         }),
 

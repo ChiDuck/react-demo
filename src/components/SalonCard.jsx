@@ -2,13 +2,7 @@ import { Link } from "react-router-dom";
 import "../styles/SalonCard.scss";
 import Button from "./Button";
 
-export default function SalonCard({
-  picture,
-  logo,
-  salon_name,
-  description,
-  distance,
-}) {
+export default function SalonCard(props) {
   return (
     <Link
       to="/salon-detail/0cf58164-5614-48c3-9037-927283107cad"
@@ -21,13 +15,13 @@ export default function SalonCard({
           alt="favorite"
         />
         <div className="salon-image">
-          <img src={picture} alt="salon" />
+          <img src={props.picture} alt="salon" />
         </div>
         <div className="salon-overlay">
           <div className="salon-badge">
-            <img height="40" width="40" src={logo} alt="badge" />
+            <img height="40" width="40" src={props.logo} alt="badge" />
             <div>
-              <h3>{salon_name}</h3>
+              <h3>{props.salon_name}</h3>
               <div className="salon-rating">
                 <span>
                   <i className="fa-solid fa-star"></i>
@@ -41,11 +35,11 @@ export default function SalonCard({
               </div>
             </div>
           </div>
-          <p>{description}</p>
+          <p>{props.description}</p>
           <div className="salon-book">
             <div>
               <img className="location-icon" src="icon/distance-icon.svg" />
-              <span>{distance} miles away</span>
+              <span>{props.distance} miles away</span>
             </div>
             <Button className="book-button" text="Book Now" />
           </div>

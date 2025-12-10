@@ -1,0 +1,72 @@
+@use "../../../styles/variables";
+
+.navbar {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  font-size: 16px;
+  padding: 10px 0 30px;
+
+  > div {
+    flex: 1;
+    text-align: center;
+  }
+}
+
+.settingContainer {
+  display: flex;
+  border: variables.$border-light;
+  border-radius: 20px;
+  padding: 20px;
+  justify-content: space-evenly;
+}
+
+.checkbox {
+  > div {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 30px;
+
+    input[type="checkbox"] {
+      cursor: pointer;
+      width: 15px;
+      height: 15px;
+      accent-color: variables.$primary-color;
+      border-radius: 50%;
+
+      &:focus {
+        box-shadow: 0 0 0 0.25rem rgba(211, 66, 122, 0.25);
+      }
+    }
+  }
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  span {
+    font-size: 14px;
+  }
+
+  input {
+    border: variables.$border-light;
+    width: 100%;
+    font-size: 15px;
+    box-sizing: border-box;
+    padding: 0 20px;
+    border-radius: 30px;
+    color: variables.$text-title-color;
+    height: 50px;
+
+    &:focus-visible {
+      outline: none !important;
+    }
+  }
+
+  button {
+    all: unset;
+    padding: 0 15px;
+  }
+}

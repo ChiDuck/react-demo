@@ -1,5 +1,6 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { action as reviewAction } from "../components/ReviewForm/action";
+import AccountSettingSection from "../components/UserProfile/AccountSettingSection/AccountSettingSection";
 import AppointmentsSection from "../components/UserProfile/AppointmentsSection/AppointmentsSection";
 import { userAppointmentLoader } from "../components/UserProfile/AppointmentsSection/loader";
 import FavoriteSection from "../components/UserProfile/FavoriteSection/FavoriteSection";
@@ -50,9 +51,18 @@ const routes = createBrowserRouter([
   {
     path: "/profile",
     element: <UserPage />,
-    shouldRevalidate: ({ actionResult }) => {
-      if (actionResult?.action === "edit-review") return false;
-      return true;
+    shouldRevalidate: ({
+      currentUrl,
+      nextUrl,
+      actionResult,
+      defaultShouldRevalidate,
+    }) => {
+      // Skip revalidation when navigating from /profile/... to another /profile/... child.
+      const sameParent = nextUrl.pathname.startsWith("/profile");
+      if (sameParent) return false;
+
+      // fallback to router default behaviour
+      return defaultShouldRevalidate();
     },
     children: [
       {
@@ -69,10 +79,10 @@ const routes = createBrowserRouter([
         element: <ReviewSection />,
         loader: userReviewLoader,
         action: editReview,
-        shouldRevalidate: ({ actionResult }) => {
-          if (actionResult?.action === "edit-review") return false;
-          return true;
-        },
+        // shouldRevalidate: ({ actionResult }) => {
+        //   if (actionResult?.action === "edit-review") return false;
+        //   return true;
+        // },
       },
       {
         path: "gallery",
@@ -83,6 +93,10 @@ const routes = createBrowserRouter([
         path: "fav",
         element: <FavoriteSection />,
         loader: userFavoriteLoader,
+      },
+      {
+        path: "set",
+        element: <AccountSettingSection />,
       },
     ],
     loader: userProfileLoader,
