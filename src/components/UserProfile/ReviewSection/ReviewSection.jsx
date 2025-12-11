@@ -10,7 +10,7 @@ export default function ReviewSection() {
   const [items, setItems] = useState(data.data);
   const [deleting, setDeleting] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [page, setPage] = useState(2);
+  const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const containerRef = useRef(null);
   const [refresh, setRefresh] = useState(0);
@@ -22,7 +22,7 @@ export default function ReviewSection() {
     try {
       const res = await getSalonAPI({
         s: "GetUserReview",
-        p: page,
+        p: page + 1,
         z: 5,
         user: true,
       });
@@ -70,17 +70,8 @@ export default function ReviewSection() {
 
     fetchReviews();
     setDeleting({});
-    setPage(2);
+    setPage(1);
   };
-
-  useEffect(() => {
-    fetchReviews();
-    setPage(2);
-    if (containerRef.current) {
-      containerRef.current.scrollTop = 0;
-    }
-    console.log(refresh);
-  }, [refresh]);
 
   const handleUpdated = () => setRefresh((x) => x + 1);
 

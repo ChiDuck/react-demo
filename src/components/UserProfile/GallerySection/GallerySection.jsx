@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import { getSalonAPI } from "../../../config/apiCalls";
 import Pagination from "../../Pagination/Pagination";
@@ -63,11 +63,17 @@ export default function GallerySection() {
   }, [openImg]);
 
   async function handlePage() {
+    if (page === 1) return;
+
+    const controller = new AbortController();
+    const signal = controller.signal;
+
     const res = await getSalonAPI({
       s: "GetUserGallery",
       p: page,
       z: PAGE_SIZE,
       user: true,
+      signal,
     });
 
     if (res.error !== "") {
@@ -79,6 +85,8 @@ export default function GallerySection() {
     setTotalPages(Math.max(1, Math.ceil(tot / PAGE_SIZE)));
 
     window.scrollTo({ top: 0 });
+
+    return () => controller.abort();
   }
 
   useEffect(() => {

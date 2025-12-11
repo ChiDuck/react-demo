@@ -22,8 +22,6 @@ export async function action({ request }) {
         body: JSON.stringify(payload),
     });
 
-    const json = await res.json();
-    console.log(json);
     if (res.error !== "") {
         console.log(res.error);
         return
@@ -33,7 +31,7 @@ export async function action({ request }) {
     if (files.length !== 0) {
         const uploadData = new FormData();
         uploadData.append("idsalon", salonid);
-        uploadData.append("idreview", json.new_id);
+        uploadData.append("idreview", res.new_id);
         files.forEach((f) => uploadData.append("file[]", f));
         console.log(uploadData);
 

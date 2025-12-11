@@ -49,6 +49,7 @@ const routes = createBrowserRouter([
     ],
   },
   {
+    id: "parent",
     path: "/profile",
     element: <UserPage />,
     shouldRevalidate: ({
@@ -73,26 +74,26 @@ const routes = createBrowserRouter([
         path: "appt",
         element: <AppointmentsSection />,
         loader: userAppointmentLoader,
+        shouldRevalidate: () => false,
       },
       {
         path: "review",
         element: <ReviewSection />,
         loader: userReviewLoader,
         action: editReview,
-        // shouldRevalidate: ({ actionResult }) => {
-        //   if (actionResult?.action === "edit-review") return false;
-        //   return true;
-        // },
+        shouldRevalidate: () => false,
       },
       {
         path: "gallery",
         element: <GallerySection />,
         loader: userGalleryLoader,
+        shouldRevalidate: () => false,
       },
       {
         path: "fav",
         element: <FavoriteSection />,
         loader: userFavoriteLoader,
+        shouldRevalidate: () => false,
       },
       {
         path: "set",

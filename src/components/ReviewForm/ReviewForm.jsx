@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useFetcher } from "react-router-dom";
+import StarRating from "../StarRating";
 import style from "./ReviewForm.module.scss";
 
 export default function ReviewForm({ salonid }) {
