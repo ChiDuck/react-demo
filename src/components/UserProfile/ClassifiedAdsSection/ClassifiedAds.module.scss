@@ -1,0 +1,259 @@
+@use "../../../styles/variables";
+@use "../../../styles/mixin";
+
+.adsContainer {
+  overflow: auto;
+  height: 100%;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.switch {
+  margin: 15px 0;
+  display: flex;
+  justify-content: center;
+
+  > div {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border-radius: 30px;
+    background-color: #ededed;
+    width: 320px;
+    height: 55px;
+    box-sizing: border-box;
+
+    > div:last-child {
+      position: absolute;
+      padding: 5px;
+      display: flex;
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      top: 0;
+      left: 0;
+      font-size: 14px;
+
+      div {
+        cursor: pointer;
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        strong {
+          transition: all 0.3s;
+        }
+      }
+    }
+
+    > div:first-child {
+      background-color: variables.$primary-color;
+      width: 45%;
+      height: 75%;
+      border-radius: 30px;
+      transition: left 0.5s cubic-bezier(0.46, -0.45, 0.6, 1.24);
+      position: absolute;
+      left: 3%;
+    }
+
+    &.buysell {
+      > div:first-child {
+        left: 52%;
+      }
+    }
+
+    .white {
+      color: #fff;
+    }
+  }
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 30px;
+  padding: 20px;
+}
+
+.card {
+  border: variables.$border-light;
+  border-radius: 30px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  transition: scale 0.3s ease-out;
+
+  &:hover {
+    scale: 1.03;
+  }
+
+  img {
+    width: 100%;
+    height: 200px;
+    border-radius: 20px;
+  }
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin-top: 20px;
+    border: variables.$border-light;
+    border-radius: 20px;
+    padding: 10px 20px 20px;
+
+    h2,
+    p {
+      margin: 8px 0;
+    }
+
+    p {
+      word-break: break-word;
+      font-size: 18px;
+    }
+
+    div {
+      margin-top: auto;
+      text-align: right;
+    }
+
+    button {
+      all: unset;
+      cursor: pointer;
+      color: variables.$primary-color;
+    }
+  }
+
+  &.inactive {
+    background-color: #ededed;
+    color: variables.$text-color;
+
+    img {
+      filter: grayscale(1);
+    }
+  }
+}
+
+.overlay {
+  display: flex;
+  opacity: 0;
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 11;
+  width: 100vw;
+  height: 100vh;
+  overflow-y: auto;
+  background-color: rgba(0, 0, 0, 0.45);
+  transition: all 0.4s ease;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  &.active {
+    opacity: 1;
+    pointer-events: all;
+
+    > div {
+      transform: translateY(0%);
+    }
+  }
+}
+
+.modal {
+  margin: 30px auto 30px;
+  position: relative;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  height: min-content;
+  transition: all 0.4s ease;
+  transform: translateY(-20%);
+
+  div {
+    text-align: right;
+  }
+}
+
+.addBtn {
+  margin: 0 20px;
+  display: flex;
+  justify-content: right;
+
+  button {
+    @include mixin.secondary-button;
+    color: variables.$primary-color;
+  }
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+  font-size: 14px;
+  justify-content: center;
+
+  span span {
+    color: red;
+  }
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    text-align: left;
+
+    input,
+    textarea {
+      border-radius: 30px;
+      border: variables.$border-light;
+      padding: 10px 20px;
+      margin: 10px 0;
+
+      &:focus-visible {
+        outline: none;
+      }
+    }
+
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      appearance: none;
+    }
+
+    textarea {
+      border-radius: 20px;
+      resize: vertical;
+      min-height: 50px;
+      max-height: 400px;
+    }
+  }
+
+  button {
+    margin-top: 20px;
+    padding: 0 50px;
+  }
+}
+
+.upload {
+  background: #ffecec;
+  border: 1px dashed #d3427a;
+  font-weight: normal;
+  color: variables.$text-color;
+  width: 100%;
+  height: 100px;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  margin-bottom: 10px;
+  transition: all 0.2s;
+}
+
+.upload:hover {
+  background-color: #fdbfbf;
+}

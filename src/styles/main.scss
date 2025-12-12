@@ -8,7 +8,7 @@ html {
 }
 
 body {
-  font-family: variables.$font-family;
+  font-family: variables.$font-family !important;
   margin: 0;
   padding: 0;
 }
@@ -17,6 +17,11 @@ button {
   @include mixin.default-button;
   font-family: inherit;
   cursor: pointer;
+}
+
+input,
+textarea {
+  font-family: inherit;
 }
 
 .fa-star {

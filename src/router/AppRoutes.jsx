@@ -3,6 +3,8 @@ import { action as reviewAction } from "../components/ReviewForm/action";
 import AccountSettingSection from "../components/UserProfile/AccountSettingSection/AccountSettingSection";
 import AppointmentsSection from "../components/UserProfile/AppointmentsSection/AppointmentsSection";
 import { userAppointmentLoader } from "../components/UserProfile/AppointmentsSection/loader";
+import ClassifiedAdsSection from "../components/UserProfile/ClassifiedAdsSection/ClassifiedAdsSection";
+import { classifiedAdsLoader } from "../components/UserProfile/ClassifiedAdsSection/loader";
 import FavoriteSection from "../components/UserProfile/FavoriteSection/FavoriteSection";
 import { userFavoriteLoader } from "../components/UserProfile/FavoriteSection/loader";
 import GallerySection from "../components/UserProfile/GallerySection/GallerySection";
@@ -98,6 +100,12 @@ const routes = createBrowserRouter([
       {
         path: "set",
         element: <AccountSettingSection />,
+      },
+      {
+        path: "ads",
+        element: <ClassifiedAdsSection />,
+        loader: classifiedAdsLoader,
+        shouldRevalidate: () => false,
       },
     ],
     loader: userProfileLoader,

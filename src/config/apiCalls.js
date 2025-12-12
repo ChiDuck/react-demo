@@ -2,7 +2,7 @@
 
 import { fetchApi } from "../config/apiHelper";
 
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiTlRQIFx1MDBkOXdcdTAwZGEgT25pLUNoYW4gQmFrYSIsImlkIjoiNGQzOGFmYzAtYWM4My00ODg0LWI4ZDMtZTA4YjNhNWQxYWQ0Iiwicm9sZSI6InVzZXIiLCJhY3RpdmUiOnRydWUsImRiaWQiOiJiYTBmZTRkYiIsImV4cCI6MTc2NTQ1MjU5MX0.LD2B1cmKH60UcRcAwqxobqUFuxoypBCJ4S-s7T5G6mI";
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiTlRQIFx1MDBkOXdcdTAwZGEgT25pLUNoYW4gQmFrYSIsImlkIjoiNGQzOGFmYzAtYWM4My00ODg0LWI4ZDMtZTA4YjNhNWQxYWQ0Iiwicm9sZSI6InVzZXIiLCJhY3RpdmUiOnRydWUsImRiaWQiOiIyYmZjNzQxMyIsImV4cCI6MTc2NTUzODA3Nn0.dhZh2w_wLgIbn9QPK8FO6ANchzgSgDgF3nU_KRElyNY";
 
 export async function getSalonAPI({
     s,
@@ -16,6 +16,7 @@ export async function getSalonAPI({
     idsalon,
     cartid,
     appointmentid,
+    listingtype,
     user = false,
     salon = false,
     signal, }
@@ -33,6 +34,7 @@ export async function getSalonAPI({
         idsalon,
         cartid,
         appointmentid,
+        listingtype,
         cache: 0
     };
 
