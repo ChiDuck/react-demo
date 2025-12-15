@@ -3,6 +3,7 @@ import { action as reviewAction } from "../components/ReviewForm/action";
 import AccountSettingSection from "../components/UserProfile/AccountSettingSection/AccountSettingSection";
 import AppointmentsSection from "../components/UserProfile/AppointmentsSection/AppointmentsSection";
 import { userAppointmentLoader } from "../components/UserProfile/AppointmentsSection/loader";
+import { addClassifiedAds } from "../components/UserProfile/ClassifiedAdsSection/action";
 import ClassifiedAdsSection from "../components/UserProfile/ClassifiedAdsSection/ClassifiedAdsSection";
 import { classifiedAdsLoader } from "../components/UserProfile/ClassifiedAdsSection/loader";
 import FavoriteSection from "../components/UserProfile/FavoriteSection/FavoriteSection";
@@ -105,6 +106,7 @@ const routes = createBrowserRouter([
         path: "ads",
         element: <ClassifiedAdsSection />,
         loader: classifiedAdsLoader,
+        action: addClassifiedAds,
         shouldRevalidate: () => false,
       },
     ],

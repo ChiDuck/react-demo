@@ -26,12 +26,12 @@ export default function ClassifiedAdsSection() {
             <div></div>
             <div>
               <div onClick={() => setType(0)}>
-                <strong className={type === 0 && css.white}>
+                <strong className={type === 0 ? css.white : ""}>
                   Salon Jobs Listing
                 </strong>
               </div>
               <div onClick={() => setType(1)}>
-                <strong className={type === 1 && css.white}>
+                <strong className={type === 1 ? css.white : ""}>
                   Salon - Buy & Sell
                 </strong>
               </div>
