@@ -41,7 +41,9 @@ export default function SalonCard(props) {
               <img className="location-icon" src="icon/distance-icon.svg" />
               <span>{props.distance} miles away</span>
             </div>
-            <Button className="book-button" text="Book Now" />
+            <Link to="/booking?salonid=0cf58164-5614-48c3-9037-927283107cad">
+              <Button className="book-button" text="Book Now" />
+            </Link>
           </div>
         </div>
       </div>

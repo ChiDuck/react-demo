@@ -10,7 +10,9 @@ export default function SalonDetailAction({
   return (
     <div>
       <div className={style.action}>
-        <Button text="Book Now" />
+        <Link to={`/booking?salonid=${salonid}`} className={style.actionLink}>
+          <Button text="Book Now" />
+        </Link>
         {!write && (
           <>
             <Link to={`/writereview/${salonid}`} className={style.actionLink}>

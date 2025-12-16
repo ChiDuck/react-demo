@@ -101,7 +101,7 @@
   button:hover {
     background-color: #e0e0e0;
   }
-  > button:first-child {
+  > a:first-child button {
     @include mixin.default-button;
     font-weight: normal;
     display: block;

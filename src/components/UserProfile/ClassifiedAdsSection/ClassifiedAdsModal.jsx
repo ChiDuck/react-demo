@@ -93,6 +93,7 @@ export default function ClassifiedAdsModal({ open, setOpen }) {
     newFiles.forEach((file) => dt.items.add(file));
     if (validFiles.length > 0) setFiles((prev) => [...prev, ...validFiles]);
     e.target.files = dt.files;
+    console.log(dt.files);
   };
 
   useEffect(() => {
@@ -190,28 +191,6 @@ export default function ClassifiedAdsModal({ open, setOpen }) {
     setFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-
-  //   const formData = new FormData();
-  //   formData.append("name", Number(rating));
-  //   formData.append("cite", salonid ?? "");
-  //   formData.append("headline", headline ?? "");
-  //   formData.append("review", review ?? "");
-
-  //   files.forEach((file) => formData.append("photos", file));
-
-  //   // submit to the current route's action (or provide 'action' option)
-  //   fetcher.submit(formData, {
-  //     method: "post",
-  //     encType: "multipart/form-data",
-  //     // action: "/path-if-you-want-to-post-to-different-route"
-  //   });
-  // };
-
-  useEffect(() => {
-    console.log(type);
-  }, [type]);
   return (
     <div className={open ? `${css.overlay} ${css.active}` : css.overlay}>
       <fetcher.Form

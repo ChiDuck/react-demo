@@ -14,6 +14,7 @@ import { editReview } from "../components/UserProfile/ReviewSection/action";
 import { userReviewLoader } from "../components/UserProfile/ReviewSection/loader";
 import ReviewSection from "../components/UserProfile/ReviewSection/ReviewSection";
 import App from "../pages/App";
+import BookingPage from "../pages/Booking/BookingPage";
 import MainLayout from "../pages/MainLayout";
 import { salonDetailLoader } from "../pages/SalonDetail/loader";
 import SalonDetailPage from "../pages/SalonDetail/SalonDetailPage";
@@ -44,6 +45,10 @@ const routes = createBrowserRouter([
         path: "viewreview/:id",
         element: <ViewReviewPage />,
         loader: viewReviewLoader,
+      },
+      {
+        path: "booking",
+        element: <BookingPage />,
       },
       {
         path: "*",

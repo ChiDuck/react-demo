@@ -3,7 +3,7 @@
 @mixin default-button {
   background-color: variables.$primary-color;
   color: variables.$button-text-color;
-  border-radius: 30px;
+  border-radius: 30px !important;
   border: none;
   height: 50px;
   min-width: 115px;
