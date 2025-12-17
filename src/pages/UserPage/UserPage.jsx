@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Outlet, useLoaderData, useLocation } from "react-router-dom";
-import { navItems } from "../../components/IconSVG/navItems";
+import { userNavItems } from "../../components/IconSVG/navItems";
 import UserHeaderBar from "../../layout/UserLayout/UserHeaderBar";
 import UserSideNav from "../../layout/UserLayout/UserSideNav";
 import "./UserPage.scss";
@@ -10,7 +10,7 @@ export default function UserPage() {
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
 
-  const curLbl = navItems.find((item) =>
+  const curLbl = userNavItems.find((item) =>
     location.pathname.startsWith(item.path)
   );
   return (

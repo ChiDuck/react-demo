@@ -1,3 +1,4 @@
+import "../BookingSteps.scss";
 export default function DateStep() {
   return (
     <>

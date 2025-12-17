@@ -1,3 +1,4 @@
+import "../BookingSteps.scss";
 export default function ConfirmStep() {
   return (
     <>
@@ -45,6 +46,7 @@ export default function ConfirmStep() {
           <div>
             <div>
               <strong>Callus Removal x 1</strong>
+              <br />
               <span>1 min each</span>
             </div>
             <strong>$5.00</strong>
@@ -69,11 +71,12 @@ export default function ConfirmStep() {
           <h4>Special Notes</h4>
           <textarea name="" id="" placeholder="Enter special notes"></textarea>
         </div>
-        <div>
+        <div className="policy">
           <div>
             <input type="checkbox" name="" id="" />
-            By checking this box, you agree to our Terms and Conditions, Privacy
-            Policy, and Disclaimer.
+            By checking this box, you agree to our{" "}
+            <span>Terms and Conditions, Privacy Policy</span>, and{" "}
+            <span>Disclaimer</span>.
           </div>
           <span>
             *Total is an estimate. Final price may vary based on add-ons or

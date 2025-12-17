@@ -7,7 +7,15 @@ import ApptIcon from "./user/6.svg?react"
 import ReviewIcon from "./user/7.svg?react"
 import GalleryIcon from "./user/8.svg?react"
 
-export const icons = {
+import ConfirmIcon from "./bookingSteps/confirm.svg?react"
+import ContactIcon from "./bookingSteps/contact.svg?react"
+import DateIcon from "./bookingSteps/date.svg?react"
+import GuestIcon from "./bookingSteps/guest.svg?react"
+import PrefIcon from "./bookingSteps/preferences.svg?react"
+import ServiceIcon from "./bookingSteps/services.svg?react"
+import TimeIcon from "./bookingSteps/time.svg?react"
+
+export const userProfileIcons = {
     ads: AdsIcon,
     fav: FavIcon,
     set: SetIcon,
@@ -16,4 +24,14 @@ export const icons = {
     appt: ApptIcon,
     review: ReviewIcon,
     gallery: GalleryIcon,
+};
+
+export const bookingIcons = {
+    gst: GuestIcon,
+    srv: ServiceIcon,
+    pref: PrefIcon,
+    date: DateIcon,
+    time: TimeIcon,
+    ctc: ContactIcon,
+    cfrm: ConfirmIcon
 };

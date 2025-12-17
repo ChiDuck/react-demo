@@ -1,13 +1,13 @@
 import { NavLink } from "react-router-dom";
-import { icons } from "../../assets/icons/icons";
-import { navItems } from "../../components/IconSVG/navItems";
+import { userProfileIcons } from "../../assets/icons/icons";
+import { userNavItems } from "../../components/IconSVG/navItems";
 import css from "../UserLayout/NavBar.module.scss";
 
 export default function NavBar(props) {
   return (
     <ul className={css.navlist}>
-      {navItems.map((item) => {
-        const Icon = icons[item.icon];
+      {userNavItems.map((item) => {
+        const Icon = userProfileIcons[item.icon];
         return (
           <NavLink
             key={item.path}

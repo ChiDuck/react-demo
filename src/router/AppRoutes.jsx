@@ -15,6 +15,7 @@ import { userReviewLoader } from "../components/UserProfile/ReviewSection/loader
 import ReviewSection from "../components/UserProfile/ReviewSection/ReviewSection";
 import App from "../pages/App";
 import BookingPage from "../pages/Booking/BookingPage";
+import { salonDetailBookingLoader } from "../pages/Booking/loader";
 import MainLayout from "../pages/MainLayout";
 import { salonDetailLoader } from "../pages/SalonDetail/loader";
 import SalonDetailPage from "../pages/SalonDetail/SalonDetailPage";
@@ -49,6 +50,7 @@ const routes = createBrowserRouter([
       {
         path: "booking",
         element: <BookingPage />,
+        loader: salonDetailBookingLoader,
       },
       {
         path: "*",
