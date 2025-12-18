@@ -34,27 +34,80 @@
 .service-categ-list {
   display: flex;
   flex-direction: column;
-  flex: 3;
+  flex: 2;
   gap: 15px;
+
   > div {
-    padding: 5px 10px;
+    border-radius: 10px;
+    padding: 10px 5px;
     background-color: $light-primary-color;
+    transition: all 0.2s ease;
+    max-height: 50px;
+
     h3 {
       margin: 0;
+    }
+
+    &.active {
+      max-height: 100%;
+      .srv-list {
+        max-height: 100%;
+        opacity: 1;
+        padding: 10px;
+      }
     }
   }
 
   .srv-list {
-    display: flex;
     flex-direction: column;
     gap: 10px;
-    padding: 10px;
+    overflow: hidden;
+    opacity: 0;
+    max-height: 0%;
+    transition: all 0.3s ease;
 
     .srv-item {
       background-color: #fff;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      gap: 15px;
+      border-radius: 10px;
+      padding: 5px 15px;
+
+      > *:first-child {
+        flex: 1;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow-wrap: break-word;
+        word-break: break-word;
+        text-overflow: ellipsis;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+      }
+
+      > *:last-child {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+
+      button:first-child {
+        background-color: #fff;
+        border: 1px solid $primary-color;
+        color: $text-color;
+      }
+      button {
+        min-width: 0;
+        border-radius: 5px !important;
+        height: fit-content;
+        aspect-ratio: 1;
+        padding: 0 2px;
+
+        i {
+          scale: 0.7;
+        }
+      }
     }
   }
 }
@@ -67,13 +120,29 @@
   font-size: 22px;
   height: fit-content;
 
-  div {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  > div {
     border-radius: 10px;
+    margin-top: 10px;
     background-color: #fff;
     padding: 10px;
+
+    .selected-item {
+      display: flex;
+      font-size: 18px;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      margin: 0 10px;
+      border-bottom: $border-light;
+    }
+  }
+  .est-total {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    strong:last-child {
+      color: $primary-color;
+    }
   }
 }
 
@@ -88,11 +157,20 @@
     font-weight: bold;
   }
 
-  > div {
+  .tech-input {
     height: 50px;
     border-radius: 30px;
     border: $border-light;
     background-color: #fff;
+  }
+
+  .tech-list {
+    height: 0;
+    overflow-y: auto;
+    transition: height 0.5s ease-in-out;
+    &.active {
+      height: 300px;
+    }
   }
 
   span {

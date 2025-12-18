@@ -79,7 +79,7 @@ function Progressor({ curStep }) {
       </div>
       <div className="step-name">
         {bookingItems.map((item, i) => (
-          <div className={`${i + 1 <= curStep ? "active" : ""}`}>
+          <div key={i} className={`${i + 1 <= curStep ? "active" : ""}`}>
             {i + 1} - {item.label}
           </div>
         ))}
@@ -135,7 +135,7 @@ export default function BookingPage() {
             />
           )}
           {state.step === BOOKING_STEPS.preferences && (
-            <PreferencesStep state={state} dispatch={dispatch} />
+            <PreferencesStep state={state} dispatch={dispatch} guest={guest} />
           )}
           {state.step === BOOKING_STEPS.date && (
             <DateStep state={state} dispatch={dispatch} />
@@ -164,7 +164,10 @@ export default function BookingPage() {
             <span> | {service} </span>
             Service
           </div>
-          <button onClick={() => dispatch({ type: "NEXT_STEP" })}>
+          <button
+            disabled={service < guest && state.step === BOOKING_STEPS.services}
+            onClick={() => dispatch({ type: "NEXT_STEP" })}
+          >
             Next <i className="fa-solid fa-arrow-right"></i>
           </button>
         </div>

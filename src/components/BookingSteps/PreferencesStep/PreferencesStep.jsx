@@ -1,5 +1,39 @@
+import { useEffect, useState } from "react";
 import "../BookingSteps.scss";
-export default function PreferencesStep() {
+export default function PreferencesStep({ guest }) {
+  const [open, setOpen] = useState(false);
+  const [hide, setHide] = useState(true);
+
+  const fetchTech = async () => {
+    const res = await getSalonAPI({
+      s: "GetSalonCategoryService",
+      idsalon: id,
+    });
+
+    if (res.error !== "") {
+      console.log(res.error);
+      return;
+    }
+    setList(res.data);
+  };
+
+  useEffect(() => {
+    fetchTech();
+  }, []);
+
+  useEffect(() => {
+    if (open) {
+      setHide(false);
+    } else {
+      const t = setTimeout(() => setHide(true), 300);
+      return () => clearTimeout(t);
+    }
+  }, [open]);
+
+  useEffect(() => {
+    if (!hide) setOpen(true);
+  }, [hide]);
+
   return (
     <>
       <div className="text-center">
@@ -10,9 +44,16 @@ export default function PreferencesStep() {
         </p>
       </div>
       <div className="technician-select">
-        <label>Preferred Technicians for 1 Guests</label>
-        <div></div>
-        <span>You can select up to 1 preference(s). 0 selected.</span>
+        <label>Preferred Technicians for {guest} Guests</label>
+        <div
+          onClick={() => {
+            hide ? setHide(false) : setOpen(false);
+          }}
+        >
+          <div className="tech-input"></div>
+          <div className={`tech-list ${open ? "active" : ""}`}></div>
+        </div>
+        <span>You can select up to {guest} preference(s). 0 selected.</span>
       </div>
     </>
   );
