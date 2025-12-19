@@ -90,11 +90,12 @@ function Progressor({ curStep }) {
 
 export default function BookingPage() {
   const data = useLoaderData();
-  console.log(data.data);
   const [searchParams, setSearchParams] = useSearchParams();
   const [state, dispatch] = useReducer(bookingReducer, initialState);
   const [guest, setGuest] = useState(1);
   const [service, setService] = useState(0);
+  const srvsRef = useRef([]);
+  const techsRef = useRef([]);
   const sessionRef = useRef(null);
   const salonid = searchParams.get("salonid");
 
@@ -129,16 +130,29 @@ export default function BookingPage() {
               state={state}
               dispatch={dispatch}
               guest={guest}
-              service={service}
               setService={setService}
+              srvsRef={srvsRef}
               id={salonid}
             />
           )}
           {state.step === BOOKING_STEPS.preferences && (
-            <PreferencesStep state={state} dispatch={dispatch} guest={guest} />
+            <PreferencesStep
+              state={state}
+              dispatch={dispatch}
+              guest={guest}
+              srvsRef={srvsRef}
+              techsRef={techsRef}
+              id={salonid}
+            />
           )}
           {state.step === BOOKING_STEPS.date && (
-            <DateStep state={state} dispatch={dispatch} />
+            <DateStep
+              state={state}
+              dispatch={dispatch}
+              timezone={data.data.timezone}
+              srvsRef={srvsRef}
+              techsRef={techsRef}
+            />
           )}
           {state.step === BOOKING_STEPS.time && (
             <TimeStep state={state} dispatch={dispatch} />

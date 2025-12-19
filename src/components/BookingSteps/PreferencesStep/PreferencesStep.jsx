@@ -1,25 +1,40 @@
 import { useEffect, useState } from "react";
+import { postSalonAPI } from "../../../config/apiCalls";
 import "../BookingSteps.scss";
-export default function PreferencesStep({ guest }) {
+
+const imgUrl = import.meta.env.VITE_API_IMG_URL;
+const dfUserUrl = import.meta.env.VITE_API_DF_USER_URL;
+
+export default function PreferencesStep({ guest, id, srvsRef, techsRef }) {
   const [open, setOpen] = useState(false);
   const [hide, setHide] = useState(true);
+  const [techs, setTechs] = useState([]);
+  const [selectedTechs, setSelectedTechs] = useState([]);
 
   const fetchTech = async () => {
-    const res = await getSalonAPI({
-      s: "GetSalonCategoryService",
-      idsalon: id,
+    const res = await postSalonAPI({
+      c: "GetSalonTechnicianByService",
+      isPublic: true,
+      body: JSON.stringify({
+        salonid: id,
+        services: JSON.stringify(srvsRef.current),
+      }),
     });
 
     if (res.error !== "") {
       console.log(res.error);
       return;
     }
-    setList(res.data);
+    setTechs(res.data);
   };
 
   useEffect(() => {
     fetchTech();
   }, []);
+
+  useEffect(() => {
+    techsRef.current = selectedTechs.map((prev) => prev.id);
+  }, [selectedTechs]);
 
   useEffect(() => {
     if (open) {
@@ -45,15 +60,63 @@ export default function PreferencesStep({ guest }) {
       </div>
       <div className="technician-select">
         <label>Preferred Technicians for {guest} Guests</label>
-        <div
-          onClick={() => {
-            hide ? setHide(false) : setOpen(false);
-          }}
-        >
-          <div className="tech-input"></div>
-          <div className={`tech-list ${open ? "active" : ""}`}></div>
+        <div>
+          <div
+            className="tech-input"
+            onClick={() => {
+              hide ? setHide(false) : setOpen(false);
+            }}
+          >
+            {selectedTechs?.map((item) => (
+              <div key={item.id}>
+                <strong>{item.nickname || item.firstname}</strong>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+
+                    setSelectedTechs((prev) =>
+                      prev.filter((i) => i.id !== item.id)
+                    );
+                  }}
+                >
+                  <i className="fa-solid fa-xmark"></i>
+                </button>
+              </div>
+            ))}
+          </div>
+          <div className={`tech-list ${open ? "active" : ""}`}>
+            {techs?.map((item) => {
+              const selected =
+                selectedTechs.find((i) => i.id === item.id) ||
+                selectedTechs.length === guest;
+              return (
+                <div
+                  className={selected ? "selected" : ""}
+                  key={item.id}
+                  onClick={() =>
+                    !selected && setSelectedTechs((prev) => [...prev, item])
+                  }
+                >
+                  <div>
+                    <img
+                      src={
+                        item.avatar !== ""
+                          ? `${imgUrl}/${item.avatar}`
+                          : dfUserUrl
+                      }
+                      alt=""
+                    />
+                  </div>
+                  <strong>{item.nickname || item.firstname}</strong>
+                </div>
+              );
+            })}
+          </div>
         </div>
-        <span>You can select up to {guest} preference(s). 0 selected.</span>
+        <span>
+          You can select up to {guest} preference(s). {selectedTechs.length}{" "}
+          selected.
+        </span>
       </div>
     </>
   );

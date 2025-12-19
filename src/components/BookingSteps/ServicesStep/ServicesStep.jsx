@@ -90,11 +90,12 @@ function SelectedItem({ item, quantity }) {
   );
 }
 
-export default function ServicesStep({ guest, setService, id }) {
+export default function ServicesStep({ guest, setService, srvsRef, id }) {
   const [list, setList] = useState([]);
-  const [selectedList, setSelectedList] = useState([]);
   const [quantities, setQuantities] = useState([]);
   const [total, setTotal] = useState(0);
+  const [selectedSrvs, setSelectedSrvs] = useState([]);
+
   const fetchService = async () => {
     const res = await getSalonAPI({
       s: "GetSalonCategoryService",
@@ -112,9 +113,14 @@ export default function ServicesStep({ guest, setService, id }) {
     fetchService();
   }, []);
 
+  useEffect(() => {
+    srvsRef.current = selectedSrvs.map((prev) => prev.id);
+  }, [selectedSrvs]);
+
   const addOrRmItem = (srv, delta = 1) => {
     setService((prev) => prev + delta);
     setTotal((prev) => prev + srv.price * delta);
+
     setQuantities((prev) => {
       const found = prev.find((i) => i.id === srv.id);
 
@@ -131,7 +137,7 @@ export default function ServicesStep({ guest, setService, id }) {
         .filter((item) => item.quantity > 0);
     });
 
-    setSelectedList((prev) => {
+    setSelectedSrvs((prev) => {
       const exists = prev.some((i) => i.id === srv.id);
 
       if (delta === 1 && !exists) {
@@ -149,11 +155,6 @@ export default function ServicesStep({ guest, setService, id }) {
       return prev;
     });
   };
-
-  useEffect(() => {
-    console.log(selectedList);
-    console.log(quantities);
-  }, [selectedList]);
 
   return (
     <>
@@ -178,7 +179,7 @@ export default function ServicesStep({ guest, setService, id }) {
         <div className="selected-services">
           <strong>Service Pool Summary</strong>
           <div>
-            {selectedList?.map((item) => {
+            {selectedSrvs?.map((item) => {
               const q = quantities.find((i) => i.id === item.id);
               return (
                 <SelectedItem key={item.id} item={item} quantity={q.quantity} />

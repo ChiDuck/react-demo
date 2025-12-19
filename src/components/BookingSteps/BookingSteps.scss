@@ -158,16 +158,80 @@
   }
 
   .tech-input {
-    height: 50px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 5px;
+    min-height: 50px;
+    height: auto;
     border-radius: 30px;
     border: $border-light;
     background-color: #fff;
+    cursor: pointer;
+    pointer-events: visible;
+
+    div {
+      background-color: $primary-color;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      text-wrap: nowrap;
+      width: fit-content;
+      color: #fff;
+      padding: 5px 8px 5px 12px;
+
+      button {
+        all: unset;
+        padding: 0 2px;
+        border: $border-light;
+        cursor: pointer;
+
+        i {
+          scale: 0.7;
+        }
+      }
+    }
   }
 
   .tech-list {
     height: 0;
     overflow-y: auto;
     transition: height 0.5s ease-in-out;
+    background-color: #fff;
+
+    > div {
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      gap: 15px;
+      cursor: pointer;
+      background-color: #fff;
+      transition: all 0.3s ease;
+
+      > div {
+        border-radius: 50%;
+        border: 1px solid $primary-color;
+        overflow: hidden;
+        img {
+          width: 50px;
+          height: 50px;
+          object-fit: cover;
+        }
+      }
+
+      &:hover {
+        background-color: #f7f7f7;
+        border-radius: 50px;
+      }
+
+      &.selected {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background-color: #fff;
+      }
+    }
+
     &.active {
       height: 300px;
     }
@@ -193,6 +257,11 @@
     gap: 15px;
     margin-bottom: 20px;
 
+    div {
+      min-width: 250px;
+      text-align: center;
+    }
+
     h3 {
       font-weight: bold;
       margin: 0;
@@ -202,8 +271,14 @@
       min-width: 0;
       aspect-ratio: 1;
       height: fit-content;
-      padding: 0 15px;
-      border-radius: 10px !important;
+      padding: 0 10px;
+      border-radius: 5px !important;
+    }
+
+    button:first-child {
+      background-color: #fff;
+      color: $text-color;
+      border: $border-light;
     }
   }
   .weekday {
@@ -219,7 +294,7 @@
     grid-template-columns: repeat(7, 1fr);
     gap: 10px;
 
-    > div {
+    .date-cell {
       display: flex;
       align-items: start;
       cursor: pointer;
@@ -229,9 +304,14 @@
       aspect-ratio: 1;
       font-size: 20px;
       transition: all 0.3s ease-in-out;
-      &:hover {
+      &:not(.disabled):hover,
+      &.selected {
         background-color: $primary-color;
         color: #fff;
+      }
+      &.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
       }
     }
   }
