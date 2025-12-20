@@ -1,42 +1,29 @@
-import { useMemo, useState } from "react";
-import "../BookingSteps.scss";
+import { useEffect, useMemo, useState } from "react";
+import { postSalonAPI } from "../../../config/apiCalls";
+import DateCell from "./DateCell";
+import {
+  addMonths,
+  formatDateUTC,
+  getDateInTimezone,
+  randomInt,
+} from "./dateFunction";
+import "./DateStep.scss";
 
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-function getDateInTimezone(date, timezone) {
-  const parts = new Intl.DateTimeFormat("en-US", {
-    timeZone: timezone,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).formatToParts(date);
+export default function DateStep({
+  onSelect,
+  timezone,
+  srvsRef,
+  techsRef,
+  id,
+  sessionKey,
+}) {
+  const [fullSchedule, setFullSchedule] = useState({
+    technician: [],
+    schedule: [],
+  });
 
-  const year = Number(parts.find((p) => p.type === "year").value);
-  const month = Number(parts.find((p) => p.type === "month").value);
-  const day = Number(parts.find((p) => p.type === "day").value);
-
-  return new Date(Date.UTC(year, month - 1, day));
-}
-
-function addMonths(date, months) {
-  const d = new Date(
-    Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + months, 1)
-  );
-  return d;
-}
-
-function formatDateUTC(date) {
-  const y = date.getUTCFullYear();
-  const m = String(date.getUTCMonth() + 1).padStart(2, "0");
-  const d = String(date.getUTCDate()).padStart(2, "0");
-  return `${y}/${m}/${d}`;
-}
-
-function randomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-export default function DateStep({ onSelect, timezone, srvsRef, techsRef }) {
   const today = useMemo(
     () => getDateInTimezone(new Date(), timezone),
     [timezone]
@@ -113,15 +100,6 @@ export default function DateStep({ onSelect, timezone, srvsRef, techsRef }) {
     return false;
   }
 
-  function handleSelect(day) {
-    if (isDisabled(day)) return;
-    const d = new Date(
-      Date.UTC(viewDate.getUTCFullYear(), viewDate.getUTCMonth(), day)
-    );
-    setSelectedDate(d);
-    if (onSelect) onSelect(d);
-  }
-
   // build grid items including leading empty slots
   const cells = [];
   for (let i = 0; i < firstWeekday; i++) cells.push(null);
@@ -131,19 +109,26 @@ export default function DateStep({ onSelect, timezone, srvsRef, techsRef }) {
   const todayUTC = new Date(
     Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
   );
+  const startOfMonthUTC = new Date(
+    Date.UTC(viewDate.getUTCFullYear(), viewDate.getUTCMonth(), 1)
+  );
 
   const endOfMonthUTC = new Date(
-    Date.UTC(todayUTC.getUTCFullYear(), todayUTC.getUTCMonth() + 1, 0)
+    Date.UTC(viewDate.getUTCFullYear(), viewDate.getUTCMonth() + 1, 0)
   );
 
   const fetchDatetime = async () => {
     const payload = {
       salonid: id,
+      hasanyone: 1,
       services: JSON.stringify(srvsRef.current),
-      techsRef: JSON.stringify(techsRef.current),
-      fromtime: formatDateUTC(todayUTC),
+      technicians: JSON.stringify(techsRef.current),
+      fromtime: formatDateUTC(
+        viewDate.getTime() === minMonth.getTime() ? todayUTC : startOfMonthUTC
+      ),
       totime: formatDateUTC(endOfMonthUTC),
       random: randomInt(100, 2000),
+      key: sessionKey,
     };
 
     const res = await postSalonAPI({
@@ -156,8 +141,15 @@ export default function DateStep({ onSelect, timezone, srvsRef, techsRef }) {
       console.log(res.error);
       return;
     }
-    setTechs(res.data);
+    setFullSchedule(res.data);
   };
+
+  useEffect(() => {
+    fetchDatetime();
+  }, [viewDate]);
+  useEffect(() => {
+    console.log(fullSchedule);
+  }, [fullSchedule]);
 
   return (
     <>
@@ -192,35 +184,18 @@ export default function DateStep({ onSelect, timezone, srvsRef, techsRef }) {
         </div>
 
         <div className="date-grid">
-          {cells.map((day, idx) => {
-            if (day === null)
-              return <div key={"empty-" + idx} className="empty" />;
-            const disabled = isDisabled(day);
-            const cellDate = new Date(
-              Date.UTC(viewDate.getUTCFullYear(), viewDate.getUTCMonth(), day)
-            );
-            const isToday = cellDate.getTime() === today.getTime();
-            const isSelected =
-              selectedDate &&
-              selectedDate.getUTCFullYear() === viewDate.getUTCFullYear() &&
-              selectedDate.getUTCMonth() === viewDate.getUTCMonth() &&
-              selectedDate.getUTCDate() === day;
-            return (
-              <div
-                key={day}
-                className={[
-                  "date-cell",
-                  disabled ? "disabled" : "",
-                  isToday ? "today" : "",
-                  isSelected ? "selected" : "",
-                ].join(" ")}
-                onClick={() => handleSelect(day)}
-                disabled={disabled}
-              >
-                {day}
-              </div>
-            );
-          })}
+          {cells.map((day, idx) => (
+            <DateCell
+              key={idx}
+              idx={idx}
+              day={day}
+              viewDate={viewDate}
+              fullSchedule={fullSchedule}
+              selectedDate={selectedDate}
+              setSelectedDate={setSelectedDate}
+              isDisabled={isDisabled}
+            />
+          ))}
         </div>
       </div>
     </>

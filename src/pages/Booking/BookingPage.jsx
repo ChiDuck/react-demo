@@ -11,6 +11,7 @@ import TimeStep from "../../components/BookingSteps/TimeStep/TimeStep";
 import { bookingItems } from "../../components/IconSVG/navItems";
 import "./BookingPage.scss";
 import { BOOKING_STEPS, bookingReducer, initialState } from "./bookingReducer";
+
 function BookingHeader() {
   //   const star = (data.salonstar / 5) * 100;
   const star = 85;
@@ -152,6 +153,9 @@ export default function BookingPage() {
               timezone={data.data.timezone}
               srvsRef={srvsRef}
               techsRef={techsRef}
+              key={sessionRef.current}
+              sessionKey={sessionRef.current}
+              id={salonid}
             />
           )}
           {state.step === BOOKING_STEPS.time && (
