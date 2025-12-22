@@ -13,6 +13,7 @@ const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export default function DateStep({
   onSelect,
+  guest,
   timezone,
   srvsRef,
   techsRef,
@@ -187,8 +188,9 @@ export default function DateStep({
           {cells.map((day, idx) => (
             <DateCell
               key={idx}
-              idx={idx}
               day={day}
+              guest={guest}
+              techsRef={techsRef.current}
               viewDate={viewDate}
               fullSchedule={fullSchedule}
               selectedDate={selectedDate}

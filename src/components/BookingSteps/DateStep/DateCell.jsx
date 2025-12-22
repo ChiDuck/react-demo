@@ -1,8 +1,10 @@
+import { bookableDay, isTechWithinSchedule } from "./dateFunction";
 import "./DateStep.scss";
 
 export default function DateCell({
-  idx,
   day,
+  guest,
+  techsRef,
   viewDate,
   fullSchedule,
   isDisabled,
@@ -15,6 +17,7 @@ export default function DateCell({
   const cellDate = new Date(
     Date.UTC(viewDate.getUTCFullYear(), viewDate.getUTCMonth(), day)
   );
+
   const isHoliday = schedule.find(
     (i) =>
       i.startdate <= formatDate(cellDate) &&
@@ -22,17 +25,32 @@ export default function DateCell({
       i.status === 0
   );
 
-  const salonClosed = schedule.find(
+  const activeDay = schedule.find(
     (i) =>
-      cellDate.getUTCDay() + 1 === i.weekdays &&
-      i.status === 0 &&
+      cellDate.getUTCDay() + 1 === i.weekdays && //(UTCDay: 0 = Sun, weekdays: 1 = Sun)
+      i.status === 1 &&
       i.startdate === null &&
       i.enddate === null
   );
 
+  const salonClosed = !activeDay;
+
   const notWorking = tech
-    .filter((t) => !t.schedule.some((s) => s.weekdays === cellDate.getUTCDay()))
+    .filter(
+      (t) =>
+        (techsRef.length === 0 || techsRef.some((p) => p === t.id)) &&
+        !t.schedule.some(
+          (s) =>
+            s.weekdays === cellDate.getUTCDay() + 1 &&
+            isTechWithinSchedule(s, activeDay)
+        )
+    )
     .map((t) => t.nickname || t.techname);
+
+  const isBookable = bookableDay(techsRef, tech, activeDay, guest);
+
+  console.log(formatDate(cellDate) + " " + notWorking);
+
   const isSelected =
     selectedDate &&
     selectedDate.getUTCFullYear() === viewDate.getUTCFullYear() &&
@@ -40,7 +58,7 @@ export default function DateCell({
     selectedDate.getUTCDate() === day;
 
   function handleSelect(day) {
-    if (disabled || isHoliday || salonClosed || notWorking.length === 0) return;
+    if (disabled || isHoliday || salonClosed || !isBookable) return;
     const d = new Date(
       Date.UTC(viewDate.getUTCFullYear(), viewDate.getUTCMonth(), day)
     );
@@ -56,16 +74,13 @@ export default function DateCell({
     return `${y}-${m}-${d}T00:00:00`;
   }
 
-  if (day === null) return <div key={"empty-" + idx} className="empty" />;
+  if (day === null) return <div />;
 
   return (
     <div
-      key={day}
       className={[
         "date-cell",
-        disabled || isHoliday || salonClosed || notWorking.length === 0
-          ? "disabled"
-          : "",
+        disabled || isHoliday || salonClosed || !isBookable ? "disabled" : "",
         isSelected ? "selected" : "",
       ].join(" ")}
       onClick={() => handleSelect(day)}
@@ -78,8 +93,15 @@ export default function DateCell({
       )}
       {salonClosed && !disabled && <div className="closed">Salon Closed</div>}
 
-      {notWorking.length === 0 && !disabled && (
-        <div className="not-working">
+      {!isBookable && !disabled && !isHoliday && !salonClosed && (
+        <div
+          className="not-working"
+          title={
+            tech.length - notWorking.length < guest
+              ? "Not enough technicians working"
+              : notWorking.map((i) => `${i} is not working`).join("\n")
+          }
+        >
           <i className="fa-solid fa-user-slash"></i>
         </div>
       )}

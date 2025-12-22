@@ -150,6 +150,7 @@ export default function BookingPage() {
             <DateStep
               state={state}
               dispatch={dispatch}
+              guest={guest}
               timezone={data.data.timezone}
               srvsRef={srvsRef}
               techsRef={techsRef}

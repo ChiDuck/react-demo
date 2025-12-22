@@ -30,3 +30,59 @@ export function formatDateUTC(date) {
 export function randomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
+function timeToMinutes(timeStr) {
+    const [time, meridiem] = timeStr.split(" ");
+    let [hours, minutes] = time.split(":").map(Number);
+
+    if (meridiem === "PM" && hours !== 12) hours += 12;
+    if (meridiem === "AM" && hours === 12) hours = 0;
+
+    return hours * 60 + minutes;
+}
+
+function isTechWorkingOnDay(tech, schedule) {
+    if (schedule === undefined) return false;
+    return tech.schedule.some(
+        (s) =>
+            s.weekdays === schedule.weekdays &&
+            isTechWithinSchedule(s, schedule)
+    );
+}
+
+export function isTechWithinSchedule(tech, schedule) {
+    if (!tech || !schedule) return false;
+    const techStart = timeToMinutes(tech.starttime);
+    const techEnd = timeToMinutes(tech.endtime);
+
+    const schedStart = timeToMinutes(schedule.starttime);
+    const schedEnd = timeToMinutes(schedule.endtime);
+
+    return techStart < schedEnd && techEnd > schedStart;
+}
+
+export function bookableDay(techsRef, tech, activeDay, guest) {
+    const prfTechs =
+        techsRef.length > 0
+            ? tech.filter((t) => techsRef.some((p) => p === t.id))
+            : [];
+
+    const otherTechs = tech.filter((t) => !prfTechs.some((p) => p.id === t.id));
+
+    const prfWorking = prfTechs.filter((t) => isTechWorkingOnDay(t, activeDay));
+
+    if (prfWorking.length !== prfTechs.length) {
+        return false; // preferred tech missing
+    }
+
+    const availableOthers = otherTechs.filter((t) =>
+        isTechWorkingOnDay(t, activeDay)
+    );
+
+    const remainingGuests = guest - prfTechs.length;
+
+    const isBookable =
+        remainingGuests <= 0 || availableOthers.length >= remainingGuests;
+
+    return isBookable
+}
