@@ -31,7 +31,18 @@ export function randomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function timeToMinutes(timeStr) {
+export function minutesToTime(minutes) {
+    let hours = Math.floor(minutes / 60);
+    let mins = minutes % 60;
+
+    const modifier = hours >= 12 ? "PM" : "AM";
+    if (hours === 0) hours = 12;
+    else if (hours > 12) hours -= 12;
+
+    return `${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")} ${modifier}`;
+}
+
+export function timeToMinutes(timeStr) {
     const [time, meridiem] = timeStr.split(" ");
     let [hours, minutes] = time.split(":").map(Number);
 

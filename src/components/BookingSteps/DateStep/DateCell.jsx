@@ -49,8 +49,6 @@ export default function DateCell({
 
   const isBookable = bookableDay(techsRef, tech, activeDay, guest);
 
-  console.log(formatDate(cellDate) + " " + notWorking);
-
   const isSelected =
     selectedDate &&
     selectedDate.getUTCFullYear() === viewDate.getUTCFullYear() &&
@@ -63,7 +61,6 @@ export default function DateCell({
       Date.UTC(viewDate.getUTCFullYear(), viewDate.getUTCMonth(), day)
     );
     setSelectedDate(d);
-    if (onSelect) onSelect(d);
   }
 
   function formatDate(date) {

@@ -10,32 +10,55 @@ export const BOOKING_STEPS = {
 
 export const initialState = {
     step: BOOKING_STEPS.guest,
-    guests: 0,
+    inforUser: null,
     selectedService: [],
     selectedTechnician: [],
+    guests: 1,
     selectedDate: null,
     selectedTime: null,
-    inforUser: null,
     tax: 0,
-    formatselecteddate: null
+    formatselecteddate: null,
+};
+
+function buildSavePayload({ salonid, state, sessionKey }) {
+    return {
+        salonid,
+        key: sessionKey,
+        content: JSON.stringify({
+            inforUser: state.inforUser,
+            selectedService: state.selectedService,
+            selectedTechnician: state.selectedTechnician,
+            guests: state.guests,
+            selectedDate: state.selectedDate,
+            selectedTime: state.selectedTime,
+            tax: state.tax,
+            step: state.step,
+            formatselecteddate: state.formatselecteddate,
+        }),
+    };
 }
+
 
 export function bookingReducer(state, action) {
     switch (action.type) {
-        case "SET_GUEST":
-            return { ...state, guest: action.payload };
+        case "SET_GUESTS":
+            return { ...state, guests: action.payload };
 
         case "SET_SERVICES":
             return { ...state, selectedService: action.payload };
 
         case "SET_PREFERENCES":
-            return { ...state, preferences: action.payload };
+            return { ...state, selectedTechnician: action.payload };
 
         case "SET_DATE":
-            return { ...state, date: action.payload };
+            return {
+                ...state,
+                selectedDate: action.payload.date,
+                formatselecteddate: action.payload.formatted,
+            };
 
         case "SET_TIME":
-            return { ...state, time: action.payload };
+            return { ...state, selectedTime: action.payload };
 
         case "SET_CONTACT":
             return { ...state, contact: action.payload };
@@ -49,6 +72,12 @@ export function bookingReducer(state, action) {
         case "PREV_STEP":
             return { ...state, step: state.step - 1 };
 
+        case "HYDRATE_FROM_API":
+            return {
+                ...state,
+                ...action.payload,
+                step: action.payload.step ?? state.step,
+            };
         default:
             return state;
     }

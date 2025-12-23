@@ -12,13 +12,14 @@ import "./DateStep.scss";
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export default function DateStep({
-  onSelect,
   guest,
   timezone,
   srvsRef,
   techsRef,
   id,
   sessionKey,
+  dateRef,
+  setNext,
 }) {
   const [fullSchedule, setFullSchedule] = useState({
     technician: [],
@@ -148,9 +149,11 @@ export default function DateStep({
   useEffect(() => {
     fetchDatetime();
   }, [viewDate]);
+
   useEffect(() => {
-    console.log(fullSchedule);
-  }, [fullSchedule]);
+    dateRef.current = selectedDate;
+    setNext(selectedDate != null);
+  }, [selectedDate]);
 
   return (
     <>

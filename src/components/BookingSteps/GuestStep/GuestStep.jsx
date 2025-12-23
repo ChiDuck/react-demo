@@ -1,11 +1,5 @@
 import "../BookingSteps.scss";
-export default function GuestStep({
-  state,
-  dispatch,
-  guest,
-  setGuest,
-  maxGuest,
-}) {
+export default function GuestStep({ state, dispatch, maxGuest }) {
   return (
     <>
       <div className="text-center">
@@ -13,15 +7,22 @@ export default function GuestStep({
         <p>How many guests will be joining us today?</p>
       </div>
       <div className="guest-counter">
-        <h3>Number of guest</h3>
-        <h2>{guest}</h2>
+        <h3>Number of Guest</h3>
+        <h1>{state.guests}</h1>
         <div>
-          <button disabled={guest === 1} onClick={() => setGuest((g) => g - 1)}>
+          <button
+            disabled={state.guests === 1}
+            onClick={() =>
+              dispatch({ type: "SET_GUESTS", payload: state.guests - 1 })
+            }
+          >
             <i className="fa-solid fa-minus"></i>
           </button>
           <button
-            disabled={guest === maxGuest}
-            onClick={() => setGuest((g) => g + 1)}
+            disabled={state.guests === maxGuest}
+            onClick={() =>
+              dispatch({ type: "SET_GUESTS", payload: state.guests + 1 })
+            }
           >
             <i className="fa-solid fa-plus"></i>
           </button>

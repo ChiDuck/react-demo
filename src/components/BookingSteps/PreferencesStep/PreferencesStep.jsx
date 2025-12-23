@@ -5,11 +5,21 @@ import "../BookingSteps.scss";
 const imgUrl = import.meta.env.VITE_API_IMG_URL;
 const dfUserUrl = import.meta.env.VITE_API_DF_USER_URL;
 
-export default function PreferencesStep({ guest, id, srvsRef, techsRef }) {
+export default function PreferencesStep({
+  guest,
+  id,
+  srvsRef,
+  state,
+  dispatch,
+  techsRef,
+  setNext,
+}) {
   const [open, setOpen] = useState(false);
   const [hide, setHide] = useState(true);
   const [techs, setTechs] = useState([]);
   const [selectedTechs, setSelectedTechs] = useState([]);
+
+  setNext(true);
 
   const fetchTech = async () => {
     const res = await postSalonAPI({

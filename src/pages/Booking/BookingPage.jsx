@@ -95,10 +95,25 @@ export default function BookingPage() {
   const [state, dispatch] = useReducer(bookingReducer, initialState);
   const [guest, setGuest] = useState(1);
   const [service, setService] = useState(0);
+  const [next, setNext] = useState(true);
   const srvsRef = useRef([]);
   const techsRef = useRef([]);
+  const dateRef = useRef(null);
+  const timeRef = useRef(null);
   const sessionRef = useRef(null);
   const salonid = searchParams.get("salonid");
+
+  // useEffect(() => {
+  //   if (!sessionRef.current) return;
+
+  //   const payload = buildSavePayload({
+  //     salonid,
+  //     state,
+  //     sessionKey: sessionRef.current,
+  //   });
+
+  //   saveBookingProgress(payload);
+  // }, [state.step]);
 
   useEffect(() => {
     let key = searchParams.get("key");
@@ -111,6 +126,31 @@ export default function BookingPage() {
     sessionRef.current = key;
   }, []);
 
+  const stepValidators = {
+    [BOOKING_STEPS.guest]: () => true,
+
+    [BOOKING_STEPS.services]: (state) => {
+      const totalSrv = state.selectedService.reduce(
+        (a, item) => a + item.quantity,
+        0
+      );
+      return totalSrv >= state.guests;
+    },
+
+    [BOOKING_STEPS.preferences]: () => true,
+
+    [BOOKING_STEPS.date]: (state) => !!state.selectedDate,
+
+    [BOOKING_STEPS.time]: (state) => !!state.selectedTime,
+
+    [BOOKING_STEPS.contact]: (state) => !!state.inforUser,
+  };
+
+  function canProceed(step, state) {
+    const valid = stepValidators[step];
+    return valid ? valid(state) : true;
+  }
+
   return (
     <div className="ms-auto me-auto container mt-4 mb-4">
       <BookingHeader />
@@ -121,8 +161,6 @@ export default function BookingPage() {
             <GuestStep
               state={state}
               dispatch={dispatch}
-              guest={guest}
-              setGuest={setGuest}
               maxGuest={data.data.techcount}
             />
           )}
@@ -130,10 +168,10 @@ export default function BookingPage() {
             <ServicesStep
               state={state}
               dispatch={dispatch}
-              guest={guest}
               setService={setService}
               srvsRef={srvsRef}
               id={salonid}
+              setNext={setNext}
             />
           )}
           {state.step === BOOKING_STEPS.preferences && (
@@ -144,6 +182,7 @@ export default function BookingPage() {
               srvsRef={srvsRef}
               techsRef={techsRef}
               id={salonid}
+              setNext={setNext}
             />
           )}
           {state.step === BOOKING_STEPS.date && (
@@ -157,10 +196,24 @@ export default function BookingPage() {
               key={sessionRef.current}
               sessionKey={sessionRef.current}
               id={salonid}
+              dateRef={dateRef}
+              setNext={setNext}
             />
           )}
           {state.step === BOOKING_STEPS.time && (
-            <TimeStep state={state} dispatch={dispatch} />
+            <TimeStep
+              state={state}
+              dispatch={dispatch}
+              guest={guest}
+              srvsRef={srvsRef}
+              techsRef={techsRef}
+              dateRef={dateRef}
+              timeRef={timeRef}
+              key={sessionRef.current}
+              sessionKey={sessionRef.current}
+              id={salonid}
+              setNext={setNext}
+            />
           )}
           {state.step === BOOKING_STEPS.contact && (
             <ContactStep state={state} dispatch={dispatch} />
@@ -178,13 +231,13 @@ export default function BookingPage() {
             <i className="fa-solid fa-arrow-left"></i> Back
           </button>
           <div>
-            <span>{guest} </span>
+            <span>{state.guests} </span>
             Guests
             <span> | {service} </span>
             Service
           </div>
           <button
-            disabled={service < guest && state.step === BOOKING_STEPS.services}
+            disabled={!canProceed(state.step, state)}
             onClick={() => dispatch({ type: "NEXT_STEP" })}
           >
             Next <i className="fa-solid fa-arrow-right"></i>
