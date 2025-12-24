@@ -52,14 +52,19 @@ export function timeToMinutes(timeStr) {
     return hours * 60 + minutes;
 }
 
-function isTechWorkingOnDay(tech, schedule) {
-    if (schedule === undefined) return false;
+function isTechWorkingOnDay(tech, daySchedules) {
+    if (!daySchedules?.length) return false;
+
     return tech.schedule.some(
-        (s) =>
-            s.weekdays === schedule.weekdays &&
-            isTechWithinSchedule(s, schedule)
+        (sched) =>
+            daySchedules.some(
+                (shift) =>
+                    sched.weekdays === shift.weekdays &&
+                    isTechWithinSchedule(sched, shift)
+            )
     );
 }
+
 
 export function isTechWithinSchedule(tech, schedule) {
     if (!tech || !schedule) return false;
@@ -72,28 +77,30 @@ export function isTechWithinSchedule(tech, schedule) {
     return techStart < schedEnd && techEnd > schedStart;
 }
 
-export function bookableDay(techsRef, tech, activeDay, guest) {
-    const prfTechs =
+export function bookableDay(techsRef, techs, daySchedules, guest) {
+    const preferredTechs =
         techsRef.length > 0
-            ? tech.filter((t) => techsRef.some((p) => p === t.id))
+            ? techs.filter((t) => techsRef.includes(t.id))
             : [];
 
-    const otherTechs = tech.filter((t) => !prfTechs.some((p) => p.id === t.id));
+    const otherTechs = techs.filter(
+        (t) => !preferredTechs.some((p) => p.id === t.id)
+    );
 
-    const prfWorking = prfTechs.filter((t) => isTechWorkingOnDay(t, activeDay));
+    // All preferred techs must work at least one span that day
+    const preferredWorking = preferredTechs.filter((t) =>
+        isTechWorkingOnDay(t, daySchedules)
+    );
 
-    if (prfWorking.length !== prfTechs.length) {
-        return false; // preferred tech missing
+    if (preferredWorking.length !== preferredTechs.length) {
+        return false;
     }
 
     const availableOthers = otherTechs.filter((t) =>
-        isTechWorkingOnDay(t, activeDay)
+        isTechWorkingOnDay(t, daySchedules)
     );
 
-    const remainingGuests = guest - prfTechs.length;
+    const remainingGuests = guest - preferredTechs.length;
 
-    const isBookable =
-        remainingGuests <= 0 || availableOthers.length >= remainingGuests;
-
-    return isBookable
+    return remainingGuests <= 0 || availableOthers.length >= remainingGuests;
 }

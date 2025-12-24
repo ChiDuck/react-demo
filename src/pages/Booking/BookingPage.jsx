@@ -94,7 +94,6 @@ export default function BookingPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [state, dispatch] = useReducer(bookingReducer, initialState);
   const [guest, setGuest] = useState(1);
-  const [service, setService] = useState(0);
   const [next, setNext] = useState(true);
   const srvsRef = useRef([]);
   const techsRef = useRef([]);
@@ -102,7 +101,10 @@ export default function BookingPage() {
   const timeRef = useRef(null);
   const sessionRef = useRef(null);
   const salonid = searchParams.get("salonid");
-
+  const totalSrv = state.selectedService.reduce(
+    (a, item) => a + item.quantity,
+    0
+  );
   // useEffect(() => {
   //   if (!sessionRef.current) return;
 
@@ -129,14 +131,7 @@ export default function BookingPage() {
   const stepValidators = {
     [BOOKING_STEPS.guest]: () => true,
 
-    [BOOKING_STEPS.services]: (state) => {
-      const totalSrv = state.selectedService.reduce(
-        (a, item) => a + item.quantity,
-        0
-      );
-      return totalSrv >= state.guests;
-    },
-
+    [BOOKING_STEPS.services]: (state) => totalSrv >= state.guests,
     [BOOKING_STEPS.preferences]: () => true,
 
     [BOOKING_STEPS.date]: (state) => !!state.selectedDate,
@@ -165,54 +160,28 @@ export default function BookingPage() {
             />
           )}
           {state.step === BOOKING_STEPS.services && (
-            <ServicesStep
-              state={state}
-              dispatch={dispatch}
-              setService={setService}
-              srvsRef={srvsRef}
-              id={salonid}
-              setNext={setNext}
-            />
+            <ServicesStep state={state} dispatch={dispatch} id={salonid} />
           )}
           {state.step === BOOKING_STEPS.preferences && (
-            <PreferencesStep
-              state={state}
-              dispatch={dispatch}
-              guest={guest}
-              srvsRef={srvsRef}
-              techsRef={techsRef}
-              id={salonid}
-              setNext={setNext}
-            />
+            <PreferencesStep state={state} dispatch={dispatch} id={salonid} />
           )}
           {state.step === BOOKING_STEPS.date && (
             <DateStep
               state={state}
               dispatch={dispatch}
-              guest={guest}
               timezone={data.data.timezone}
-              srvsRef={srvsRef}
-              techsRef={techsRef}
               key={sessionRef.current}
               sessionKey={sessionRef.current}
               id={salonid}
-              dateRef={dateRef}
-              setNext={setNext}
             />
           )}
           {state.step === BOOKING_STEPS.time && (
             <TimeStep
               state={state}
               dispatch={dispatch}
-              guest={guest}
-              srvsRef={srvsRef}
-              techsRef={techsRef}
-              dateRef={dateRef}
-              timeRef={timeRef}
               key={sessionRef.current}
               sessionKey={sessionRef.current}
               id={salonid}
-              setNext={setNext}
             />
           )}
           {state.step === BOOKING_STEPS.contact && (
@@ -233,7 +202,7 @@ export default function BookingPage() {
           <div>
             <span>{state.guests} </span>
             Guests
-            <span> | {service} </span>
+            <span> | {totalSrv} </span>
             Service
           </div>
           <button

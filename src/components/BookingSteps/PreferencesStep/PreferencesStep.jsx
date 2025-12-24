@@ -5,21 +5,10 @@ import "../BookingSteps.scss";
 const imgUrl = import.meta.env.VITE_API_IMG_URL;
 const dfUserUrl = import.meta.env.VITE_API_DF_USER_URL;
 
-export default function PreferencesStep({
-  guest,
-  id,
-  srvsRef,
-  state,
-  dispatch,
-  techsRef,
-  setNext,
-}) {
+export default function PreferencesStep({ state, dispatch, id, techsRef }) {
   const [open, setOpen] = useState(false);
   const [hide, setHide] = useState(true);
   const [techs, setTechs] = useState([]);
-  const [selectedTechs, setSelectedTechs] = useState([]);
-
-  setNext(true);
 
   const fetchTech = async () => {
     const res = await postSalonAPI({
@@ -27,7 +16,7 @@ export default function PreferencesStep({
       isPublic: true,
       body: JSON.stringify({
         salonid: id,
-        services: JSON.stringify(srvsRef.current),
+        services: JSON.stringify(state.selectedService.map((i) => i.id)),
       }),
     });
 
@@ -41,10 +30,6 @@ export default function PreferencesStep({
   useEffect(() => {
     fetchTech();
   }, []);
-
-  useEffect(() => {
-    techsRef.current = selectedTechs.map((prev) => prev.id);
-  }, [selectedTechs]);
 
   useEffect(() => {
     if (open) {
@@ -69,7 +54,7 @@ export default function PreferencesStep({
         </p>
       </div>
       <div className="technician-select">
-        <label>Preferred Technicians for {guest} Guests</label>
+        <label>Preferred Technicians for {state.guests} Guests</label>
         <div>
           <div
             className="tech-input"
@@ -77,16 +62,19 @@ export default function PreferencesStep({
               hide ? setHide(false) : setOpen(false);
             }}
           >
-            {selectedTechs?.map((item) => (
+            {state.selectedTechnician?.map((item) => (
               <div key={item.id}>
                 <strong>{item.nickname || item.firstname}</strong>
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-
-                    setSelectedTechs((prev) =>
-                      prev.filter((i) => i.id !== item.id)
+                    const updated = state.selectedTechnician.filter(
+                      (i) => i.id !== item.id
                     );
+                    dispatch({
+                      type: "SET_PREFERENCES",
+                      payload: updated,
+                    });
                   }}
                 >
                   <i className="fa-solid fa-xmark"></i>
@@ -97,15 +85,19 @@ export default function PreferencesStep({
           <div className={`tech-list ${open ? "active" : ""}`}>
             {techs?.map((item) => {
               const selected =
-                selectedTechs.find((i) => i.id === item.id) ||
-                selectedTechs.length === guest;
+                state.selectedTechnician.find((i) => i.id === item.id) ||
+                state.selectedTechnician.length === state.guests;
               return (
                 <div
                   className={selected ? "selected" : ""}
                   key={item.id}
-                  onClick={() =>
-                    !selected && setSelectedTechs((prev) => [...prev, item])
-                  }
+                  onClick={() => {
+                    !selected &&
+                      dispatch({
+                        type: "SET_PREFERENCES",
+                        payload: [...state.selectedTechnician, item],
+                      });
+                  }}
                 >
                   <div>
                     <img
@@ -124,8 +116,8 @@ export default function PreferencesStep({
           </div>
         </div>
         <span>
-          You can select up to {guest} preference(s). {selectedTechs.length}{" "}
-          selected.
+          You can select up to {state.guests} preference(s).{" "}
+          {state.selectedTechnician.length} selected.
         </span>
       </div>
     </>

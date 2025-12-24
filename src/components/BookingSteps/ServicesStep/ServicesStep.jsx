@@ -3,14 +3,8 @@ import { getSalonAPI } from "../../../config/apiCalls";
 import "../BookingSteps.scss";
 import ServiceCategory, { SelectedItem } from "./ServiceCategory";
 
-export default function ServicesStep({
-  state,
-  dispatch,
-  setService,
-  srvsRef,
-  id,
-}) {
-  const [list, setList] = useState([]);
+export default function ServicesStep({ state, dispatch, id }) {
+  const [srvData, setSrvData] = useState({});
 
   const fetchService = async () => {
     const res = await getSalonAPI({
@@ -22,20 +16,14 @@ export default function ServicesStep({
       console.log(res.error);
       return;
     }
-    setList(res.data);
+    setSrvData(res);
   };
 
   useEffect(() => {
     fetchService();
   }, []);
 
-  useEffect(() => {
-    srvsRef.current = state.selectedService.map((prev) => prev.id);
-  }, [state.selectedService]);
-
   const addOrRmItem = (srv, delta = 1) => {
-    setService((prev) => prev + delta);
-
     const exists = state.selectedService.some((i) => i.id === srv.id);
     let updated;
 
@@ -55,7 +43,10 @@ export default function ServicesStep({
 
     dispatch({
       type: "SET_SERVICES",
-      payload: updated,
+      payload: {
+        srv: updated,
+        tax: !!srvData.isservicetaxed ? srvData.tax : 0,
+      },
     });
   };
 
@@ -70,7 +61,7 @@ export default function ServicesStep({
       </div>
       <div className="d-flex justify-content-between gap-5">
         <div className="service-categ-list">
-          {list?.map((item) => (
+          {srvData.data?.map((item) => (
             <ServiceCategory
               key={item.id}
               item={item}

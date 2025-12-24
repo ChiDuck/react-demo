@@ -1,36 +1,50 @@
 import { timeToMinutes } from "../DateStep/dateFunction";
 
-function getTechScheduleForDay(tech, weekday) {
-    return tech.schedule.find(
-        (s) => s.status === 1 && s.weekdays === weekday
-    );
+function getNowMinutesInTimezone(timezone) {
+    const now = new Date();
+
+    const parts = new Intl.DateTimeFormat("en-US", {
+        timeZone: timezone,
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+    }).formatToParts(now);
+
+    const hour = Number(parts.find(p => p.type === "hour").value);
+    const minute = Number(parts.find(p => p.type === "minute").value);
+
+    return hour * 60 + minute;
 }
 
-function isSlotInsideTech(slotMin, techSchedule, block) {
-    if (!techSchedule) return false;
+function isPastSlot(slotMin, pickedDate, timezone) {
+    const today = new Intl.DateTimeFormat("en-CA", {
+        timeZone: timezone,
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+    }).format(new Date()); // YYYY-MM-DD
 
-    const start = timeToMinutes(techSchedule.starttime);
-    const end = timeToMinutes(techSchedule.endtime);
+    if (pickedDate !== today) return false;
 
-    return slotMin >= start && slotMin + block <= end;
+    const nowMin = getNowMinutesInTimezone(timezone);
+    return slotMin < nowMin;
 }
 
-function allPreferredTechsAvailable(
-    slotMin,
-    preferredTechs,
-    weekday,
-    block
-) {
-    return preferredTechs.every((tech) => {
-        const sched = getTechScheduleForDay(tech, weekday);
-        return isSlotInsideTech(slotMin, sched, block);
+
+function isSlotInsideAnyTechShift(slotMin, techSchedules, block) {
+    return techSchedules.some((sched) => {
+        const start = timeToMinutes(sched.starttime);
+        const end = timeToMinutes(sched.endtime);
+        return slotMin >= start && slotMin + block <= end;
     });
 }
 
 function countAvailableTechs(slotMin, techs, weekday, block) {
     return techs.filter((tech) => {
-        const sched = getTechScheduleForDay(tech, weekday);
-        return isSlotInsideTech(slotMin, sched, block);
+        const shifts = tech.schedule.filter(
+            (s) => s.weekdays === weekday
+        );
+        return isSlotInsideAnyTechShift(slotMin, shifts, block);
     }).length;
 }
 
@@ -45,17 +59,17 @@ function isSlotSelectable({
     // Rule 1: preferred techs must ALL be working
     if (
         preferredTechs.length > 0 &&
-        !allPreferredTechsAvailable(
-            slotMin,
-            preferredTechs,
-            weekday,
-            block
-        )
+        !preferredTechs.every((tech) => {
+            const shifts = tech.schedule.filter(
+                (s) => s.weekdays === weekday
+            );
+            return isSlotInsideAnyTechShift(slotMin, shifts, block);
+        })
     ) {
         return false;
     }
 
-    // Rule 2: total capacity must satisfy guests
+    // Rule 2: capacity check
     const availableCount = countAvailableTechs(
         slotMin,
         allTechs,
@@ -68,23 +82,25 @@ function isSlotSelectable({
 
 export function buildSlotsWithAvailability({
     slots,
-    dateStr,
+    weekdays,
     preferredTechs,
     allTechs,
     guestCount,
     timeblock,
+    pickedDate
 }) {
-    const date = new Date(dateStr.replaceAll("/", "-") + "T00:00:00Z");
-    const weekday = date.getUTCDay() + 1;
-
     return slots.map((time) => {
         const slotMin = timeToMinutes(time);
+
+        if (isPastSlot(slotMin, pickedDate)) {
+            return { time, disabled: true };
+        }
 
         const enabled = isSlotSelectable({
             slotMin,
             preferredTechs,
             allTechs,
-            weekday,
+            weekday: weekdays,
             block: timeblock,
             guestCount,
         });
@@ -95,4 +111,5 @@ export function buildSlotsWithAvailability({
         };
     });
 }
+
 

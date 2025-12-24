@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { postSalonAPI } from "../../../config/apiCalls";
 import "../BookingSteps.scss";
 import {
-  formatDateUTC,
   minutesToTime,
   randomInt,
   timeToMinutes,
@@ -10,55 +9,54 @@ import {
 import { buildSlotsWithAvailability } from "./timeFunction";
 
 function generateTimeSlots({
-  dateStr,
+  weekdays,
   schedule,
   timeblock,
   lasttimebeforeclose,
 }) {
-  const date = new Date(dateStr.replaceAll("/", "-") + "T00:00:00Z");
-  const weekday = date.getUTCDay() + 1;
-
-  const activeSchedule = schedule.find(
-    (s) => s.status === 1 && s.weekdays === weekday
+  const daySchedules = schedule.filter(
+    (s) =>
+      s.status === 1 &&
+      s.weekdays === weekdays &&
+      s.startdate === null &&
+      s.enddate === null
   );
-
-  if (!activeSchedule) return [];
-
-  let start = timeToMinutes(activeSchedule.starttime);
-  const end = timeToMinutes(activeSchedule.endtime) - lasttimebeforeclose;
+  if (!daySchedules.length) return [];
 
   const slots = [];
-  while (start <= end) {
-    slots.push(minutesToTime(start));
-    start += timeblock;
-  }
 
-  return slots;
-}
+  daySchedules.forEach((span) => {
+    let start = timeToMinutes(span.starttime);
+    const end = timeToMinutes(span.endtime) - lasttimebeforeclose;
 
-export default function TimeStep({
-  dateRef,
-  id,
-  srvsRef,
-  techsRef,
-  sessionKey,
-  guest,
-  setNext,
-}) {
-  const [selectedTime, setSelectedTime] = useState(null);
-  const [fullSchedule, setFullSchedule] = useState({
-    technician: [],
-    schedule: [],
+    while (start <= end) {
+      slots.push(minutesToTime(start));
+      start += timeblock;
+    }
   });
 
-  const pickedDate = formatDateUTC(dateRef.current);
+  // remove duplicates + sort
+  return [...new Set(slots)].sort(
+    (a, b) => timeToMinutes(a) - timeToMinutes(b)
+  );
+}
+
+export default function TimeStep({ state, dispatch, id, sessionKey }) {
+  const [fullSchedule, setFullSchedule] = useState({
+    technician: [],
+    data: [],
+    schedule: [],
+  });
+  const selectedTechId = state.selectedTechnician.map((i) => i.id);
+  console.log(selectedTechId);
+  const pickedDate = state.formatselecteddate;
 
   const fetchTime = async () => {
     const payload = {
       salonid: id,
       hasanyone: 1,
-      services: JSON.stringify(srvsRef.current),
-      technicians: JSON.stringify(techsRef.current),
+      services: JSON.stringify(state.selectedService.map((i) => i.id)),
+      technicians: JSON.stringify(selectedTechId),
       fromtime: pickedDate,
       totime: pickedDate,
       random: randomInt(100, 2000),
@@ -76,6 +74,7 @@ export default function TimeStep({
       return;
     }
     setFullSchedule(res.data);
+    console.log(res.data.data);
   };
 
   useEffect(() => {
@@ -83,22 +82,26 @@ export default function TimeStep({
   }, []);
 
   const slots = generateTimeSlots({
-    dateStr: pickedDate,
+    weekdays: fullSchedule.data[0]?.weekdays,
     schedule: fullSchedule.schedule,
     timeblock: fullSchedule.timeblock,
     lasttimebeforeclose: fullSchedule.lasttimebeforeclose,
   });
-  console.log(techsRef);
   const validSlots = buildSlotsWithAvailability({
     slots,
-    dateStr: pickedDate,
-    preferredTechs: fullSchedule.technician.filter((t) =>
-      techsRef.current.some((i) => i === t.id)
+    pickedDate: pickedDate,
+    weekdays: fullSchedule.data[0]?.weekdays,
+    preferredTechs: fullSchedule.technician.filter((tech) =>
+      selectedTechId.includes(tech.id)
     ),
     allTechs: fullSchedule.technician,
-    guestCount: guest,
+    guestCount: state.guests,
     timeblock: fullSchedule.timeblock,
   });
+
+  useEffect(() => {
+    console.log(state);
+  }, [state.selectedTime]);
 
   return (
     <>
@@ -113,9 +116,15 @@ export default function TimeStep({
             key={slot.time}
             className={[
               slot.disabled ? "disabled" : "",
-              selectedTime === slot.time ? "selected" : "",
+              state.selectedTime === slot.time ? "selected" : "",
             ].join(" ")}
-            onClick={() => !slot.disabled && setSelectedTime(slot.time)}
+            onClick={() =>
+              !slot.disabled &&
+              dispatch({
+                type: "SET_TIME",
+                payload: slot.time,
+              })
+            }
           >
             {slot.time}
           </div>

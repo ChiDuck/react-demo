@@ -1,15 +1,18 @@
-import { bookableDay, isTechWithinSchedule } from "./dateFunction";
+import {
+  bookableDay,
+  formatDateUTC,
+  isTechWithinSchedule,
+} from "./dateFunction";
 import "./DateStep.scss";
 
 export default function DateCell({
+  state,
+  dispatch,
   day,
-  guest,
-  techsRef,
+  selectedTech,
   viewDate,
   fullSchedule,
   isDisabled,
-  selectedDate,
-  setSelectedDate,
 }) {
   const schedule = fullSchedule.schedule;
   const tech = fullSchedule.technician;
@@ -25,42 +28,53 @@ export default function DateCell({
       i.status === 0
   );
 
-  const activeDay = schedule.find(
-    (i) =>
-      cellDate.getUTCDay() + 1 === i.weekdays && //(UTCDay: 0 = Sun, weekdays: 1 = Sun)
-      i.status === 1 &&
-      i.startdate === null &&
-      i.enddate === null
+  const daySchedules = schedule.filter(
+    (s) =>
+      s.status === 1 &&
+      s.weekdays === cellDate.getUTCDay() + 1 &&
+      s.startdate === null &&
+      s.enddate === null
   );
 
-  const salonClosed = !activeDay;
+  const salonClosed = !daySchedules;
 
   const notWorking = tech
     .filter(
       (t) =>
-        (techsRef.length === 0 || techsRef.some((p) => p === t.id)) &&
+        (selectedTech.length === 0 || selectedTech.some((p) => p === t.id)) &&
         !t.schedule.some(
           (s) =>
             s.weekdays === cellDate.getUTCDay() + 1 &&
-            isTechWithinSchedule(s, activeDay)
+            daySchedules.some(
+              (shift) =>
+                s.weekdays === shift.weekdays && isTechWithinSchedule(s, shift)
+            )
         )
     )
     .map((t) => t.nickname || t.techname);
 
-  const isBookable = bookableDay(techsRef, tech, activeDay, guest);
+  const isBookable = bookableDay(
+    selectedTech,
+    tech,
+    daySchedules,
+    state.guests
+  );
 
   const isSelected =
-    selectedDate &&
-    selectedDate.getUTCFullYear() === viewDate.getUTCFullYear() &&
-    selectedDate.getUTCMonth() === viewDate.getUTCMonth() &&
-    selectedDate.getUTCDate() === day;
+    state.selectedDate &&
+    state.selectedDate.getUTCFullYear() === viewDate.getUTCFullYear() &&
+    state.selectedDate.getUTCMonth() === viewDate.getUTCMonth() &&
+    state.selectedDate.getUTCDate() === day;
 
   function handleSelect(day) {
     if (disabled || isHoliday || salonClosed || !isBookable) return;
     const d = new Date(
       Date.UTC(viewDate.getUTCFullYear(), viewDate.getUTCMonth(), day)
     );
-    setSelectedDate(d);
+    dispatch({
+      type: "SET_DATE",
+      payload: { date: d, formatted: formatDateUTC(d) },
+    });
   }
 
   function formatDate(date) {
@@ -72,7 +86,6 @@ export default function DateCell({
   }
 
   if (day === null) return <div />;
-
   return (
     <div
       className={[
@@ -94,7 +107,7 @@ export default function DateCell({
         <div
           className="not-working"
           title={
-            tech.length - notWorking.length < guest
+            tech.length - notWorking.length < state.guests
               ? "Not enough technicians working"
               : notWorking.map((i) => `${i} is not working`).join("\n")
           }

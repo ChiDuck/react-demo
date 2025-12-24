@@ -45,16 +45,22 @@ export function bookingReducer(state, action) {
             return { ...state, guests: action.payload };
 
         case "SET_SERVICES":
-            return { ...state, selectedService: action.payload };
+            return { ...state, selectedService: action.payload.srv, tax: action.payload.tax };
 
         case "SET_PREFERENCES":
-            return { ...state, selectedTechnician: action.payload };
+            return {
+                ...state,
+                selectedTechnician: action.payload,
+                selectedDate: null,
+                formatselecteddate: null
+            };
 
         case "SET_DATE":
             return {
                 ...state,
                 selectedDate: action.payload.date,
                 formatselecteddate: action.payload.formatted,
+                selectedTime: null,
             };
 
         case "SET_TIME":

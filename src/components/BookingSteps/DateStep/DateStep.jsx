@@ -12,19 +12,17 @@ import "./DateStep.scss";
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export default function DateStep({
-  guest,
+  state,
+  dispatch,
   timezone,
-  srvsRef,
-  techsRef,
   id,
   sessionKey,
-  dateRef,
-  setNext,
 }) {
   const [fullSchedule, setFullSchedule] = useState({
     technician: [],
     schedule: [],
   });
+  const selectedTechId = state.selectedTechnician.map((i) => i.id);
 
   const today = useMemo(
     () => getDateInTimezone(new Date(), timezone),
@@ -38,8 +36,6 @@ export default function DateStep({
   const maxMonth = useMemo(() => addMonths(minMonth, 6), [minMonth]);
 
   const [viewDate, setViewDate] = useState(minMonth);
-  const [selectedDate, setSelectedDate] = useState(null);
-
   const monthLabel = useMemo(() => {
     return viewDate.toLocaleString("en-US", {
       month: "long",
@@ -63,7 +59,6 @@ export default function DateStep({
   );
 
   const canPrev = useMemo(() => {
-    // prev allowed if viewDate is after minMonth
     return !(
       viewDate.getUTCFullYear() === minMonth.getUTCFullYear() &&
       viewDate.getUTCMonth() === minMonth.getUTCMonth()
@@ -71,7 +66,6 @@ export default function DateStep({
   }, [viewDate, minMonth]);
 
   const canNext = useMemo(() => {
-    // next allowed if viewDate is before maxMonth
     return !(
       viewDate.getUTCFullYear() === maxMonth.getUTCFullYear() &&
       viewDate.getUTCMonth() === maxMonth.getUTCMonth()
@@ -123,8 +117,8 @@ export default function DateStep({
     const payload = {
       salonid: id,
       hasanyone: 1,
-      services: JSON.stringify(srvsRef.current),
-      technicians: JSON.stringify(techsRef.current),
+      services: JSON.stringify(state.selectedService.map((i) => i.id)),
+      technicians: JSON.stringify(selectedTechId),
       fromtime: formatDateUTC(
         viewDate.getTime() === minMonth.getTime() ? todayUTC : startOfMonthUTC
       ),
@@ -149,11 +143,6 @@ export default function DateStep({
   useEffect(() => {
     fetchDatetime();
   }, [viewDate]);
-
-  useEffect(() => {
-    dateRef.current = selectedDate;
-    setNext(selectedDate != null);
-  }, [selectedDate]);
 
   return (
     <>
@@ -192,12 +181,11 @@ export default function DateStep({
             <DateCell
               key={idx}
               day={day}
-              guest={guest}
-              techsRef={techsRef.current}
+              state={state}
+              dispatch={dispatch}
+              selectedTech={selectedTechId}
               viewDate={viewDate}
               fullSchedule={fullSchedule}
-              selectedDate={selectedDate}
-              setSelectedDate={setSelectedDate}
               isDisabled={isDisabled}
             />
           ))}
