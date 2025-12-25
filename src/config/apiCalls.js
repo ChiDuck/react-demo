@@ -2,16 +2,16 @@
 
 import { fetchApi } from "../config/apiHelper";
 
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiTlRQIFx1MDBkOXdcdTAwZGEgT25pLUNoYW4gQmFrYSIsImlkIjoiNGQzOGFmYzAtYWM4My00ODg0LWI4ZDMtZTA4YjNhNWQxYWQ0Iiwicm9sZSI6InVzZXIiLCJhY3RpdmUiOnRydWUsImRiaWQiOiI2NzdiZWQ3OCIsImV4cCI6MTc2NjU3MTUzMn0.9Mb1yP4SZ3N_iwCXpdJNfzMYqYUdgsPCoda8I3erqkE";
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiTlRQIFx1MDBkOXdcdTAwZGEgT25pLUNoYW4gQmFrYSIsImlkIjoiNGQzOGFmYzAtYWM4My00ODg0LWI4ZDMtZTA4YjNhNWQxYWQ0Iiwicm9sZSI6InVzZXIiLCJhY3RpdmUiOnRydWUsImRiaWQiOiI3OTg0NzU3NCIsImV4cCI6MTc2NjY1NjE1M30.UokD74X1UNmAG4-cFmu6e7_SJ0oxJOLAXI5cyvQbM0Y";
 
 export async function getSalonAPI({
     s,
-    sort,
     p,
     z,
     k,
     o,
     f,
+    sort,
     salonid,
     idsalon,
     cartid,
@@ -25,12 +25,12 @@ export async function getSalonAPI({
 
     const params = {
         s,
-        sort,
         p,
         z,
         k,
         o,
         f,
+        sort,
         salonid,
         idsalon,
         cartid,
@@ -52,8 +52,8 @@ export async function getSalonAPI({
     return fetchApi(`${fetchString}${query}`, (user || salon) ? token : null, { signal });
 }
 
-export async function postSalonAPI({ c, body, user = false, isPublic = false }) {
-    const fetchString = user ? "user/" : isPublic ? "public?c=" : "salon/cmd?c=";
+export async function postSalonAPI({ c, body, user = false, isPublic = false, login = false }) {
+    const fetchString = user ? "user/" : isPublic ? "public?c=" : login ? "login" : "salon/cmd?c=";
 
     return fetchApi(`${fetchString}${c}`, token, {
         method: "POST",

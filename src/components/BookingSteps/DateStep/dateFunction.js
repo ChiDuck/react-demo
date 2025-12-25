@@ -1,3 +1,5 @@
+import { isPastSlot } from "../TimeStep/timeFunction";
+
 export function getDateInTimezone(date, timezone) {
     const parts = new Intl.DateTimeFormat("en-US", {
         timeZone: timezone,
@@ -52,7 +54,7 @@ export function timeToMinutes(timeStr) {
     return hours * 60 + minutes;
 }
 
-function isTechWorkingOnDay(tech, daySchedules) {
+function isTechWorkingOnDay(tech, daySchedules, cellDate, timezone) {
     if (!daySchedules?.length) return false;
 
     return tech.schedule.some(
@@ -60,16 +62,17 @@ function isTechWorkingOnDay(tech, daySchedules) {
             daySchedules.some(
                 (shift) =>
                     sched.weekdays === shift.weekdays &&
-                    isTechWithinSchedule(sched, shift)
+                    isTechWithinSchedule(sched, shift, cellDate, timezone)
             )
     );
 }
 
 
-export function isTechWithinSchedule(tech, schedule) {
+export function isTechWithinSchedule(tech, schedule, cellDate, timezone) {
     if (!tech || !schedule) return false;
     const techStart = timeToMinutes(tech.starttime);
     const techEnd = timeToMinutes(tech.endtime);
+    if (isPastSlot(techEnd, cellDate, timezone) === true) return false;
 
     const schedStart = timeToMinutes(schedule.starttime);
     const schedEnd = timeToMinutes(schedule.endtime);
@@ -77,10 +80,10 @@ export function isTechWithinSchedule(tech, schedule) {
     return techStart < schedEnd && techEnd > schedStart;
 }
 
-export function bookableDay(techsRef, techs, daySchedules, guest) {
+export function bookableDay(selectedTech, techs, daySchedules, guest, cellDate, timezone) {
     const preferredTechs =
-        techsRef.length > 0
-            ? techs.filter((t) => techsRef.includes(t.id))
+        selectedTech.length > 0
+            ? techs.filter((t) => selectedTech.includes(t.id))
             : [];
 
     const otherTechs = techs.filter(
@@ -89,7 +92,7 @@ export function bookableDay(techsRef, techs, daySchedules, guest) {
 
     // All preferred techs must work at least one span that day
     const preferredWorking = preferredTechs.filter((t) =>
-        isTechWorkingOnDay(t, daySchedules)
+        isTechWorkingOnDay(t, daySchedules, cellDate, timezone)
     );
 
     if (preferredWorking.length !== preferredTechs.length) {
@@ -97,7 +100,7 @@ export function bookableDay(techsRef, techs, daySchedules, guest) {
     }
 
     const availableOthers = otherTechs.filter((t) =>
-        isTechWorkingOnDay(t, daySchedules)
+        isTechWorkingOnDay(t, daySchedules, cellDate, timezone)
     );
 
     const remainingGuests = guest - preferredTechs.length;

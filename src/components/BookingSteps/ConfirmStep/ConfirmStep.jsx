@@ -1,5 +1,20 @@
 import "../BookingSteps.scss";
-export default function ConfirmStep() {
+
+function formatBookingDate(dateInput) {
+  const date = new Date(dateInput);
+
+  const datePart = new Intl.DateTimeFormat("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "2-digit",
+  }).format(date);
+
+  return datePart;
+}
+
+export default function ConfirmStep({ state, dispatch }) {
+  const parser = JSON.parse(state.inforUser);
+
   return (
     <>
       <div className="text-center">
@@ -10,11 +25,13 @@ export default function ConfirmStep() {
         <div className="date">
           <div>
             <span>Date:</span>
-            <strong>Friday, December 26 at 04:00 PM</strong>
+            <strong>
+              {formatBookingDate(state.selectedDate)} at {state.selectedTime}
+            </strong>
           </div>
           <div>
             <span>Number of Guests</span>
-            <strong>1 Guest(s)</strong>
+            <strong>{state.guests} Guest(s)</strong>
           </div>
         </div>
         <div className="contact">
@@ -22,43 +39,52 @@ export default function ConfirmStep() {
           <div>
             <div>
               <span>Name</span>
-              <strong>NTP ÙwÚ Oni-Chan Baka</strong>
+              <strong>{parser.name}</strong>
             </div>
             <div>
               <span>Phone Number</span>
-              <strong>(888) 678-6785</strong>
+              <strong>{parser.phone}</strong>
             </div>
             <div>
               <span>Email Address</span>
-              <strong>ntp5405@gmail.com</strong>
+              <strong>{parser.email}</strong>
             </div>
           </div>
         </div>
         <div className="tech">
           <h4>Technician Preferences</h4>
           <div>
-            <div>Anyone Available</div>
-            <div>Anyone Available</div>
+            {state.selectedTechnician.length > 0 ? (
+              state.selectedTechnician.map((t) => (
+                <div key={t.id}>{t.nickname || t.firstname}</div>
+              ))
+            ) : (
+              <div>Anyone Available</div>
+            )}
           </div>
         </div>
         <div className="service">
           <h4>Services</h4>
-          <div>
+          {state.selectedService.map((item) => (
             <div>
-              <strong>Callus Removal x 1</strong>
-              <br />
-              <span>1 min each</span>
+              <div>
+                <strong>
+                  {item.name} x {item.quantity}
+                </strong>
+                <br />
+                <span>{item.minutes} min each</span>
+              </div>
+              <strong>${item.price.toFixed(2)}</strong>
             </div>
-            <strong>$5.00</strong>
-          </div>
-          <h4>Payment Summary</h4>
-          <div>
+          ))}
+          <h4 className="mt-3 mb-2">Payment Summary</h4>
+          <div className="payment">
             <div>
               <span>Est. Subtotal</span>
               <strong>$5.00</strong>
             </div>
             <div>
-              <span>Tax (17.00%)</span>
+              <span>Tax ({state.tax}%)</span>
               <strong>$5.00</strong>
             </div>
             <div>

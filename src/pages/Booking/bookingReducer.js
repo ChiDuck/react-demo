@@ -67,7 +67,7 @@ export function bookingReducer(state, action) {
             return { ...state, selectedTime: action.payload };
 
         case "SET_CONTACT":
-            return { ...state, contact: action.payload };
+            return { ...state, inforUser: action.payload };
 
         case "SET_CONFIRM":
             return { ...state, confirm: action.payload };

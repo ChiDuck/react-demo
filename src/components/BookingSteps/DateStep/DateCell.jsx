@@ -13,9 +13,10 @@ export default function DateCell({
   viewDate,
   fullSchedule,
   isDisabled,
+  timezone,
 }) {
   const schedule = fullSchedule.schedule;
-  const tech = fullSchedule.technician;
+  const allTech = fullSchedule.technician;
   const disabled = isDisabled(day);
   const cellDate = new Date(
     Date.UTC(viewDate.getUTCFullYear(), viewDate.getUTCMonth(), day)
@@ -38,7 +39,7 @@ export default function DateCell({
 
   const salonClosed = !daySchedules;
 
-  const notWorking = tech
+  const notWorking = allTech
     .filter(
       (t) =>
         (selectedTech.length === 0 || selectedTech.some((p) => p === t.id)) &&
@@ -47,7 +48,13 @@ export default function DateCell({
             s.weekdays === cellDate.getUTCDay() + 1 &&
             daySchedules.some(
               (shift) =>
-                s.weekdays === shift.weekdays && isTechWithinSchedule(s, shift)
+                s.weekdays === shift.weekdays &&
+                isTechWithinSchedule(
+                  s,
+                  shift,
+                  formatDateUTC(cellDate),
+                  timezone
+                )
             )
         )
     )
@@ -55,9 +62,11 @@ export default function DateCell({
 
   const isBookable = bookableDay(
     selectedTech,
-    tech,
+    allTech,
     daySchedules,
-    state.guests
+    state.guests,
+    formatDateUTC(cellDate),
+    timezone
   );
 
   const isSelected =
@@ -107,7 +116,7 @@ export default function DateCell({
         <div
           className="not-working"
           title={
-            tech.length - notWorking.length < state.guests
+            allTech.length - notWorking.length < state.guests
               ? "Not enough technicians working"
               : notWorking.map((i) => `${i} is not working`).join("\n")
           }

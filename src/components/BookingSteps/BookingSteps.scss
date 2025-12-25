@@ -311,6 +311,12 @@
       outline: $primary-color;
     }
   }
+
+  .error-text {
+    color: red;
+    font-size: 16px;
+    margin-top: -4px;
+  }
 }
 
 .confirm-info {
@@ -327,6 +333,7 @@
 
     h4 {
       font-weight: bold;
+      margin: 0 10px 10px;
     }
 
     span {
@@ -374,7 +381,7 @@
         border-radius: 30px;
         background-color: $primary-color;
         color: #fff;
-        padding: 10px;
+        padding: 10px 15px;
         font-weight: bold;
         font-size: 14px;
       }
@@ -382,13 +389,14 @@
   }
 
   .service {
-    > div:first-of-type {
+    > div {
       background-color: #fff;
       border-radius: 10px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 15px 20px;
+      padding: 10px 20px;
+      margin-bottom: 15px;
     }
 
     > div:last-child {
@@ -402,6 +410,7 @@
         padding: 15px 0;
         justify-content: space-between;
       }
+      
       > div:last-child {
         border-bottom: none;
 

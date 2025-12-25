@@ -41,7 +41,13 @@ function generateTimeSlots({
   );
 }
 
-export default function TimeStep({ state, dispatch, id, sessionKey }) {
+export default function TimeStep({
+  state,
+  dispatch,
+  id,
+  sessionKey,
+  timezone,
+}) {
   const [fullSchedule, setFullSchedule] = useState({
     technician: [],
     data: [],
@@ -97,6 +103,8 @@ export default function TimeStep({ state, dispatch, id, sessionKey }) {
     allTechs: fullSchedule.technician,
     guestCount: state.guests,
     timeblock: fullSchedule.timeblock,
+    timezone: timezone,
+    calendar: fullSchedule.data[0]?.calendar ?? [],
   });
 
   useEffect(() => {

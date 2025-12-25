@@ -184,6 +184,7 @@ export default function DateStep({
               state={state}
               dispatch={dispatch}
               selectedTech={selectedTechId}
+              timezone={timezone}
               viewDate={viewDate}
               fullSchedule={fullSchedule}
               isDisabled={isDisabled}

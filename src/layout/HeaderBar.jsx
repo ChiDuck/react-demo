@@ -5,6 +5,8 @@ import LoginModal from "../components/LogInModal";
 import SearchBar from "../components/SearchBar";
 import SideBar from "../components/SideBar";
 import SignupModal from "../components/SignUpModal";
+import { getSalonAPI } from "../config/apiCalls";
+import { saveUserToStorage } from "../pages/localStorage";
 import "../styles/Header.scss";
 
 function Logo() {
@@ -21,6 +23,19 @@ export default function HeaderBar() {
   const [isLoginVisible, setIsLoginVisible] = useState(false);
   const [isSignupVisible, setIsSignupVisible] = useState(false);
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
+
+  const fetchLogin = async () => {
+    const res = await getSalonAPI({
+      s: "GetUserDetail",
+      user: true,
+    });
+
+    if (res.error !== "") {
+      console.log(res.error);
+      return;
+    }
+    saveUserToStorage(res.data[0]);
+  };
 
   function handleLogInClick() {
     console.log("Log In clicked");
@@ -65,7 +80,7 @@ export default function HeaderBar() {
               <Button
                 className="login-button"
                 text="Log In"
-                onClick={handleLogInClick}
+                onClick={() => fetchLogin()}
               />
               <Button
                 className="signup-button"
