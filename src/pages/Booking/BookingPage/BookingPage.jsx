@@ -1,16 +1,24 @@
-import { useEffect, useReducer, useRef } from "react";
+import { useEffect, useReducer, useRef, useState } from "react";
 import { useLoaderData, useSearchParams } from "react-router-dom";
-import { bookingIcons } from "../../assets/icons/icons";
-import ConfirmStep from "../../components/BookingSteps/ConfirmStep/ConfirmStep";
-import ContactStep from "../../components/BookingSteps/ContactStep/ContactStep";
-import DateStep from "../../components/BookingSteps/DateStep/DateStep";
-import GuestStep from "../../components/BookingSteps/GuestStep/GuestStep";
-import PreferencesStep from "../../components/BookingSteps/PreferencesStep/PreferencesStep";
-import ServicesStep from "../../components/BookingSteps/ServicesStep/ServicesStep";
-import TimeStep from "../../components/BookingSteps/TimeStep/TimeStep";
-import { bookingItems } from "../../components/IconSVG/navItems";
+import { bookingIcons } from "../../../assets/icons/icons";
+import ConfirmStep from "../../../components/BookingSteps/ConfirmStep/ConfirmStep";
+import ContactStep from "../../../components/BookingSteps/ContactStep/ContactStep";
+import DateStep from "../../../components/BookingSteps/DateStep/DateStep";
+import GuestStep from "../../../components/BookingSteps/GuestStep/GuestStep";
+import PreferencesStep from "../../../components/BookingSteps/PreferencesStep/PreferencesStep";
+import ServicesStep from "../../../components/BookingSteps/ServicesStep/ServicesStep";
+import TimeStep from "../../../components/BookingSteps/TimeStep/TimeStep";
+import { bookingItems } from "../../../components/IconSVG/navItems";
+import { getSalonAPI } from "../../../config/apiCalls";
 import "./BookingPage.scss";
-import { BOOKING_STEPS, bookingReducer, initialState } from "./bookingReducer";
+import {
+  BOOKING_STEPS,
+  bookingReducer,
+  buildSavePayload,
+  initialState,
+  saveBookingProgress,
+} from "./bookingReducer";
+import { useBookingCountdown } from "./useBookingCountdown";
 
 function BookingHeader() {
   //   const star = (data.salonstar / 5) * 100;
@@ -89,27 +97,74 @@ function Progressor({ curStep }) {
   );
 }
 
+function Countdown({ seconds }) {
+  if (seconds <= 0) return null;
+
+  const min = Math.floor(seconds / 60);
+  const sec = seconds % 60;
+
+  return (
+    <div className="text-center mt-2">
+      <span>
+        {min}:{sec.toString().padStart(2, "0")}
+      </span>
+    </div>
+  );
+}
+
 export default function BookingPage() {
   const data = useLoaderData();
   const [searchParams, setSearchParams] = useSearchParams();
   const [state, dispatch] = useReducer(bookingReducer, initialState);
+  const [confirm, setConfirm] = useState(false);
   const sessionRef = useRef(null);
+  const remainingSeconds = useBookingCountdown(handleExpiredSession);
+  const hasFetchedRef = useRef(false);
+  const [expired, setExpired] = useState(false);
   const salonid = searchParams.get("salonid");
   const totalSrv = state.selectedService.reduce(
     (a, item) => a + item.quantity,
     0
   );
-  // useEffect(() => {
-  //   if (!sessionRef.current) return;
 
-  //   const payload = buildSavePayload({
-  //     salonid,
-  //     state,
-  //     sessionKey: sessionRef.current,
-  //   });
+  async function fetchProgress() {
+    return await getSalonAPI({
+      s: "GetBookingProcess",
+      salonid: salonid,
+      key: sessionRef.current,
+      token: true,
+      cache: false,
+    });
+  }
+  async function handleExpiredSession() {
+    const res = fetchProgress();
 
-  //   saveBookingProgress(payload);
-  // }, [state.step]);
+    localStorage.removeItem("booking_expires_at");
+    dispatch({ type: "RESET_BOOKING" });
+    alert("time out bih");
+  }
+
+  useEffect(() => {
+    if (!sessionRef.current) return;
+
+    saveBookingProgress(
+      buildSavePayload({
+        salonid,
+        state,
+        sessionKey: sessionRef.current,
+      })
+    );
+
+    async function refreshTimer() {
+      const expiresAt = Date.now() + 300 * 1000;
+      localStorage.setItem("booking_expires_at", expiresAt);
+    }
+
+    refreshTimer();
+
+    // startStepTimer();
+    // return () => clearTimeout(timerRef.current);
+  }, [state.step]);
 
   useEffect(() => {
     let key = searchParams.get("key");
@@ -118,9 +173,40 @@ export default function BookingPage() {
       key = crypto.randomUUID();
       searchParams.set("key", key);
       setSearchParams(searchParams, { replace: true });
+      hasFetchedRef.current = true;
+    } else {
+      sessionRef.current = key;
+
+      async function restoreBooking() {
+        const res = fetchProgress();
+
+        if (res.error !== "") {
+          console.log(res.error);
+          return;
+        }
+        if (!res.data) return;
+
+        dispatch({
+          type: "RESTORE_BOOKING",
+          payload: res.data.content,
+        });
+      }
+      if (hasFetchedRef.current) return;
+      hasFetchedRef.current = true;
+      restoreBooking();
     }
-    sessionRef.current = key;
   }, []);
+
+  // function startStepTimer() {
+  //   clearTimeout(timerRef.current);
+
+  //   timerRef.current = setTimeout(() => {
+  //     const res = fetchProgress();
+
+  //     dispatch({ type: "RESET_BOOKING" });
+  //     setExpired(true);
+  //   }, 5 * 60 * 1000);
+  // }
 
   const stepValidators = {
     [BOOKING_STEPS.guest]: () => true,
@@ -154,6 +240,7 @@ export default function BookingPage() {
       <BookingHeader />
       <div className="booking-content">
         <Progressor curStep={state.step} />
+        <Countdown seconds={remainingSeconds} />
         <div className="step-content">
           {state.step === BOOKING_STEPS.guest && (
             <GuestStep
@@ -192,10 +279,7 @@ export default function BookingPage() {
             <ContactStep state={state} dispatch={dispatch} />
           )}
           {state.step === BOOKING_STEPS.confirm && (
-            <ConfirmStep
-              state={state}
-              dispatch={dispatch}
-            />
+            <ConfirmStep state={state} dispatch={dispatch} />
           )}
         </div>
         <div className="d-flex justify-content-between">

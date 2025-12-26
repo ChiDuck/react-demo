@@ -1,4 +1,4 @@
-import { getSalonAPI } from "../../config/apiCalls";
+import { getSalonAPI } from "../../../config/apiCalls";
 
 export async function salonDetailBookingLoader({ request }) {
     const url = new URL(request.url);

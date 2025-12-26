@@ -5,39 +5,33 @@ import { fetchApi } from "../config/apiHelper";
 const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiTlRQIFx1MDBkOXdcdTAwZGEgT25pLUNoYW4gQmFrYSIsImlkIjoiNGQzOGFmYzAtYWM4My00ODg0LWI4ZDMtZTA4YjNhNWQxYWQ0Iiwicm9sZSI6InVzZXIiLCJhY3RpdmUiOnRydWUsImRiaWQiOiI3OTg0NzU3NCIsImV4cCI6MTc2NjY1NjE1M30.UokD74X1UNmAG4-cFmu6e7_SJ0oxJOLAXI5cyvQbM0Y";
 
 export async function getSalonAPI({
-    s,
-    p,
-    z,
-    k,
-    o,
-    f,
+    s, p, z, k, o, f,
     sort,
-    salonid,
-    idsalon,
-    cartid,
+    salonid, idsalon,
+    cartid, idcart,
+    type,
     appointmentid,
     listingtype,
     zip,
+    key,
     user = false,
     salon = false,
+    token = false,
+    cache = true,
     signal, }
 ) {
 
     const params = {
-        s,
-        p,
-        z,
-        k,
-        o,
-        f,
+        s, p, z, k, o, f,
         sort,
-        salonid,
-        idsalon,
-        cartid,
+        salonid, idsalon,
+        cartid, idcart,
+        type,
+        key,
         appointmentid,
         listingtype,
         zip,
-        cache: 0
+        cache: cache ? 0 : null,
     };
 
     // Build query string and REMOVE empty values
@@ -49,7 +43,7 @@ export async function getSalonAPI({
 
     const fetchString = user ? "user/search?" : (salon ? "salon/search?" : "public?")
 
-    return fetchApi(`${fetchString}${query}`, (user || salon) ? token : null, { signal });
+    return fetchApi(`${fetchString}${query}`, (user || salon || token) ? token : null, { signal });
 }
 
 export async function postSalonAPI({ c, body, user = false, isPublic = false, login = false }) {

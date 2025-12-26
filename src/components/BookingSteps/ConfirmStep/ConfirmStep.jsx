@@ -14,7 +14,7 @@ function formatBookingDate(dateInput) {
 
 export default function ConfirmStep({ state, dispatch }) {
   const parser = JSON.parse(state.inforUser);
-
+  let subtotal = 0;
   return (
     <>
       <div className="text-center">
@@ -65,31 +65,36 @@ export default function ConfirmStep({ state, dispatch }) {
         </div>
         <div className="service">
           <h4>Services</h4>
-          {state.selectedService.map((item) => (
-            <div>
+          {state.selectedService.map((item) => {
+            subtotal += item.quantity * item.price;
+            return (
               <div>
-                <strong>
-                  {item.name} x {item.quantity}
-                </strong>
-                <br />
-                <span>{item.minutes} min each</span>
+                <div>
+                  <strong>
+                    {item.name} x {item.quantity}
+                  </strong>
+                  <br />
+                  <span>{item.minutes} min each</span>
+                </div>
+                <strong>${item.price.toFixed(2)}</strong>
               </div>
-              <strong>${item.price.toFixed(2)}</strong>
-            </div>
-          ))}
+            );
+          })}
           <h4 className="mt-3 mb-2">Payment Summary</h4>
           <div className="payment">
             <div>
               <span>Est. Subtotal</span>
-              <strong>$5.00</strong>
+              <strong>${subtotal.toFixed(2)}</strong>
             </div>
             <div>
               <span>Tax ({state.tax}%)</span>
-              <strong>$5.00</strong>
+              <strong>${((subtotal * state.tax) / 100).toFixed(2)}</strong>
             </div>
             <div>
               <span>Est. Total</span>
-              <strong>$5.00</strong>
+              <strong>
+                ${(subtotal + (subtotal * state.tax) / 100).toFixed(2)}
+              </strong>
             </div>
           </div>
         </div>

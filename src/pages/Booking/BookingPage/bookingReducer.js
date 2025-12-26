@@ -1,3 +1,5 @@
+import { postSalonAPI } from "../../../config/apiCalls";
+
 export const BOOKING_STEPS = {
     guest: 1,
     services: 2,
@@ -20,7 +22,7 @@ export const initialState = {
     formatselecteddate: null,
 };
 
-function buildSavePayload({ salonid, state, sessionKey }) {
+export function buildSavePayload({ salonid, state, sessionKey }) {
     return {
         salonid,
         key: sessionKey,
@@ -38,6 +40,17 @@ function buildSavePayload({ salonid, state, sessionKey }) {
     };
 }
 
+export async function saveBookingProgress(payload) {
+    const res = await postSalonAPI({
+        c: "AddBookingProcess",
+        isPublic: true,
+        body: JSON.stringify(payload)
+    })
+
+    if (res.error !== "") {
+        console.log(res.error);
+    }
+}
 
 export function bookingReducer(state, action) {
     switch (action.type) {
@@ -77,6 +90,16 @@ export function bookingReducer(state, action) {
 
         case "PREV_STEP":
             return { ...state, step: state.step - 1 };
+
+        case "RESTORE_BOOKING":
+            return {
+                ...state,
+                ...action.payload,
+                step: action.payload.step ?? state.step,
+            };
+
+        case "RESET_BOOKING":
+            return initialState;
 
         case "HYDRATE_FROM_API":
             return {

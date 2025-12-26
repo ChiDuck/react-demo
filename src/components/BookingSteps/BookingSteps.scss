@@ -399,7 +399,9 @@
       margin-bottom: 15px;
     }
 
-    > div:last-child {
+    .payment {
+      display: flex;
+      flex-direction: column;
       background-color: #fff;
       border-radius: 10px;
       padding: 0 20px;
@@ -407,13 +409,19 @@
       > div {
         border-bottom: $border-light;
         display: flex;
+        width: 100%;
         padding: 15px 0;
         justify-content: space-between;
       }
-      
+
       > div:last-child {
         border-bottom: none;
+        padding: 10px 0 15px;
 
+        span {
+          display: flex;
+          align-items: center;
+        }
         strong {
           color: $primary-color;
           font-size: 26px;
@@ -428,9 +436,11 @@
       border-radius: 15px;
       padding: 10px 20px;
       min-height: 130px;
+      max-height: 400px;
       border: $border-light;
 
-      &:focus-visible {
+      &:focus-visible,
+      &:hover {
         outline: none;
         border-color: $primary-color;
       }

@@ -14,8 +14,10 @@ import { editReview } from "../components/UserProfile/ReviewSection/action";
 import { userReviewLoader } from "../components/UserProfile/ReviewSection/loader";
 import ReviewSection from "../components/UserProfile/ReviewSection/ReviewSection";
 import App from "../pages/App";
-import BookingPage from "../pages/Booking/BookingPage";
-import { salonDetailBookingLoader } from "../pages/Booking/loader";
+import BookingPage from "../pages/Booking/BookingPage/BookingPage";
+import { salonDetailBookingLoader } from "../pages/Booking/BookingPage/loader";
+import { thankYouDetailLoader } from "../pages/Booking/ThankYouPage/loader";
+import ThankYouPage from "../pages/Booking/ThankYouPage/ThankYouPage";
 import MainLayout from "../pages/MainLayout";
 import { salonDetailLoader } from "../pages/SalonDetail/loader";
 import SalonDetailPage from "../pages/SalonDetail/SalonDetailPage";
@@ -53,6 +55,11 @@ const routes = createBrowserRouter([
         loader: salonDetailBookingLoader,
       },
       {
+        path: "thankyou",
+        element: <ThankYouPage />,
+        loader: thankYouDetailLoader,
+      },
+      {
         path: "*",
         element: <div>Not Found</div>,
       },
@@ -62,17 +69,11 @@ const routes = createBrowserRouter([
     id: "parent",
     path: "/profile",
     element: <UserPage />,
-    shouldRevalidate: ({
-      currentUrl,
-      nextUrl,
-      actionResult,
-      defaultShouldRevalidate,
-    }) => {
+    shouldRevalidate: ({ nextUrl, defaultShouldRevalidate }) => {
       // Skip revalidation when navigating from /profile/... to another /profile/... child.
       const sameParent = nextUrl.pathname.startsWith("/profile");
       if (sameParent) return false;
 
-      // fallback to router default behaviour
       return defaultShouldRevalidate();
     },
     children: [
