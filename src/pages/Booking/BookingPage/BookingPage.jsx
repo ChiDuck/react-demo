@@ -18,7 +18,7 @@ import {
   initialState,
   saveBookingProgress,
 } from "./bookingReducer";
-import { useBookingCountdown } from "./useBookingCountdown";
+import { ensureStepTimer, useBookingCountdown } from "./useBookingCountdown";
 
 function BookingHeader() {
   //   const star = (data.salonstar / 5) * 100;
@@ -118,8 +118,13 @@ export default function BookingPage() {
   const [state, dispatch] = useReducer(bookingReducer, initialState);
   const [confirm, setConfirm] = useState(false);
   const sessionRef = useRef(null);
-  const remainingSeconds = useBookingCountdown(handleExpiredSession);
-  const hasFetchedRef = useRef(false);
+  const remainingSeconds = useBookingCountdown({
+    enabled: state.step > 1,
+    step: state.step,
+    onExpire: handleExpiredSession,
+  });
+  const hasRestoredRef = useRef(false);
+  const isHydratingRef = useRef(true);
   const [expired, setExpired] = useState(false);
   const salonid = searchParams.get("salonid");
   const totalSrv = state.selectedService.reduce(
@@ -139,13 +144,15 @@ export default function BookingPage() {
   async function handleExpiredSession() {
     const res = fetchProgress();
 
-    localStorage.removeItem("booking_expires_at");
+    localStorage.removeItem("booking_timer");
     dispatch({ type: "RESET_BOOKING" });
     alert("time out bih");
   }
 
   useEffect(() => {
-    if (!sessionRef.current) return;
+    if (!hasRestoredRef.current) return;
+    if (state.step <= 1) return;
+    ensureStepTimer(state.step);
 
     saveBookingProgress(
       buildSavePayload({
@@ -154,59 +161,32 @@ export default function BookingPage() {
         sessionKey: sessionRef.current,
       })
     );
-
-    async function refreshTimer() {
-      const expiresAt = Date.now() + 300 * 1000;
-      localStorage.setItem("booking_expires_at", expiresAt);
-    }
-
-    refreshTimer();
-
-    // startStepTimer();
-    // return () => clearTimeout(timerRef.current);
   }, [state.step]);
 
   useEffect(() => {
+    if (hasRestoredRef.current) return;
     let key = searchParams.get("key");
 
     if (!key) {
       key = crypto.randomUUID();
       searchParams.set("key", key);
       setSearchParams(searchParams, { replace: true });
-      hasFetchedRef.current = true;
-    } else {
-      sessionRef.current = key;
+    }
+    sessionRef.current = key;
 
-      async function restoreBooking() {
-        const res = fetchProgress();
-
-        if (res.error !== "") {
-          console.log(res.error);
-          return;
-        }
-        if (!res.data) return;
-
+    (async () => {
+      const res = await fetchProgress();
+      if (res?.data?.content) {
         dispatch({
           type: "RESTORE_BOOKING",
           payload: res.data.content,
         });
       }
-      if (hasFetchedRef.current) return;
-      hasFetchedRef.current = true;
-      restoreBooking();
-    }
+
+      hasRestoredRef.current = true;
+      isHydratingRef.current = false;
+    })();
   }, []);
-
-  // function startStepTimer() {
-  //   clearTimeout(timerRef.current);
-
-  //   timerRef.current = setTimeout(() => {
-  //     const res = fetchProgress();
-
-  //     dispatch({ type: "RESET_BOOKING" });
-  //     setExpired(true);
-  //   }, 5 * 60 * 1000);
-  // }
 
   const stepValidators = {
     [BOOKING_STEPS.guest]: () => true,

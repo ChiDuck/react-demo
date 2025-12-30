@@ -1,12 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 
-export function useBookingCountdown(onExpire) {
+export function useBookingCountdown({ enabled, step, onExpire }) {
     const [remaining, setRemaining] = useState(0);
     const intervalRef = useRef(null);
 
     useEffect(() => {
-        const expiresAt = Number(localStorage.getItem("booking_expires_at"));
-        if (!expiresAt) return;
+        if (!enabled || step <= 1) return;
+
+        const raw = localStorage.getItem("booking_timer");
+        if (!raw) return;
+
+        const { expiresAt } = JSON.parse(raw);
 
         function tick() {
             const diff = Math.max(0, Math.floor((expiresAt - Date.now()) / 1000));
@@ -20,10 +24,26 @@ export function useBookingCountdown(onExpire) {
 
         tick();
         intervalRef.current = setInterval(tick, 1000);
-        console.log(remaining);
 
         return () => clearInterval(intervalRef.current);
-    }, [onExpire]);
+    }, [enabled, step, onExpire]);
 
     return remaining;
+}
+
+export function ensureStepTimer(step) {
+    if (step <= 1) return;
+
+    const raw = localStorage.getItem("booking_timer");
+    const stored = raw ? JSON.parse(raw) : null;
+
+    // reset if step changed
+    if (!stored || stored.step !== step) {
+        const expiresAt = Date.now() + 300 * 1000;
+
+        localStorage.setItem(
+            "booking_timer",
+            JSON.stringify({ step, expiresAt })
+        );
+    }
 }

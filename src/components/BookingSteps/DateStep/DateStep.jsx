@@ -1,8 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { postSalonAPI } from "../../../config/apiCalls";
+import { buildSlotsWithAvailability } from "../TimeStep/timeFunction";
+import { generateTimeSlots } from "../TimeStep/TimeStep";
 import DateCell from "./DateCell";
 import {
   addMonths,
+  formatDate,
   formatDateUTC,
   getDateInTimezone,
   randomInt,
@@ -20,6 +23,7 @@ export default function DateStep({
 }) {
   const [fullSchedule, setFullSchedule] = useState({
     technician: [],
+    calendar: [],
     schedule: [],
   });
   const selectedTechId = state.selectedTechnician.map((i) => i.id);
@@ -144,6 +148,66 @@ export default function DateStep({
     fetchDatetime();
   }, [viewDate]);
 
+  function handleSelectDate(dayInfo) {
+    const slots = generateTimeSlots({
+      weekdays: fullSchedule.data[0]?.weekdays,
+      schedule: fullSchedule.schedule,
+      timeblock: fullSchedule.timeblock,
+      lasttimebeforeclose: fullSchedule.lasttimebeforeclose,
+    });
+
+    const computedTimes = buildSlotsWithAvailability({
+      slots,
+      pickedDate: state.formatselecteddate,
+      weekdays: dayInfo.weekdays,
+      preferredTechs: fullSchedule.technician.filter((tech) =>
+        selectedTechId.includes(tech.id)
+      ),
+      allTechs: fullSchedule.technician,
+      guestCount: state.guests,
+      timeblock: fullSchedule.timeblock,
+      timezone,
+      calendar: fullSchedule.data[0]?.calendar ?? [],
+    });
+
+    const selectedDate = {
+      weekdays: dayInfo.weekdays,
+      currentdate: formatDate(dayInfo.currentdate),
+      status: 1,
+
+      times: {
+        allTime: computedTimes.map((t) => {
+          const base = {
+            time: t.time,
+            active: !t.disabled,
+          };
+          if (!t.disabled) {
+            base.quantity = dayInfo.quantity;
+          }
+
+          return base;
+        }),
+      },
+
+      workListTechSelected: [],
+      workListTechAnyone: [],
+      workListTechIstemp: [],
+      technicianOff: [],
+      statusTechOff: 0,
+    };
+
+    dispatch({
+      type: "SET_DATE",
+      payload: {
+        date: selectedDate,
+        formatted: formatDateUTC(dayInfo.currentdate),
+      },
+    });
+  }
+
+  useEffect(() => {
+    console.log(state);
+  }, [state]);
   return (
     <>
       <div className="text-center">
@@ -187,6 +251,7 @@ export default function DateStep({
               timezone={timezone}
               viewDate={viewDate}
               fullSchedule={fullSchedule}
+              handleSelectDate={handleSelectDate}
               isDisabled={isDisabled}
             />
           ))}

@@ -8,7 +8,7 @@ import {
 } from "../DateStep/dateFunction";
 import { buildSlotsWithAvailability } from "./timeFunction";
 
-function generateTimeSlots({
+export function generateTimeSlots({
   weekdays,
   schedule,
   timeblock,
@@ -87,25 +87,25 @@ export default function TimeStep({
     fetchTime();
   }, []);
 
-  const slots = generateTimeSlots({
-    weekdays: fullSchedule.data[0]?.weekdays,
-    schedule: fullSchedule.schedule,
-    timeblock: fullSchedule.timeblock,
-    lasttimebeforeclose: fullSchedule.lasttimebeforeclose,
-  });
-  const validSlots = buildSlotsWithAvailability({
-    slots,
-    pickedDate: pickedDate,
-    weekdays: fullSchedule.data[0]?.weekdays,
-    preferredTechs: fullSchedule.technician.filter((tech) =>
-      selectedTechId.includes(tech.id)
-    ),
-    allTechs: fullSchedule.technician,
-    guestCount: state.guests,
-    timeblock: fullSchedule.timeblock,
-    timezone: timezone,
-    calendar: fullSchedule.data[0]?.calendar ?? [],
-  });
+  // const slots = generateTimeSlots({
+  //   weekdays: fullSchedule.data[0]?.weekdays,
+  //   schedule: fullSchedule.schedule,
+  //   timeblock: fullSchedule.timeblock,
+  //   lasttimebeforeclose: fullSchedule.lasttimebeforeclose,
+  // });
+  // const validSlots = buildSlotsWithAvailability({
+  //   slots,
+  //   pickedDate: pickedDate,
+  //   weekdays: fullSchedule.data[0]?.weekdays,
+  //   preferredTechs: fullSchedule.technician.filter((tech) =>
+  //     selectedTechId.includes(tech.id)
+  //   ),
+  //   allTechs: fullSchedule.technician,
+  //   guestCount: state.guests,
+  //   timeblock: fullSchedule.timeblock,
+  //   timezone: timezone,
+  //   calendar: fullSchedule.data[0]?.calendar ?? [],
+  // });
 
   useEffect(() => {
     console.log(state);
@@ -119,11 +119,11 @@ export default function TimeStep({
         <span>Thursday, December 25.</span>
       </div>
       <div className="time-grid">
-        {validSlots.map((slot) => (
+        {state.selectedDate.times.allTime.map((slot) => (
           <div
             key={slot.time}
             className={[
-              slot.disabled ? "disabled" : "",
+              slot.active ? "" : "disabled",
               state.selectedTime === slot.time ? "selected" : "",
             ].join(" ")}
             onClick={() =>

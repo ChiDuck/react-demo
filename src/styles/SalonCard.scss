@@ -6,6 +6,7 @@
   border-radius: 10px;
   border: variables.$border-light;
   transition: all 0.3s;
+  cursor: pointer;
 
   &:hover {
     box-shadow: variables.$box-shadow;
@@ -13,10 +14,6 @@
   }
 }
 
-.salon-card-link {
-  text-decoration: none;
-  color: inherit;
-}
 .salon-image {
   height: 150px;
   display: flex;

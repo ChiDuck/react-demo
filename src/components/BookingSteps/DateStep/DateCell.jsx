@@ -1,5 +1,7 @@
+import { useMemo } from "react";
 import {
   bookableDay,
+  formatDate,
   formatDateUTC,
   isTechWithinSchedule,
 } from "./dateFunction";
@@ -13,6 +15,7 @@ export default function DateCell({
   viewDate,
   fullSchedule,
   isDisabled,
+  handleSelectDate,
   timezone,
 }) {
   const schedule = fullSchedule.schedule;
@@ -37,15 +40,14 @@ export default function DateCell({
       s.enddate === null
   );
 
-  const salonClosed = !daySchedules;
+  const salonClosed = daySchedules.length === 0;
 
-  const notWorking = allTech
-    .filter(
-      (t) =>
-        (selectedTech.length === 0 || selectedTech.some((p) => p === t.id)) &&
-        !t.schedule.some(
-          (s) =>
-            s.weekdays === cellDate.getUTCDay() + 1 &&
+  const notWorking = useMemo(() => {
+    return allTech
+      .filter(
+        (t) =>
+          (selectedTech.length === 0 || selectedTech.includes(t.id)) &&
+          !t.schedule.some((s) =>
             daySchedules.some(
               (shift) =>
                 s.weekdays === shift.weekdays &&
@@ -56,43 +58,33 @@ export default function DateCell({
                   timezone
                 )
             )
-        )
-    )
-    .map((t) => t.nickname || t.techname);
+          )
+      )
+      .map((t) => t.nickname || t.techname);
+  }, [allTech, selectedTech, daySchedules, cellDate, timezone]);
 
-  const isBookable = bookableDay(
-    selectedTech,
-    allTech,
-    daySchedules,
-    state.guests,
-    formatDateUTC(cellDate),
-    timezone
-  );
-
-  const isSelected =
-    state.selectedDate &&
-    state.selectedDate.getUTCFullYear() === viewDate.getUTCFullYear() &&
-    state.selectedDate.getUTCMonth() === viewDate.getUTCMonth() &&
-    state.selectedDate.getUTCDate() === day;
-
-  function handleSelect(day) {
-    if (disabled || isHoliday || salonClosed || !isBookable) return;
-    const d = new Date(
-      Date.UTC(viewDate.getUTCFullYear(), viewDate.getUTCMonth(), day)
+  const isBookable = useMemo(() => {
+    return bookableDay(
+      selectedTech,
+      allTech,
+      daySchedules,
+      state.guests,
+      formatDateUTC(cellDate),
+      timezone
     );
-    dispatch({
-      type: "SET_DATE",
-      payload: { date: d, formatted: formatDateUTC(d) },
-    });
-  }
+  }, [selectedTech, allTech, daySchedules, state.guests, cellDate, timezone]);
 
-  function formatDate(date) {
-    const y = date.getUTCFullYear();
-    const m = String(date.getUTCMonth() + 1).padStart(2, "0");
-    const d = String(date.getUTCDate()).padStart(2, "0");
+  const isSelected = useMemo(() => {
+    if (!state.selectedDate?.currentdate) return false;
 
-    return `${y}-${m}-${d}T00:00:00`;
-  }
+    const d = new Date(state.selectedDate.currentdate);
+
+    return (
+      d.getUTCFullYear() === viewDate.getUTCFullYear() &&
+      d.getUTCMonth() === viewDate.getUTCMonth() &&
+      d.getUTCDate() === day
+    );
+  }, [state.selectedDate, viewDate, day]);
 
   if (day === null) return <div />;
   return (
@@ -102,7 +94,14 @@ export default function DateCell({
         disabled || isHoliday || salonClosed || !isBookable ? "disabled" : "",
         isSelected ? "selected" : "",
       ].join(" ")}
-      onClick={() => handleSelect(day)}
+      onClick={() => {
+        if (disabled || isHoliday || salonClosed || !isBookable) return;
+        handleSelectDate({
+          weekdays: cellDate.getUTCDay(),
+          currentdate: cellDate,
+          quantity: allTech.length - notWorking.length,
+        });
+      }}
     >
       {day}
       {isHoliday && !disabled && (

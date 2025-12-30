@@ -22,7 +22,16 @@ export function addMonths(date, months) {
     return d;
 }
 
+export function formatDate(date) {
+    const y = date.getUTCFullYear();
+    const m = String(date.getUTCMonth() + 1).padStart(2, "0");
+    const d = String(date.getUTCDate()).padStart(2, "0");
+
+    return `${y}-${m}-${d}T00:00:00Z`;
+}
+
 export function formatDateUTC(date) {
+    console.log(date);
     const y = date.getUTCFullYear();
     const m = String(date.getUTCMonth() + 1).padStart(2, "0");
     const d = String(date.getUTCDate()).padStart(2, "0");
