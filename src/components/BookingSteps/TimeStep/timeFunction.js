@@ -115,7 +115,7 @@ function isSlotSelectable({
 
 export function buildSlotsWithAvailability({
     slots,
-    weekdays,
+    weekday,
     preferredTechs,
     allTechs,
     guestCount,
@@ -136,7 +136,7 @@ export function buildSlotsWithAvailability({
 
         const enabled = isSlotSelectable({
             slotMin,
-            weekday: weekdays,
+            weekday,
             preferredTechs,
             allTechs,
             guestCount,

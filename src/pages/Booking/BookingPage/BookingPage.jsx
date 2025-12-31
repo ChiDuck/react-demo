@@ -1,5 +1,5 @@
 import { useEffect, useReducer, useRef, useState } from "react";
-import { useLoaderData, useSearchParams } from "react-router-dom";
+import { useLoaderData, useNavigate, useSearchParams } from "react-router-dom";
 import { bookingIcons } from "../../../assets/icons/icons";
 import ConfirmStep from "../../../components/BookingSteps/ConfirmStep/ConfirmStep";
 import ContactStep from "../../../components/BookingSteps/ContactStep/ContactStep";
@@ -9,7 +9,7 @@ import PreferencesStep from "../../../components/BookingSteps/PreferencesStep/Pr
 import ServicesStep from "../../../components/BookingSteps/ServicesStep/ServicesStep";
 import TimeStep from "../../../components/BookingSteps/TimeStep/TimeStep";
 import { bookingItems } from "../../../components/IconSVG/navItems";
-import { getSalonAPI } from "../../../config/apiCalls";
+import { getSalonAPI, postSalonAPI } from "../../../config/apiCalls";
 import "./BookingPage.scss";
 import {
   BOOKING_STEPS,
@@ -114,6 +114,7 @@ function Countdown({ seconds }) {
 
 export default function BookingPage() {
   const data = useLoaderData();
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [state, dispatch] = useReducer(bookingReducer, initialState);
   const [confirm, setConfirm] = useState(false);
@@ -125,8 +126,8 @@ export default function BookingPage() {
   });
   const hasRestoredRef = useRef(false);
   const isHydratingRef = useRef(true);
-  const [expired, setExpired] = useState(false);
   const salonid = searchParams.get("salonid");
+  const noteRef = useRef("");
   const totalSrv = state.selectedService.reduce(
     (a, item) => a + item.quantity,
     0
@@ -141,6 +142,7 @@ export default function BookingPage() {
       cache: false,
     });
   }
+
   async function handleExpiredSession() {
     const res = fetchProgress();
 
@@ -151,7 +153,6 @@ export default function BookingPage() {
 
   useEffect(() => {
     if (!hasRestoredRef.current) return;
-    if (state.step <= 1) return;
     ensureStepTimer(state.step);
 
     saveBookingProgress(
@@ -188,6 +189,45 @@ export default function BookingPage() {
     })();
   }, []);
 
+  function reformat(date) {
+    const y = date.getUTCFullYear();
+    const m = String(date.getUTCMonth() + 1).padStart(2, "0");
+    const d = String(date.getUTCDate()).padStart(2, "0");
+    return `${m}/${d}/${y}`;
+  }
+  const createBooking = async () => {
+    const payload = {
+      salonid,
+      inforuser: state.inforUser,
+      selectedservice: JSON.stringify(state.selectedService),
+      selectedtime: `${reformat(new Date(state.selectedDate.currentdate))} ${
+        state.selectedTime
+      }`,
+      guestcount: state.guests,
+      selectedtechnician: JSON.stringify(state.selectedTechnician),
+      tax: state.tax,
+      note: noteRef.current,
+      key: sessionRef.current,
+    };
+
+    const res = await postSalonAPI({
+      c: "CreateSalonCartNew",
+      body: JSON.stringify(payload),
+    });
+
+    if (res.error !== null) {
+      console.log(res.error);
+      return;
+    }
+
+    localStorage.removeItem("booking_timer");
+    dispatch({ type: "RESET_BOOKING" });
+
+    navigate(
+      `/thankyou?idsalon=${salonid}&idorder=${res.new_id}&bookingtype=4`
+    );
+  };
+
   const stepValidators = {
     [BOOKING_STEPS.guest]: () => true,
 
@@ -214,13 +254,17 @@ export default function BookingPage() {
     const valid = stepValidators[step];
     return valid ? valid(state) : true;
   }
-
+  useEffect(() => {
+    console.log(confirm);
+  }, [confirm]);
   return (
     <div className="ms-auto me-auto container mt-4 mb-4">
       <BookingHeader />
       <div className="booking-content">
         <Progressor curStep={state.step} />
-        <Countdown seconds={remainingSeconds} />
+        {state.step !== BOOKING_STEPS.guest && (
+          <Countdown seconds={remainingSeconds} />
+        )}
         <div className="step-content">
           {state.step === BOOKING_STEPS.guest && (
             <GuestStep
@@ -259,7 +303,12 @@ export default function BookingPage() {
             <ContactStep state={state} dispatch={dispatch} />
           )}
           {state.step === BOOKING_STEPS.confirm && (
-            <ConfirmStep state={state} dispatch={dispatch} />
+            <ConfirmStep
+              state={state}
+              dispatch={dispatch}
+              noteRef={noteRef}
+              setConfirm={setConfirm}
+            />
           )}
         </div>
         <div className="d-flex justify-content-between">
@@ -276,12 +325,28 @@ export default function BookingPage() {
             <span> | {totalSrv} </span>
             Service
           </div>
-          <button
-            disabled={!canProceed(state.step, state)}
-            onClick={() => dispatch({ type: "NEXT_STEP" })}
-          >
-            Next <i className="fa-solid fa-arrow-right"></i>
-          </button>
+          {state.step === BOOKING_STEPS.confirm ? (
+            <div>
+              <button
+                onClick={createBooking}
+                disabled={!confirm}
+                className="me-2"
+              >
+                Pay At Store
+              </button>
+              Or
+              <button disabled className="ms-2">
+                Pay Now
+              </button>
+            </div>
+          ) : (
+            <button
+              disabled={!canProceed(state.step, state)}
+              onClick={() => dispatch({ type: "NEXT_STEP" })}
+            >
+              Next <i className="fa-solid fa-arrow-right"></i>
+            </button>
+          )}
         </div>
       </div>
     </div>

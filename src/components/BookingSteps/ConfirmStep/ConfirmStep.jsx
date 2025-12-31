@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import "../BookingSteps.scss";
 
 function formatBookingDate(dateInput) {
@@ -12,9 +13,14 @@ function formatBookingDate(dateInput) {
   return datePart;
 }
 
-export default function ConfirmStep({ state, dispatch }) {
+export default function ConfirmStep({ state, setConfirm, noteRef }) {
   const parser = JSON.parse(state.inforUser);
   let subtotal = 0;
+
+  useEffect(() => {
+    setConfirm(false);
+  }, []);
+
   return (
     <>
       <div className="text-center">
@@ -26,7 +32,8 @@ export default function ConfirmStep({ state, dispatch }) {
           <div>
             <span>Date:</span>
             <strong>
-              {formatBookingDate(state.selectedDate)} at {state.selectedTime}
+              {formatBookingDate(state.selectedDate.currentdate)} at{" "}
+              {state.selectedTime}
             </strong>
           </div>
           <div>
@@ -54,21 +61,20 @@ export default function ConfirmStep({ state, dispatch }) {
         <div className="tech">
           <h4>Technician Preferences</h4>
           <div>
-            {state.selectedTechnician.length > 0 ? (
-              state.selectedTechnician.map((t) => (
-                <div key={t.id}>{t.nickname || t.firstname}</div>
-              ))
-            ) : (
+            {state.selectedTechnician?.map((t) => (
+              <div key={t.id}>{t.nickname || t.firstname}</div>
+            ))}
+            {state.selectedTechnician.length < state.guests && (
               <div>Anyone Available</div>
             )}
           </div>
         </div>
         <div className="service">
           <h4>Services</h4>
-          {state.selectedService.map((item) => {
+          {state.selectedService.map((item, i) => {
             subtotal += item.quantity * item.price;
             return (
-              <div>
+              <div key={i}>
                 <div>
                   <strong>
                     {item.name} x {item.quantity}
@@ -100,14 +106,26 @@ export default function ConfirmStep({ state, dispatch }) {
         </div>
         <div className="note">
           <h4>Special Notes</h4>
-          <textarea name="" id="" placeholder="Enter special notes"></textarea>
+          <textarea
+            name=""
+            id=""
+            onChange={(e) => (noteRef.current = e.target.value)}
+            placeholder="Enter special notes"
+          ></textarea>
         </div>
         <div className="policy">
           <div>
-            <input type="checkbox" name="" id="" />
-            By checking this box, you agree to our{" "}
-            <span>Terms and Conditions, Privacy Policy</span>, and{" "}
-            <span>Disclaimer</span>.
+            <label style={{ cursor: "pointer" }}>
+              <input
+                type="checkbox"
+                name=""
+                id=""
+                onChange={() => setConfirm((prev) => !prev)}
+              />
+              By checking this box, you agree to our{" "}
+              <span>Terms and Conditions, Privacy Policy</span>, and{" "}
+              <span>Disclaimer.</span>
+            </label>
           </div>
           <span>
             *Total is an estimate. Final price may vary based on add-ons or

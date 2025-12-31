@@ -32,12 +32,16 @@ export function useBookingCountdown({ enabled, step, onExpire }) {
 }
 
 export function ensureStepTimer(step) {
-    if (step <= 1) return;
+    if (step <= 1) {
+        // clear timer when going back to step 1
+        localStorage.removeItem("booking_timer");
+        return;
+    }
 
     const raw = localStorage.getItem("booking_timer");
     const stored = raw ? JSON.parse(raw) : null;
 
-    // reset if step changed
+    // reset if step changed or timer doesn't exist
     if (!stored || stored.step !== step) {
         const expiresAt = Date.now() + 300 * 1000;
 

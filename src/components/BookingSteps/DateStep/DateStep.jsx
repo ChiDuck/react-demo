@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { postSalonAPI } from "../../../config/apiCalls";
 import { buildSlotsWithAvailability } from "../TimeStep/timeFunction";
 import { generateTimeSlots } from "../TimeStep/TimeStep";
@@ -148,62 +148,62 @@ export default function DateStep({
     fetchDatetime();
   }, [viewDate]);
 
-  function handleSelectDate(dayInfo) {
-    const slots = generateTimeSlots({
-      weekdays: fullSchedule.data[0]?.weekdays,
-      schedule: fullSchedule.schedule,
-      timeblock: fullSchedule.timeblock,
-      lasttimebeforeclose: fullSchedule.lasttimebeforeclose,
-    });
+  const handleSelectDate = useCallback(
+    (dayInfo) => {
+      const slots = generateTimeSlots({
+        weekdays: fullSchedule.data?.[0]?.weekdays,
+        schedule: fullSchedule.schedule,
+        timeblock: fullSchedule.timeblock,
+        lasttimebeforeclose: fullSchedule.lasttimebeforeclose,
+      });
 
-    const computedTimes = buildSlotsWithAvailability({
-      slots,
-      pickedDate: state.formatselecteddate,
-      weekdays: dayInfo.weekdays,
-      preferredTechs: fullSchedule.technician.filter((tech) =>
-        selectedTechId.includes(tech.id)
-      ),
-      allTechs: fullSchedule.technician,
-      guestCount: state.guests,
-      timeblock: fullSchedule.timeblock,
+      const computedTimes = buildSlotsWithAvailability({
+        slots,
+        pickedDate: formatDateUTC(dayInfo.currentdate),
+        weekday: dayInfo.weekdays,
+        preferredTechs: fullSchedule.technician.filter((tech) =>
+          selectedTechId.includes(tech.id)
+        ),
+        allTechs: fullSchedule.technician,
+        guestCount: state.guests,
+        timeblock: fullSchedule.timeblock,
+        timezone,
+        calendar: fullSchedule.data?.[0]?.calendar ?? [],
+      });
+
+      dispatch({
+        type: "SET_DATE",
+        payload: {
+          date: {
+            weekdays: dayInfo.weekdays,
+            currentdate: formatDate(dayInfo.currentdate),
+            status: 1,
+            times: {
+              allTime: computedTimes.map((t) => ({
+                time: t.time,
+                active: !t.disabled,
+                ...(t.disabled ? {} : { quantity: dayInfo.quantity }),
+              })),
+            },
+            workListTechSelected: [],
+            workListTechAnyone: [],
+            workListTechIstemp: [],
+            technicianOff: [],
+            statusTechOff: 0,
+          },
+          formatted: formatDateUTC(dayInfo.currentdate),
+        },
+      });
+    },
+    [
+      fullSchedule,
+      selectedTechId,
+      state.guests,
+      state.formatselecteddate,
       timezone,
-      calendar: fullSchedule.data[0]?.calendar ?? [],
-    });
-
-    const selectedDate = {
-      weekdays: dayInfo.weekdays,
-      currentdate: formatDate(dayInfo.currentdate),
-      status: 1,
-
-      times: {
-        allTime: computedTimes.map((t) => {
-          const base = {
-            time: t.time,
-            active: !t.disabled,
-          };
-          if (!t.disabled) {
-            base.quantity = dayInfo.quantity;
-          }
-
-          return base;
-        }),
-      },
-
-      workListTechSelected: [],
-      workListTechAnyone: [],
-      workListTechIstemp: [],
-      technicianOff: [],
-      statusTechOff: 0,
-    };
-
-    dispatch({
-      type: "SET_DATE",
-      payload: {
-        date: selectedDate,
-        formatted: formatDateUTC(dayInfo.currentdate),
-      },
-    });
-  }
+      dispatch,
+    ]
+  );
 
   useEffect(() => {
     console.log(state);
@@ -245,14 +245,15 @@ export default function DateStep({
             <DateCell
               key={idx}
               day={day}
-              state={state}
-              dispatch={dispatch}
+              guests={state.guests}
+              selectedDate={state.selectedDate}
               selectedTech={selectedTechId}
               timezone={timezone}
               viewDate={viewDate}
-              fullSchedule={fullSchedule}
+              schedule={fullSchedule.schedule}
+              allTech={fullSchedule.technician}
               handleSelectDate={handleSelectDate}
-              isDisabled={isDisabled}
+              disabled={isDisabled(day)}
             />
           ))}
         </div>

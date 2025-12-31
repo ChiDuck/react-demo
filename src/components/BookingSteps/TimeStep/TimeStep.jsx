@@ -6,7 +6,6 @@ import {
   randomInt,
   timeToMinutes,
 } from "../DateStep/dateFunction";
-import { buildSlotsWithAvailability } from "./timeFunction";
 
 export function generateTimeSlots({
   weekdays,
@@ -41,20 +40,13 @@ export function generateTimeSlots({
   );
 }
 
-export default function TimeStep({
-  state,
-  dispatch,
-  id,
-  sessionKey,
-  timezone,
-}) {
+export default function TimeStep({ state, dispatch, id, sessionKey }) {
   const [fullSchedule, setFullSchedule] = useState({
     technician: [],
     data: [],
     schedule: [],
   });
   const selectedTechId = state.selectedTechnician.map((i) => i.id);
-  console.log(selectedTechId);
   const pickedDate = state.formatselecteddate;
 
   const fetchTime = async () => {
@@ -87,36 +79,22 @@ export default function TimeStep({
     fetchTime();
   }, []);
 
-  // const slots = generateTimeSlots({
-  //   weekdays: fullSchedule.data[0]?.weekdays,
-  //   schedule: fullSchedule.schedule,
-  //   timeblock: fullSchedule.timeblock,
-  //   lasttimebeforeclose: fullSchedule.lasttimebeforeclose,
-  // });
-  // const validSlots = buildSlotsWithAvailability({
-  //   slots,
-  //   pickedDate: pickedDate,
-  //   weekdays: fullSchedule.data[0]?.weekdays,
-  //   preferredTechs: fullSchedule.technician.filter((tech) =>
-  //     selectedTechId.includes(tech.id)
-  //   ),
-  //   allTechs: fullSchedule.technician,
-  //   guestCount: state.guests,
-  //   timeblock: fullSchedule.timeblock,
-  //   timezone: timezone,
-  //   calendar: fullSchedule.data[0]?.calendar ?? [],
-  // });
-
   useEffect(() => {
     console.log(state);
   }, [state.selectedTime]);
+
+  const formatted = new Intl.DateTimeFormat("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+  }).format(new Date(state.selectedDate.currentdate));
 
   return (
     <>
       <div className="text-center">
         <h3>Choose Your Start Time</h3>
         <p>Available times for your group on.</p>
-        <span>Thursday, December 25.</span>
+        <span>{formatted}.</span>
       </div>
       <div className="time-grid">
         {state.selectedDate.times.allTime.map((slot) => (
@@ -127,7 +105,7 @@ export default function TimeStep({
               state.selectedTime === slot.time ? "selected" : "",
             ].join(" ")}
             onClick={() =>
-              !slot.disabled &&
+              slot.active &&
               dispatch({
                 type: "SET_TIME",
                 payload: slot.time,

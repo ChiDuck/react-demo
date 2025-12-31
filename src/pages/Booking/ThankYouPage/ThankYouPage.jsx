@@ -1,4 +1,4 @@
-import { useLoaderData } from "react-router-dom";
+import { Link, useLoaderData } from "react-router-dom";
 import "./ThankYouPage.scss";
 
 export default function ThankYouPage() {
@@ -157,7 +157,9 @@ export default function ThankYouPage() {
           </div>
         </div>
       </div>
-      <button>Book Another Appointment</button>
+      <Link to={`/booking?salonid=${res.data.salonid}`}>
+        <button>Book Another Appointment</button>
+      </Link>
     </div>
   );
 }

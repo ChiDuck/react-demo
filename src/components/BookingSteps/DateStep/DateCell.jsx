@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 import {
   bookableDay,
   formatDate,
@@ -7,37 +7,45 @@ import {
 } from "./dateFunction";
 import "./DateStep.scss";
 
-export default function DateCell({
-  state,
-  dispatch,
+function DateCell({
+  guests,
+  selectedDate,
   day,
   selectedTech,
   viewDate,
-  fullSchedule,
-  isDisabled,
+  schedule,
+  allTech,
+  disabled,
   handleSelectDate,
   timezone,
 }) {
-  const schedule = fullSchedule.schedule;
-  const allTech = fullSchedule.technician;
-  const disabled = isDisabled(day);
-  const cellDate = new Date(
-    Date.UTC(viewDate.getUTCFullYear(), viewDate.getUTCMonth(), day)
+  const cellDate = useMemo(
+    () =>
+      new Date(
+        Date.UTC(viewDate.getUTCFullYear(), viewDate.getUTCMonth(), day)
+      ),
+    [viewDate, day]
   );
 
-  const isHoliday = schedule.find(
-    (i) =>
-      i.startdate <= formatDate(cellDate) &&
-      i.enddate >= formatDate(cellDate) &&
-      i.status === 0
-  );
+  const isHoliday = useMemo(() => {
+    return schedule.some(
+      (i) =>
+        i.status === 0 &&
+        i.startdate <= formatDate(cellDate) &&
+        i.enddate >= formatDate(cellDate)
+    );
+  }, [schedule, cellDate]);
 
-  const daySchedules = schedule.filter(
-    (s) =>
-      s.status === 1 &&
-      s.weekdays === cellDate.getUTCDay() + 1 &&
-      s.startdate === null &&
-      s.enddate === null
+  const daySchedules = useMemo(
+    () =>
+      schedule.filter(
+        (s) =>
+          s.status === 1 &&
+          s.weekdays === cellDate.getUTCDay() + 1 &&
+          s.startdate === null &&
+          s.enddate === null
+      ),
+    [schedule, cellDate]
   );
 
   const salonClosed = daySchedules.length === 0;
@@ -68,23 +76,23 @@ export default function DateCell({
       selectedTech,
       allTech,
       daySchedules,
-      state.guests,
+      guests,
       formatDateUTC(cellDate),
       timezone
     );
-  }, [selectedTech, allTech, daySchedules, state.guests, cellDate, timezone]);
+  }, [selectedTech, allTech, daySchedules, guests, cellDate, timezone]);
 
   const isSelected = useMemo(() => {
-    if (!state.selectedDate?.currentdate) return false;
+    if (!selectedDate?.currentdate) return false;
 
-    const d = new Date(state.selectedDate.currentdate);
+    const d = new Date(selectedDate.currentdate);
 
     return (
       d.getUTCFullYear() === viewDate.getUTCFullYear() &&
       d.getUTCMonth() === viewDate.getUTCMonth() &&
       d.getUTCDate() === day
     );
-  }, [state.selectedDate, viewDate, day]);
+  }, [selectedDate, viewDate, day]);
 
   if (day === null) return <div />;
   return (
@@ -97,7 +105,7 @@ export default function DateCell({
       onClick={() => {
         if (disabled || isHoliday || salonClosed || !isBookable) return;
         handleSelectDate({
-          weekdays: cellDate.getUTCDay(),
+          weekdays: cellDate.getUTCDay() + 1,
           currentdate: cellDate,
           quantity: allTech.length - notWorking.length,
         });
@@ -115,7 +123,7 @@ export default function DateCell({
         <div
           className="not-working"
           title={
-            allTech.length - notWorking.length < state.guests
+            allTech.length - notWorking.length < guests
               ? "Not enough technicians working"
               : notWorking.map((i) => `${i} is not working`).join("\n")
           }
@@ -126,3 +134,5 @@ export default function DateCell({
     </div>
   );
 }
+
+export default memo(DateCell);
